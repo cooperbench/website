@@ -63,14 +63,9 @@ async function loadComparison() {
 async function loadComparisonData(game, cognitiveLoad, timePressure, seed) {
   try {
     // 获取正确的基础路径
-    // 本地开发: './' 或 绝对路径
-    // GitHub Pages: '/real-time-reasoning/' 或相对路径
     const basePath = window.location.hostname === 'bleaves.github.io' 
       ? '/real-time-reasoning/static/data' 
       : 'http://localhost:8000/static/data';
-    
-    // 或者更简单：使用相对路径（推荐）
-    // const basePath = './static/data';
     
     const baseUrl = `${basePath}/${game}_${cognitiveLoad}_${timePressure}_${seed}`;
 
@@ -97,7 +92,7 @@ async function loadComparisonData(game, cognitiveLoad, timePressure, seed) {
       comparisonData.reactive = reactiveData;
       comparisonData.planning = planningData;
       comparisonData.agile = agileData;
-      comparisonData.totalSteps = Math.min(
+      comparisonData.totalSteps = Math.max(
         reactiveData.length, 
         planningData.length, 
         agileData.length
@@ -155,19 +150,24 @@ function updateStepDisplay() {
   document.getElementById('next-step-btn').disabled = currentStep === comparisonData.totalSteps - 1;
   
   // Update model displays
-  updateModelDisplay('reactive', comparisonData.reactive[currentStep]);
-  updateModelDisplay('planning', comparisonData.planning[currentStep]);
-  updateModelDisplay('agile', comparisonData.agile[currentStep]);
+  updateModelDisplay('reactive', comparisonData.reactive, currentStep);
+  updateModelDisplay('planning', comparisonData.planning, currentStep);
+  updateModelDisplay('agile', comparisonData.agile, currentStep);
 }
 
 // Update individual model display
-function updateModelDisplay(model, data) {
+function updateModelDisplay(model, dataArray, currentStep) {
+  const isGameOver = currentStep >= dataArray.length;
+  const data = isGameOver ? dataArray[dataArray.length - 1] : dataArray[currentStep];
+  
   // Update score
   document.getElementById(`score-${model}`).textContent = data.score;
   
   // Update thinking process
-  document.getElementById(`thinking-content-${model}`).innerHTML = 
-    `<p class="whitespace-pre-wrap">${data.thinking}</p>`;
+  const thinkingContent = isGameOver 
+    ? '<p class="text-red-600 font-bold text-center py-4">GAME OVER</p>'
+    : `<p class="whitespace-pre-wrap">${data.thinking}</p>`;
+  document.getElementById(`thinking-content-${model}`).innerHTML = thinkingContent;
   
   // Update canvas
   const canvas = document.getElementById(`game-canvas-${model}`);
@@ -178,8 +178,7 @@ function updateModelDisplay(model, data) {
   canvas.height = canvas.offsetHeight;
   
   if (data.state) {
-    // TODO: Implement game-specific rendering based on data.state
-    // This would render the actual game state (snake position, obstacles, etc.)
+    // Render the actual game state
     renderGameState(ctx, canvas.width, canvas.height, data.state);
   } else {
     // Placeholder: draw simple visualization
@@ -191,6 +190,27 @@ function updateModelDisplay(model, data) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(`Step ${data.step + 1}`, canvas.width / 2, canvas.height / 2);
+  }
+  
+  // Draw game over overlay if needed
+  if (isGameOver) {
+    // Semi-transparent gray overlay
+    ctx.fillStyle = 'rgba(75, 85, 99, 0.7)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw "GAME OVER" text
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 32px Inter';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+    ctx.shadowBlur = 10;
+    ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
+    ctx.shadowBlur = 0;
+    
+    // Draw final step info
+    ctx.font = '14px Inter';
+    ctx.fillText(`Final Step: ${dataArray.length}`, canvas.width / 2, canvas.height / 2 + 40);
   }
 }
 
