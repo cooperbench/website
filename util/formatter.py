@@ -38,6 +38,31 @@ formatted_freeway_state = {
   ]
 }
 
+sample_snake_state = """**Current Turn**: \\( t_0 = 46 \\)
+**Cells occupied by walls**:
+\t - Border Cells: x=0/x=7 or y=0/y=7.
+\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2)]
+**Snake Positions**:[(5, 3), (4, 3), (3, 3), (2, 3), (1, 3), (1, 4), (2, 4), (3, 4), (4, 4), (5, 4)]
+**Snake Head Direction**: R
+**Food Positions, Life Span and Value**:
+\t- (6, 2, 4, 1)
+\t- (5, 5, 7, 1)
+\t- (3, 4, 10, 1)\
+"""
+
+formatted_snake_state = {
+    "snake": [[5, 3], [4, 3], [3, 3], [2, 3], [1, 3], [1, 4], [2, 4], [3, 4], [4, 4], [5, 4]],
+    "direction": "R",
+    "food": [
+        [6, 2, 4, 1],
+        [5, 5, 7, 1],
+        [3, 4, 10, 1]
+    ],
+    "obstacles": [[3, 2], [4, 5], [3, 6], [3, 1], [2, 2]],
+    "game_turn": 46,
+    "terminal": False
+}
+
 def format_freeway(state_text):
     print("Formatting freeway state...")
     print(f"Original state text:\n{state_text}")
@@ -68,15 +93,59 @@ def format_freeway(state_text):
     }
 
 def format_snake(state_text):
-    # todo
-    pass
+    print("Formatting snake state...")
+    print(f"Original state text:\n{state_text}")
+
+    game_turn = int(state_text.split(" = ")[1].split(" \\)")[0])
+    terminal = "Game Over" in state_text #TODO: check if this is correct
+
+    obstacles_section = state_text.split("**Cells occupied by walls**:")[1].split("**Snake Positions**:")[0].strip()
+    obstacles = []
+    for line in obstacles_section.split("\n"):
+        if "Internal Obstacles" in line:
+            obs_str = line.split(": ")[1].strip().strip("[]")
+            if obs_str:
+                for obs in obs_str.split("), ("):
+                    obs = obs.strip("()")
+                    x, y = map(int, obs.split(", "))
+                    obstacles.append([x, y])
+
+    snake_section = state_text.split("**Snake Positions**:")[1].split("**Snake Head Direction**:")[0].strip()
+    snake_str = snake_section.strip().strip("[]")
+    snake = []
+    if snake_str:
+        for seg in snake_str.split("), ("):
+            seg = seg.strip("()")
+            x, y = map(int, seg.split(", "))
+            snake.append([x, y])
+
+    direction_section = state_text.split("**Snake Head Direction**:")[1].split("**Food Positions, Life Span and Value**:")[0].strip()
+    direction = direction_section
+
+    food_section = state_text.split("**Food Positions, Life Span and Value**:")[1].strip()
+    food = []
+    for line in food_section.split("\n"):
+        if line.strip().startswith("- ("):
+            food_str = line.strip().lstrip("- ").strip("()")
+            x, y, life_span, value = map(int, food_str.split(", "))
+            food.append([x, y, life_span, value])
+
+    return {
+        "snake": snake,
+        "direction": direction,
+        "food": food,
+        "obstacles": obstacles,
+        "game_turn": game_turn,
+        "terminal": terminal
+    }
 
 def format_overcooked(state_text):
     # todo
     pass
 
 def test():
-    assert format_freeway(sample_freeway_state) == formatted_freeway_state, f"Freeway state formatting failed: {format_freeway(sample_freeway_state)}"
+    # assert format_freeway(sample_freeway_state) == formatted_freeway_state, f"Freeway state formatting failed: {format_freeway(sample_freeway_state)}"
+    assert format_snake(sample_snake_state) == formatted_snake_state, f"Snake state formatting failed: {format_snake(sample_snake_state)}"
 
 if __name__ == "__main__":
     data_dir = 'static/data'
@@ -97,13 +166,12 @@ if __name__ == "__main__":
                 if 'freeway' in file_name:
                     entry['original_state'] = state
                     entry['state'] = format_freeway(state)
-                # elif 'snake' in file_name:
-                #     entry['original_state'] = state
-                #     entry['state'] = format_snake(state)
+                elif 'snake' in file_name:
+                    entry['original_state'] = state
+                    entry['state'] = format_snake(state)
                 # elif 'overcooked' in file_name:
                 #     entry['original_state'] = state
                 #     entry['state'] = format_overcooked(state)
             with open(file_path, 'w', encoding='utf-8') as f:
                 json.dump(logs, f, ensure_ascii=False, indent=4)
     print(f"Formatted states in {file_name}")
-

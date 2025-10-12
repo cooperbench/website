@@ -3,56 +3,628 @@
         "step": 0,
         "score": 0,
         "thinking": "### Understanding the Problem\n\nFirst, I need to understand the scenario:\n\n1. **Game Grid**: It's an 8x8 grid (since x and y range from 0 to 7).\n2. **Snake**: Currently, the snake is just a single segment at (3, 3), moving left (L).\n3. **Walls**: There are border walls at x=0, x=7, y=0, y=7, and several internal obstacles.\n4. **Food**: There are three pieces of food:\n   - (2, 4) with value +1 and life span 10.\n   - (1, 3) with value +1 and life span 10.\n   - (4, 1) with value +1 and life span 10.\n\n### Possible Actions\n\nSince the snake is moving left (L), the possible next moves are:\n- **Left (L)**: Continue left to (2, 3).\n- **Up (U)**: Turn up to (3, 4).\n- **Down (D)**: Turn down to (3, 2).\n\nWe cannot move right (R) because that's the opposite of the current direction (L), which is not allowed.\n\n### Evaluating Each Move\n\n#### 1. Move Left (L) to (2, 3)\n- **New Position**: (2, 3).\n- **Check for Walls**: \n  - (2, 3) is listed as an internal obstacle. So, it's a wall.\n  - **Conclusion**: Invalid move (collision with wall).\n\n#### 2. Move Up (U) to (3, 4)\n- **New Position**: (3, 4).\n- **Check for Walls**: \n  - Border walls are at y=7 and y=0, so y=4 is within bounds.\n  - No internal obstacles at (3, 4).\n- **Check for Food**: \n  - None of the food is at (3, 4).\n- **Safety**: \n  - Since the snake is only one segment, no body collision is possible.\n- **Conclusion**: Valid move, but no immediate reward.\n\n#### 3. Move Down (D) to (3, 2)\n- **New Position**: (3, 2).\n- **Check for Walls**: \n  - (3, 2) is listed as an internal obstacle.\n  - **Conclusion**: Invalid move (collision with wall).\n\n### Analysis of Valid Moves\n\nFrom the above, the only valid move is **Up (U)** to (3, 4). \n\nBut, is there any strategic advantage to this move?\n\n- **Food Proximity**: \n  - The food at (2, 4) is two moves away: Up to (3, 4) then Left to (2, 4).\n  - The food at (1, 3) is two moves away: Left to (2, 3) but (2, 3) is a wall. So, not directly accessible.\n  - The food at (4, 1) is quite far and requires multiple moves.\n\n### Potential Plan\n\nSince the snake is currently at (3, 3), moving Up to (3, 4) sets up a path towards the food at (2, 4):\n1. **Turn 0**: Move Up to (3, 4).\n2. **Turn 1**: Move Left to (2, 4) to eat the food.\n\n### Verification of the Plan\n\n- **Turn 0**: \n  - Move Up to (3, 4). Valid as established.\n- **Turn 1**: \n  - Current direction is Up (since we moved Up in Turn 0).\n  - To reach (2, 4), we need to move Left.\n  - Is Left allowed? Yes, because the previous move was Up, and Left is not the opposite of Up (which would be Down).\n  - (2, 4) is not a wall and has food.\n\n### Risks and Considerations\n\n- **Tail Reward Danger**: Not applicable here since the snake is only one segment.\n- **Body Collision**: Not applicable yet.\n- **Wall Collision**: Already considered.\n\n### Conclusion\n\nThe best immediate action is to move Up to (3, 4) to set up for the food at (2, 4) in the next turn.\n\n\\boxed{U}",
-        "state": "**Current Turn**: \\( t_0 = 0 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(3, 3)]\n**Snake Head Direction**: L\n**Food Positions, Life Span and Value**:\n\t- (2, 4, 10, 1)\n\t- (1, 3, 10, 1)\n\t- (4, 1, 10, 1)\n",
-        "action": "U"
+        "state": {
+            "snake": [
+                [
+                    3,
+                    3
+                ]
+            ],
+            "direction": "L",
+            "food": [
+                [
+                    2,
+                    4,
+                    10,
+                    1
+                ],
+                [
+                    1,
+                    3,
+                    10,
+                    1
+                ],
+                [
+                    4,
+                    1,
+                    10,
+                    1
+                ]
+            ],
+            "obstacles": [
+                [
+                    3,
+                    2
+                ],
+                [
+                    4,
+                    5
+                ],
+                [
+                    3,
+                    6
+                ],
+                [
+                    3,
+                    1
+                ],
+                [
+                    2,
+                    2
+                ],
+                [
+                    4,
+                    6
+                ],
+                [
+                    2,
+                    3
+                ],
+                [
+                    2,
+                    5
+                ]
+            ],
+            "game_turn": 0,
+            "terminal": false
+        },
+        "action": "U",
+        "original_state": "**Current Turn**: \\( t_0 = 0 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(3, 3)]\n**Snake Head Direction**: L\n**Food Positions, Life Span and Value**:\n\t- (2, 4, 10, 1)\n\t- (1, 3, 10, 1)\n\t- (4, 1, 10, 1)\n"
     },
     {
         "step": 1,
         "score": 1,
         "thinking": "Let's analyze the current state to determine the best immediate action for the snake.\n\n### Current State:\n- **Snake**: Single segment at (3,4), moving Up (U)\n- **Walls**: Border at x=0, x=7, y=0, y=7; plus internal obstacles\n- **Food**: \n  - (2,4) value=9, life=1\n  - (1,3) value=9, life=1\n  - (4,1) value=9, life=1\n  - (6,2) value=10, life=1\n\n### Possible Moves (cannot reverse to Down):\n1. **Up (U)**: to (3,5)\n   - Check walls: (3,5) is not a wall (border is at y=7)\n   - Check obstacles: (3,5) is not in internal obstacles list\n   - Safe move, no food\n\n2. **Left (L)**: to (2,4)\n   - Check walls: x=0 is wall, but (2,4) is not border\n   - Check obstacles: (2,4) not in internal obstacles\n   - Food present: (2,4) has value=9 food\n   - Since snake is length 1, no tail collision risk\n   - Would gain +1 length and +1 score\n\n3. **Right (R)**: to (4,4)\n   - Check walls: x=7 is wall, but (4,4) is not border\n   - Check obstacles: (4,4) not in internal obstacles\n   - No food at (4,4)\n   - Safe move\n\n### Best Choice:\n- **Left (L)** is optimal as it collects positive food (2,4) with value=9, increasing score and length safely.\n- Other moves don't collect food.\n\n\\boxed{L}",
-        "state": "**Current Turn**: \\( t_0 = 1 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(3, 4)]\n**Snake Head Direction**: U\n**Food Positions, Life Span and Value**:\n\t- (2, 4, 9, 1)\n\t- (1, 3, 9, 1)\n\t- (4, 1, 9, 1)\n\t- (6, 2, 10, 1)\n",
-        "action": "L"
+        "state": {
+            "snake": [
+                [
+                    3,
+                    4
+                ]
+            ],
+            "direction": "U",
+            "food": [
+                [
+                    2,
+                    4,
+                    9,
+                    1
+                ],
+                [
+                    1,
+                    3,
+                    9,
+                    1
+                ],
+                [
+                    4,
+                    1,
+                    9,
+                    1
+                ],
+                [
+                    6,
+                    2,
+                    10,
+                    1
+                ]
+            ],
+            "obstacles": [
+                [
+                    3,
+                    2
+                ],
+                [
+                    4,
+                    5
+                ],
+                [
+                    3,
+                    6
+                ],
+                [
+                    3,
+                    1
+                ],
+                [
+                    2,
+                    2
+                ],
+                [
+                    4,
+                    6
+                ],
+                [
+                    2,
+                    3
+                ],
+                [
+                    2,
+                    5
+                ]
+            ],
+            "game_turn": 1,
+            "terminal": false
+        },
+        "action": "L",
+        "original_state": "**Current Turn**: \\( t_0 = 1 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(3, 4)]\n**Snake Head Direction**: U\n**Food Positions, Life Span and Value**:\n\t- (2, 4, 9, 1)\n\t- (1, 3, 9, 1)\n\t- (4, 1, 9, 1)\n\t- (6, 2, 10, 1)\n"
     },
     {
         "step": 2,
         "score": 1,
         "thinking": "Alright, let's tackle this Snake game scenario step by step. I'm going to analyze the current state and decide the best immediate action for the snake to maximize its score while avoiding risks.\n\n### Understanding the Current State\n\n1. **Grid Dimensions**: The grid is 8x8 (from x=0 to x=7 and y=0 to y=7).\n2. **Walls**:\n   - Border walls: x=0, x=7, y=0, y=7 (can't move beyond these).\n   - Internal obstacles (can't move onto these):\n     - (3,2), (4,5), (3,6), (3,1), (2,2), (4,6), (2,3), (2,5)\n3. **Snake**:\n   - Positions: Head at (2,4), body at (3,4).\n   - Current direction: Left (L).\n4. **Food**:\n   - (1,3): value=8, life_span=1\n   - (4,1): value=8, life_span=1\n   - (6,2): value=9, life_span=1\n\n### Possible Moves\n\nFrom the current head position (2,4) moving left (L), the possible next moves are Up (U), Down (D), or continue Left (L). We cannot move Right (R) because that would be an instant reverse (opposite of current direction L), which is not allowed.\n\nSo, possible actions: U, D, L.\n\nLet's evaluate each:\n\n#### 1. Move Up (U) -> (2,5)\n- New head position: (2,5)\n- Check for collisions:\n  - Walls: y=7 is the top wall, (2,5) is not a wall.\n  - Internal obstacles: (2,5) is in the list of obstacles. **Collision!** Cannot move here.\n  \nSo, U is invalid.\n\n#### 2. Move Down (D) -> (2,3)\n- New head position: (2,3)\n- Check for collisions:\n  - Walls: y=0 is bottom, (2,3) is fine.\n  - Internal obstacles: (2,3) is in the list. **Collision!** Cannot move here.\n  \nSo, D is invalid.\n\n#### 3. Move Left (L) -> (1,4)\n- New head position: (1,4)\n- Check for collisions:\n  - Walls: x=0 is left, (1,4) is fine.\n  - Internal obstacles: (1,4) is not in the list.\n  - Body collision: Current body is at (3,4), moving to (1,4) is safe (no overlap).\n  \nThis move is valid.\n\nNow, let's check if there's food at (1,4):\n\nLooking at the food positions:\n- (1,3), (4,1), (6,2) — none at (1,4). So, no food to eat here.\n\nBut since U and D are invalid, L is the only option.\n\nWait, is there any other consideration? Let me think about the tail and food.\n\n**Tail Reward Danger**: \nCurrent snake positions: [(2,4), (3,4)]. Tail is at (3,4). \nIs there positive food adjacent to the head where the tail is?\n\nAdjacent cells to head (2,4):\n- Up: (2,5) — obstacle, not food.\n- Down: (2,3) — obstacle, not food.\n- Left: (1,4) — no food.\n- Right: (3,4) — tail is here. Is there food at (3,4)? No, food is at (1,3), (4,1), (6,2).\n\nSo no tail reward danger here.\n\n### Conclusion\n\nOnly valid move is Left (L) to (1,4), which is safe and doesn't eat any food (but that's okay since other moves are invalid).\n\n### Final Answer\n\n\\boxed{L}",
-        "state": "**Current Turn**: \\( t_0 = 2 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(2, 4), (3, 4)]\n**Snake Head Direction**: L\n**Food Positions, Life Span and Value**:\n\t- (1, 3, 8, 1)\n\t- (4, 1, 8, 1)\n\t- (6, 2, 9, 1)\n",
-        "action": "L"
+        "state": {
+            "snake": [
+                [
+                    2,
+                    4
+                ],
+                [
+                    3,
+                    4
+                ]
+            ],
+            "direction": "L",
+            "food": [
+                [
+                    1,
+                    3,
+                    8,
+                    1
+                ],
+                [
+                    4,
+                    1,
+                    8,
+                    1
+                ],
+                [
+                    6,
+                    2,
+                    9,
+                    1
+                ]
+            ],
+            "obstacles": [
+                [
+                    3,
+                    2
+                ],
+                [
+                    4,
+                    5
+                ],
+                [
+                    3,
+                    6
+                ],
+                [
+                    3,
+                    1
+                ],
+                [
+                    2,
+                    2
+                ],
+                [
+                    4,
+                    6
+                ],
+                [
+                    2,
+                    3
+                ],
+                [
+                    2,
+                    5
+                ]
+            ],
+            "game_turn": 2,
+            "terminal": false
+        },
+        "action": "L",
+        "original_state": "**Current Turn**: \\( t_0 = 2 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(2, 4), (3, 4)]\n**Snake Head Direction**: L\n**Food Positions, Life Span and Value**:\n\t- (1, 3, 8, 1)\n\t- (4, 1, 8, 1)\n\t- (6, 2, 9, 1)\n"
     },
     {
         "step": 3,
         "score": 2,
         "thinking": "### Understanding the Problem\n\nFirst, I need to understand the scenario presented:\n\n1. **Game Grid**: It's an 8x8 grid (since x and y range from 0 to 7). There are border walls at x=0, x=7, y=0, y=7, and several internal obstacles at specific coordinates.\n2. **Snake**: The snake has two segments:\n   - Head at (1, 4)\n   - Body at (2, 4)\n   - Current direction is Left (L), meaning the snake was moving left to reach (1, 4) from (2, 4).\n3. **Food**: There are three pieces of food:\n   - (1, 3): value = +1, life_span = 7\n   - (4, 1): value = +1, life_span = 7\n   - (6, 2): value = +1, life_span = 8\n\n### Possible Moves\n\nGiven the current direction is Left (L), the possible moves are:\n- **Left (L)**: Continue left to (0, 4)\n- **Up (U)**: Move up to (1, 5)\n- **Down (D)**: Move down to (1, 3)\n\n**No instant reverse**: The snake cannot move Right (R) because that would be the opposite of Left.\n\n### Evaluating Each Move\n\n#### 1. Left (L) to (0, 4)\n- **Wall Check**: x=0 is a border wall. Moving to (0, 4) would collide with the wall → **Deadly**.\n- **Conclusion**: Not a valid move.\n\n#### 2. Up (U) to (1, 5)\n- **Wall Check**: y=5 is within bounds (0 to 7).\n- **Obstacle Check**: No internal obstacles at (1, 5).\n- **Body Collision**: The only body segment is at (2, 4). Moving to (1, 5) doesn't collide with any body part.\n- **Food Check**: No food at (1, 5).\n- **Conclusion**: Safe move, but no immediate reward.\n\n#### 3. Down (D) to (1, 3)\n- **Wall Check**: y=3 is within bounds.\n- **Obstacle Check**: No internal obstacles at (1, 3).\n- **Body Collision**: The body is at (2, 4). No collision.\n- **Food Check**: There is food at (1, 3) with value +1.\n  \n**Special Cases**:\n- **Tail Reward Danger**: The tail is at (2, 4). The head is adjacent to the tail (since (1,4) and (2,4) are adjacent). The tail is at (2,4), but there's no food there. The food is at (1,3), which is not the tail's position. So, no danger here.\n  \n- **Eating Food**: If the snake moves to (1, 3), it will eat the food, increasing its length and score by +1.\n  \n- **Life Span**: The food has a life_span of 7, but since the current turn is 3, it's still valid.\n\n**Conclusion**: Safe and rewarding move.\n\n### Comparing Moves\n\n- **Left (L)**: Not possible (wall collision).\n- **Up (U)**: Safe but no reward.\n- **Down (D)**: Safe and provides a reward.\n\n### Decision\n\nThe best immediate action is to move Down (D) to (1, 3) to eat the positive food and gain a point.\n\n### Verification\n\n- **Tail Movement**: After moving to (1, 3), the new snake positions will be [(1, 3), (1, 4), (2, 4)]. The tail was at (2,4), but since the snake grows by one segment, the tail remains at (2,4) for now. However, the next move will shift the tail.\n  \n- **No Collision**: The head moves to (1,3), and the body follows to (1,4). The tail remains at (2,4) but will move to (1,4) in the next turn if the head moves away. No collision occurs.\n\n### Final Answer\n\n\\boxed{D}",
-        "state": "**Current Turn**: \\( t_0 = 3 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(1, 4), (2, 4)]\n**Snake Head Direction**: L\n**Food Positions, Life Span and Value**:\n\t- (1, 3, 7, 1)\n\t- (4, 1, 7, 1)\n\t- (6, 2, 8, 1)\n",
-        "action": "D"
+        "state": {
+            "snake": [
+                [
+                    1,
+                    4
+                ],
+                [
+                    2,
+                    4
+                ]
+            ],
+            "direction": "L",
+            "food": [
+                [
+                    1,
+                    3,
+                    7,
+                    1
+                ],
+                [
+                    4,
+                    1,
+                    7,
+                    1
+                ],
+                [
+                    6,
+                    2,
+                    8,
+                    1
+                ]
+            ],
+            "obstacles": [
+                [
+                    3,
+                    2
+                ],
+                [
+                    4,
+                    5
+                ],
+                [
+                    3,
+                    6
+                ],
+                [
+                    3,
+                    1
+                ],
+                [
+                    2,
+                    2
+                ],
+                [
+                    4,
+                    6
+                ],
+                [
+                    2,
+                    3
+                ],
+                [
+                    2,
+                    5
+                ]
+            ],
+            "game_turn": 3,
+            "terminal": false
+        },
+        "action": "D",
+        "original_state": "**Current Turn**: \\( t_0 = 3 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(1, 4), (2, 4)]\n**Snake Head Direction**: L\n**Food Positions, Life Span and Value**:\n\t- (1, 3, 7, 1)\n\t- (4, 1, 7, 1)\n\t- (6, 2, 8, 1)\n"
     },
     {
         "step": 4,
         "score": 2,
         "thinking": "Alright, let's tackle this Snake game scenario step by step. I'm going to analyze the current state and decide the best immediate action for the snake to maximize its score while avoiding risks.\n\n### Understanding the Current State\n\n1. **Current Turn**: 4\n2. **Walls**:\n   - Border walls: x=0, x=7, y=0, y=7 (so the grid is 8x8 from (0,0) to (7,7))\n   - Internal obstacles: \n     - (3,2), (4,5), (3,6), (3,1), (2,2), (4,6), (2,3), (2,5)\n3. **Snake Positions**:\n   - Head: (1,3)\n   - Body: [(1,4), (2,4)]\n   - So the snake is three segments long: head at (1,3), then (1,4), then tail at (2,4).\n4. **Snake Head Direction**: Currently moving Down (D). This means the last move was from (1,4) to (1,3) (since moving down decreases the y-coordinate).\n5. **Food Items**:\n   - (4,1): value=1, life_span=6\n   - (6,2): value=1, life_span=7\n   - (6,4): value=1, life_span=10\n\n### Possible Moves\n\nFrom the current head position (1,3) and direction D (down), the possible moves are U, D, L, R, but:\n- Cannot reverse direction immediately: last move was D, so cannot move U (up) next.\n- So possible moves: D, L, R.\n\nNow let's check each possible move for safety and potential to eat food.\n\n#### 1. Move Down (D): (1,3) → (1,2)\n- New head position: (1,2)\n- Check for collisions:\n  - Walls: (1,2) is not in the internal obstacles list, and x=1 is not a border wall, y=2 is not a border wall (since borders are y=0 and y=7).\n  - Body: Snake body is at (1,4) and (2,4). (1,2) is not in these.\n- Safe move.\n- Food at (1,2)? No, food is at (4,1), (6,2), (6,4).\n- So no food eaten, just moving.\n\n#### 2. Move Left (L): (1,3) → (0,3)\n- New head position: (0,3)\n- Check for collisions:\n  - Walls: x=0 is a border wall → collision! Deadly.\n- Not safe.\n\n#### 3. Move Right (R): (1,3) → (2,3)\n- New head position: (2,3)\n- Check for collisions:\n  - Walls: (2,3) is in internal obstacles → collision! Deadly.\n- Not safe.\n\n### Evaluating Possible Moves\n\nFrom the above:\n- D (Down) to (1,2): safe, no food.\n- L (Left) to (0,3): wall collision.\n- R (Right) to (2,3): obstacle collision.\n\nOnly safe move is D (Down) to (1,2), but no food there. \n\nIs there any other consideration? \n\n**Tail Reward Danger**: If the head is adjacent to the tail and the tail cell has positive food, eating it kills the snake because the head and newly grown tail will collide.\n\nCurrent tail is at (2,4). Adjacent cells to tail:\n- (1,4), (3,4), (2,3), (2,5)\nHead is at (1,3), which is not adjacent to (2,4). So no tail reward danger here.\n\n### Checking Food Accessibility\n\nCurrent food positions:\n1. (4,1): distance from (1,3) is |4-1| + |1-3| = 3 + 2 = 5\n2. (6,2): distance = |6-1| + |2-3| = 5 + 1 = 6\n3. (6,4): distance = |6-1| + |4-3| = 5 + 1 = 6\n\nClosest is (4,1). Can we plan a path towards it after this move?\n\nAfter moving D to (1,2), next moves could be towards (4,1). For example:\n- From (1,2), could go R to (2,2), but (2,2) is an internal obstacle.\n- Or D to (1,1), but y=1 is not a wall, and (1,1) is not an obstacle.\nThen from (1,1), could go R to (2,1), then (3,1), then (4,1).\n\nBut this is future planning. As a non-thinking executor, we're only deciding the immediate action based on current state and past plan (none here).\n\n### Conclusion\n\nOnly safe immediate move is D (Down) to (1,2). Other moves lead to collisions.\n\n\\boxed{D}",
-        "state": "**Current Turn**: \\( t_0 = 4 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(1, 3), (1, 4), (2, 4)]\n**Snake Head Direction**: D\n**Food Positions, Life Span and Value**:\n\t- (4, 1, 6, 1)\n\t- (6, 2, 7, 1)\n\t- (6, 4, 10, 1)\n",
-        "action": "D"
+        "state": {
+            "snake": [
+                [
+                    1,
+                    3
+                ],
+                [
+                    1,
+                    4
+                ],
+                [
+                    2,
+                    4
+                ]
+            ],
+            "direction": "D",
+            "food": [
+                [
+                    4,
+                    1,
+                    6,
+                    1
+                ],
+                [
+                    6,
+                    2,
+                    7,
+                    1
+                ],
+                [
+                    6,
+                    4,
+                    10,
+                    1
+                ]
+            ],
+            "obstacles": [
+                [
+                    3,
+                    2
+                ],
+                [
+                    4,
+                    5
+                ],
+                [
+                    3,
+                    6
+                ],
+                [
+                    3,
+                    1
+                ],
+                [
+                    2,
+                    2
+                ],
+                [
+                    4,
+                    6
+                ],
+                [
+                    2,
+                    3
+                ],
+                [
+                    2,
+                    5
+                ]
+            ],
+            "game_turn": 4,
+            "terminal": false
+        },
+        "action": "D",
+        "original_state": "**Current Turn**: \\( t_0 = 4 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(1, 3), (1, 4), (2, 4)]\n**Snake Head Direction**: D\n**Food Positions, Life Span and Value**:\n\t- (4, 1, 6, 1)\n\t- (6, 2, 7, 1)\n\t- (6, 4, 10, 1)\n"
     },
     {
         "step": 5,
         "score": 2,
         "thinking": "### Understanding the Current State\n\nFirst, let's break down the current state to understand the game's setup:\n\n1. **Grid Dimensions**: The grid is 8x8 (from x=0 to x=7 and y=0 to y=7).\n2. **Walls**:\n   - **Border Walls**: All cells where x=0, x=7, y=0, or y=7 are walls.\n   - **Internal Obstacles**: There are several internal walls at specific coordinates: (3,2), (4,5), (3,6), (3,1), (2,2), (4,6), (2,3), (2,5).\n3. **Snake**:\n   - **Positions**: The snake's body is at [(1,2), (1,3), (1,4)].\n     - Head is at (1,2).\n     - Next segment is at (1,3).\n     - Tail is at (1,4).\n   - **Direction**: The head is currently moving \"D\" (Down), which means it's moving in the negative y-direction.\n4. **Food**:\n   - There are three pieces of food:\n     1. At (4,1) with value=1 and life_span=5.\n     2. At (6,2) with value=1 and life_span=6.\n     3. At (6,4) with value=1 and life_span=9.\n\n### Visualizing the Snake and Food\n\nLet's visualize the snake and food positions to better understand possible moves.\n\n- **Snake**:\n  - Head: (1,2)\n  - Body: (1,3)\n  - Tail: (1,4)\n  \n  The snake is vertical, with the head at the bottom (since it's moving Down, meaning the head was at (1,3) in the previous move and moved to (1,2)).\n\n- **Food**:\n  - (4,1): To the right and slightly below the head.\n  - (6,2): Further to the right and at the same y-level as the head.\n  - (6,4): Further to the right and above the head.\n\n### Possible Moves from Current Position\n\nThe snake can move in four directions: Up (U), Down (D), Left (L), Right (R). However:\n\n1. **Current Direction**: The snake is moving Down (\"D\").\n   - **No Instant Reverse**: The snake cannot move Up (\"U\") next because that would be the opposite direction.\n   \n   So, possible moves are D, L, R.\n\nBut let's check each possible move for validity (no wall or body collision except the tail, which moves away):\n\n#### 1. Move Down (\"D\"):\n   - Current head: (1,2)\n   - Move Down: (1,1)\n   - Check:\n     - Is (1,1) a wall? y=1 is not a border wall, and it's not in the internal obstacles list. So, no wall.\n     - Is (1,1) part of the body? The body is at (1,3) and (1,4). No.\n     - Is the tail at (1,4)? Moving Down doesn't interact with the tail.\n   - Valid move.\n\n#### 2. Move Left (\"L\"):\n   - Current head: (1,2)\n   - Move Left: (0,2)\n   - Check:\n     - x=0 is a border wall. So, this is a wall collision.\n   - Invalid move (would kill the snake).\n\n#### 3. Move Right (\"R\"):\n   - Current head: (1,2)\n   - Move Right: (2,2)\n   - Check:\n     - Is (2,2) a wall? It's in the internal obstacles list: (2,2) is a wall.\n   - Invalid move (would kill the snake).\n\n#### 4. Move Up (\"U\"):\n   - Current head: (1,2)\n   - Move Up: (1,3)\n   - But current direction is Down, so Up is the opposite direction.\n   - Against the \"no instant reverse\" rule.\n   - Invalid move.\n\n### Available Moves\n\nFrom the above, the only valid move is **Down (\"D\")**.\n\n### Checking for Food\n\nEven though we only have one valid move, let's see if moving Down leads to eating food or any other considerations.\n\n- Moving Down to (1,1):\n  - Is there food at (1,1)? Checking the food positions:\n    - (4,1), (6,2), (6,4) — none at (1,1).\n  - So, no food is eaten in this move.\n\n### Tail Reward Danger\n\nWe should also check if moving Down could lead to a situation where the head is adjacent to the tail with positive food on the tail cell, which would be dangerous if eaten next.\n\nCurrent tail is at (1,4). After moving Down:\n- Head moves to (1,1).\n- Body segments move: (1,3) becomes (1,2), (1,4) becomes (1,3).\n- New tail is at (1,3).\n\nIs the head adjacent to the new tail?\n- Head at (1,1), tail at (1,3).\n- Adjacent means directly next to (up, down, left, right).\n- (1,1) and (1,3) are two cells apart vertically (y difference is 2), so not adjacent.\n\nNo immediate danger from tail reward in this scenario.\n\n### Alternative Considerations\n\nIs there any other factor to consider? \n\n- Future moves: Since we're only deciding the immediate action, we don't need to plan ahead unless the thinking model's past plan suggests otherwise. There's no past plan mentioned here.\n- Food life spans: \n  - (4,1): life_span=5 (will disappear at turn 10).\n  - (6,2): life_span=6 (turn 11).\n  - (6,4): life_span=9 (turn 14).\n  - Current turn is 5, so all foods will last for several more turns. No urgency based on life spans.\n\n### Conclusion\n\nThe only valid move is Down (\"D\"), which doesn't lead to any immediate collision or danger, and doesn't eat any food this turn. \n\n### Final Answer\n\n\\boxed{D}",
-        "state": "**Current Turn**: \\( t_0 = 5 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(1, 2), (1, 3), (1, 4)]\n**Snake Head Direction**: D\n**Food Positions, Life Span and Value**:\n\t- (4, 1, 5, 1)\n\t- (6, 2, 6, 1)\n\t- (6, 4, 9, 1)\n",
-        "action": "D"
+        "state": {
+            "snake": [
+                [
+                    1,
+                    2
+                ],
+                [
+                    1,
+                    3
+                ],
+                [
+                    1,
+                    4
+                ]
+            ],
+            "direction": "D",
+            "food": [
+                [
+                    4,
+                    1,
+                    5,
+                    1
+                ],
+                [
+                    6,
+                    2,
+                    6,
+                    1
+                ],
+                [
+                    6,
+                    4,
+                    9,
+                    1
+                ]
+            ],
+            "obstacles": [
+                [
+                    3,
+                    2
+                ],
+                [
+                    4,
+                    5
+                ],
+                [
+                    3,
+                    6
+                ],
+                [
+                    3,
+                    1
+                ],
+                [
+                    2,
+                    2
+                ],
+                [
+                    4,
+                    6
+                ],
+                [
+                    2,
+                    3
+                ],
+                [
+                    2,
+                    5
+                ]
+            ],
+            "game_turn": 5,
+            "terminal": false
+        },
+        "action": "D",
+        "original_state": "**Current Turn**: \\( t_0 = 5 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(1, 2), (1, 3), (1, 4)]\n**Snake Head Direction**: D\n**Food Positions, Life Span and Value**:\n\t- (4, 1, 5, 1)\n\t- (6, 2, 6, 1)\n\t- (6, 4, 9, 1)\n"
     },
     {
         "step": 6,
         "score": 2,
         "thinking": "Alright, let's tackle this Snake game scenario step by step. I'm going to analyze the current state and decide the best immediate action for the snake to maximize its score while avoiding risks.\n\n### Understanding the Current State\n\n1. **Current Turn**: 6\n2. **Walls**:\n   - **Border Walls**: x=0, x=7, y=0, y=7. This means the grid is 8x8 (from (0,0) to (7,7)), and the snake cannot go outside these bounds.\n   - **Internal Obstacles**: There are several internal walls at specific coordinates. These are cells the snake cannot move into:\n     - (3,2), (4,5), (3,6), (3,1), (2,2), (4,6), (2,3), (2,5)\n3. **Snake Positions**:\n   - Head: (1,1)\n   - Body segments: (1,2), (1,3)\n   - So, the snake is three segments long, moving downward (direction D).\n4. **Food Items**:\n   - (4,1): value=1, life_span=4\n   - (6,2): value=1, life_span=5\n   - (6,4): value=1, life_span=8\n\n### Visualizing the Snake and Food\n\nLet me visualize the snake and food positions to better understand the scenario.\n\n- **Snake**:\n  - Head at (1,1)\n  - Body at (1,2)\n  - Tail at (1,3)\n- **Food**:\n  - (4,1): To the right and slightly up from the head.\n  - (6,2): Further right and up.\n  - (6,4): Further right and further up.\n\n### Possible Moves\n\nThe snake is currently moving downward (D). The possible moves are U (up), D (down), L (left), R (right), but with constraints:\n\n1. **No Instant Reverse**: Cannot move opposite to current direction. Current direction is D, so cannot move U next.\n   - Allowed moves: D, L, R\n2. **Wall and Body Collisions**:\n   - Check each possible move for collisions.\n\n#### Checking Each Move:\n\n1. **Move Down (D)**: (x, y-1)\n   - Current head: (1,1) → new position: (1,0)\n   - Check:\n     - y=0 is a border wall → collision. Cannot move D.\n   \n2. **Move Left (L)**: (x-1, y)\n   - Current head: (1,1) → new position: (0,1)\n   - Check:\n     - x=0 is a border wall → collision. Cannot move L.\n   \n3. **Move Right (R)**: (x+1, y)\n   - Current head: (1,1) → new position: (2,1)\n   - Check:\n     - Is (2,1) a wall? Internal walls include (3,1), (2,2), (2,3), (2,5). (2,1) is not listed → safe.\n     - Is (2,1) part of the snake's body? Body segments are at (1,2), (1,3). Not overlapping → safe.\n     - No instant reverse issue (current direction is D, moving R is allowed).\n     - So, R is a possible move.\n\nWait a minute, initially I thought D and L are invalid due to walls, and R is valid. But is there any other constraint?\n\n### Checking for Food and Tail Reward Danger\n\nNow, let's see if moving R to (2,1) leads to any food or dangers.\n\n- **Food at (2,1)**: Looking at the food positions:\n  - (4,1), (6,2), (6,4) — none at (2,1). So no food to eat here.\n  \n- **Tail Reward Danger**: Is the head adjacent to the tail, and is there positive food on the tail?\n  - Tail is at (1,3). Adjacent cells to tail:\n    - Up: (1,4)\n    - Down: (1,2) — but this is the body segment before the tail, not the head.\n    - Left: (0,3)\n    - Right: (2,3)\n  - Head is at (1,1), which is not adjacent to the tail (1,3). So no tail reward danger here.\n\n### Other Considerations\n\nSince moving R is the only viable immediate move (D and L hit walls, U is reverse), we have to choose R unless there's a better reason not to.\n\nBut let's think ahead: after moving R to (2,1), where can we go next?\n\n- New head at (2,1), direction is R (since we moved R).\n- Next possible moves (no instant reverse from R, so cannot move L):\n  - U, D, R\n  - Check walls and body:\n    - U: (2,2) — is this a wall? Internal walls include (2,2) → wall. Cannot move U.\n    - D: (2,0) — y=0 is border wall. Cannot move D.\n    - R: (3,1) — internal wall at (3,1). Cannot move R.\n  - So, after R, we'd be stuck with no possible moves, leading to death next turn.\n\nThis is a problem. Moving R leads to a dead end next turn. Is there any other option?\n\nWait, initially I thought U is not allowed because it's reverse of current direction D. But is that correct?\n\n### Re-evaluating Instant Reverse Rule\n\nThe rule says: \"Cannot move opposite to current direction on next turn.\"\n\nCurrent direction is D (down). Opposite is U (up). So cannot move U next.\n\nBut is the current direction the direction the snake is moving now, or the direction it moved last turn?\n\nGiven the snake's positions are [(1,1), (1,2), (1,3)], and direction is D, this likely means the snake was at (1,2) last turn, moved D to (1,1), so current direction is D.\n\nThus, next move cannot be U (reverse of D).\n\nSo initial assessment seems correct: cannot move U.\n\nBut then moving R leads to a dead end. Is there any other interpretation?\n\nAlternative interpretation: maybe \"current direction\" is the direction the head is pointing, not the movement direction.\n\nBut the snake's body is [(1,1), (1,2), (1,3)], so it's aligned vertically with head at (1,1) (lowest y), so moving downward would mean next segment is below, but here the body is above, which is confusing.\n\nWait, maybe the direction is the direction the head is facing, not the movement direction.\n\nIf the head is at (1,1) and direction is D, then next segment is (1,2) (above), meaning the snake is pointing upwards, but direction is marked D (down), which is contradictory.\n\nThis is confusing. Maybe the direction is the direction the head is moving towards.\n\nGiven the positions [(1,1), (1,2), (1,3)], if the head was at (1,2) last turn and moved to (1,1), then direction is D (down).\n\nThen next move cannot be U (up), as that's reverse.\n\nGiven that, only R is possible, but leads to dead end.\n\nIs there any way to avoid this?\n\nWait, maybe the snake can move into its own tail safely under certain conditions.\n\nCurrent tail is at (1,3). If we move R to (2,1), then next turn the tail moves forward, so the body becomes [(2,1), (1,1), (1,2)], and tail was at (1,3), which moves to (1,2), so (1,3) is now empty.\n\nBut next turn, from (2,1), as we saw, no possible moves.\n\nIs there any other way? Maybe the initial interpretation is wrong, and direction is the direction the head is pointing, not the movement.\n\nIf direction is D (down), meaning the head is pointing down, but the body is above, then moving D would extend the snake down.\n\nBut current head is at (1,1), moving D would be (1,0), which is a wall.\n\nThis seems like a no-win scenario.\n\nGiven that, the only possible move is R, even if it leads to death next turn, because the other moves are immediate deaths.\n\n### Final Decision\n\nAfter evaluating all possibilities:\n\n- Move D: hits wall at (1,0) → death.\n- Move L: hits wall at (0,1) → death.\n- Move U: reverse of current direction D → not allowed.\n- Move R: to (2,1) → no immediate death, but leads to dead end next turn.\n\nSince R is the only non-immediate death move, we have to choose it.\n\n\\boxed{R}",
-        "state": "**Current Turn**: \\( t_0 = 6 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(1, 1), (1, 2), (1, 3)]\n**Snake Head Direction**: D\n**Food Positions, Life Span and Value**:\n\t- (4, 1, 4, 1)\n\t- (6, 2, 5, 1)\n\t- (6, 4, 8, 1)\n",
-        "action": "R"
+        "state": {
+            "snake": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    2
+                ],
+                [
+                    1,
+                    3
+                ]
+            ],
+            "direction": "D",
+            "food": [
+                [
+                    4,
+                    1,
+                    4,
+                    1
+                ],
+                [
+                    6,
+                    2,
+                    5,
+                    1
+                ],
+                [
+                    6,
+                    4,
+                    8,
+                    1
+                ]
+            ],
+            "obstacles": [
+                [
+                    3,
+                    2
+                ],
+                [
+                    4,
+                    5
+                ],
+                [
+                    3,
+                    6
+                ],
+                [
+                    3,
+                    1
+                ],
+                [
+                    2,
+                    2
+                ],
+                [
+                    4,
+                    6
+                ],
+                [
+                    2,
+                    3
+                ],
+                [
+                    2,
+                    5
+                ]
+            ],
+            "game_turn": 6,
+            "terminal": false
+        },
+        "action": "R",
+        "original_state": "**Current Turn**: \\( t_0 = 6 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(1, 1), (1, 2), (1, 3)]\n**Snake Head Direction**: D\n**Food Positions, Life Span and Value**:\n\t- (4, 1, 4, 1)\n\t- (6, 2, 5, 1)\n\t- (6, 4, 8, 1)\n"
     },
     {
         "step": 7,
         "score": 1,
         "thinking": "### Understanding the Current State\n\nFirst, let's break down the current state to understand the positions and constraints:\n\n1. **Grid Dimensions**: The grid is 8x8 (from x=0 to x=7 and y=0 to y=7), with borders at these limits.\n2. **Walls**:\n   - **Border Walls**: x=0, x=7, y=0, y=7 are all walls.\n   - **Internal Obstacles**: \n     - (3,2), (4,5), (3,6), (3,1), (2,2), (4,6), (2,3), (2,5)\n3. **Snake**:\n   - **Positions**: Head at (2,1), then (1,1), then (1,2) (tail).\n   - **Direction**: Currently moving Right (R).\n4. **Food**:\n   - (4,1): value=1, life_span=3\n   - (6,2): value=1, life_span=4\n   - (6,4): value=1, life_span=7\n   - (6,1): value=1, life_span=10\n\n### Visualizing the Snake and Surroundings\n\nLet's visualize the immediate surroundings of the snake's head at (2,1):\n\n- **Current Direction**: Right (R), so the head is facing towards increasing x.\n- **Possible Moves**:\n  - **Right (R)**: (3,1)\n    - Check if (3,1) is a wall: Yes, it's an internal obstacle.\n    - So, cannot move Right.\n  - **Up (U)**: (2,2)\n    - Check if (2,2) is a wall: Yes, it's an internal obstacle.\n    - Cannot move Up.\n  - **Down (D)**: (2,0)\n    - Check if (2,0) is a wall: y=0 is a border wall.\n    - Cannot move Down.\n  - **Left (L)**: (1,1)\n    - Check if (1,1) is part of the snake's body: Yes, it's the second segment.\n    - Normally, moving into the body is deadly, but there's an exception if it's the tail and the tail will move away.\n    - The tail is at (1,2), and the segment before the tail is (1,1). If the head moves to (1,1), the tail will move from (1,2) to (1,1), but the head is already at (1,1), so this would cause a collision.\n    - Wait, let's think carefully about the tail movement:\n      - Current snake: [(2,1), (1,1), (1,2)]\n      - If head moves Left to (1,1), new positions: [(1,1), (2,1), (1,1)] — this would mean the head and the new tail are both at (1,1), which is a collision.\n      - So, moving Left is deadly.\n  \nHmm, all immediate moves seem to lead to collisions or walls. This seems like a dead end. But let's double-check:\n\n- **Left (L)**: (1,1)\n  - As above, leads to head and tail at (1,1) next turn — collision.\n- **Up (U)**: (2,2) — wall.\n- **Down (D)**: (2,0) — wall.\n- **Right (R)**: (3,1) — wall.\n\nThis suggests that the snake has no legal moves, which would mean it's stuck and will collide no matter what. But this seems unlikely; perhaps I missed something.\n\nWait, let's re-examine the tail movement:\n\nCurrent snake: [(2,1), (1,1), (1,2)]\nIf head moves Left to (1,1):\n- New head: (1,1)\n- Body: (2,1), (1,1)\n- Tail was at (1,2), which moves to (1,1) (since the segment before it was (1,1), which is now at (2,1)? Wait, no:\nThe tail moves in the direction of the previous segment. The segment before tail is (1,1), which is moving to (2,1)'s old position, but (1,1) is now the head. Maybe the tail moves to where (1,1) was, which is (1,1). So head and tail at (1,1) — collision.\n\nAlternatively, maybe the tail moves to (1,1) because the segment before it is now at (2,1), so tail moves towards (2,1) — but (1,2) to (2,1) is diagonal, which isn't allowed. Snake moves are only U/D/L/R, so tail can't move diagonally. \n\nThis seems to confirm that moving Left causes a collision.\n\nSimilarly, other moves are blocked by walls or body. \n\nBut this seems like a game over scenario. Maybe the initial assumption is wrong. Let me check the rules again:\n\n\"**Tail Reward Danger**: If the head is *adjacent to the tail* and the tail cell has positive food, eating it kills the snake, because the head and newly grown tail will collide.\"\n\nIn our case, the tail is at (1,2), and the head is at (2,1). Are they adjacent? Adjacent means sharing a side, not diagonal. (2,1) and (1,2) are diagonally adjacent, not side-adjacent. So they're not adjacent in the sense that moving into the tail's position isn't directly possible unless the tail is in a directly adjacent cell (U/D/L/R).\n\nWait, the tail is at (1,2), head at (2,1). Adjacent cells to head are:\n- Left: (1,1) — body\n- Right: (3,1) — wall\n- Up: (2,2) — wall\n- Down: (2,0) — wall\n\nSo no, the tail is not in an adjacent cell to the head in terms of possible moves. So the \"Tail Reward Danger\" doesn't apply here because the tail isn't adjacent to the head in a movable direction.\n\nBut still, all possible moves from (2,1) seem blocked:\n- Left: (1,1) — body\n- Right: (3,1) — wall\n- Up: (2,2) — wall\n- Down: (2,0) — wall\n\nThis seems to imply the snake cannot move without dying, which would mean the game is over. But perhaps the snake can move into the body if it's the tail and the tail moves away.\n\nRe-reading the rules:\n\n\"Body collision (head touches any body segment). But note you can still move into the cell occupied by the tail segment, since the tail will also move forward.\"\n\nSo moving into the tail is allowed because the tail moves away. In our case, moving Left to (1,1):\n\nCurrent snake: [(2,1), (1,1), (1,2)]\nAfter moving Left:\n- Head moves to (1,1)\n- Body: (2,1), (1,1)\n- Tail was at (1,2), which moves to where? The segment before tail is (1,1), which is now at (2,1). So tail moves from (1,2) towards (2,1). But (1,2) to (2,1) is diagonal, which isn't allowed. Snake segments move in U/D/L/R, so tail can't move diagonally. \n\nThis seems to imply that the tail cannot move legally, so moving Left would cause the tail to not move, leaving the head at (1,1) and tail at (1,2), but the body is now [(1,1), (2,1), (1,1)], which has a collision at (1,1).\n\nAlternatively, maybe the tail moves to (1,1) (same as head), causing collision.\n\nThus, moving Left seems to cause a collision.\n\nSimilarly, other moves are blocked by walls. \n\nThis seems to be a no-win scenario where the snake cannot make a legal move without dying. \n\nBut perhaps I'm missing something. Maybe the tail can move in a way that avoids collision. \n\nAlternative interpretation: when the head moves Left to (1,1), the body becomes [(1,1), (2,1), (1,1)], which is invalid because (1,1) is repeated. So collision.\n\nThus, no possible moves avoid collision or walls. \n\nGiven that, the only possible action is to choose one, but all lead to death. Maybe the least bad is to move Left, but that causes collision.\n\nAlternatively, maybe the initial direction is wrong. The snake's head direction is Right, but the last move was from (1,1) to (2,1), which is Right, so current direction is Right. \n\nGiven that, and no possible moves, the snake must collide.\n\nBut this seems like a bug in the setup, as the snake shouldn't be placed in a position where no moves are possible unless it's a game over.\n\nGiven the constraints, the only possible answer is that no move is safe, but since we must choose, perhaps:\n\n\\boxed{L}\n\nBut this leads to immediate collision. Maybe the correct interpretation is that the snake cannot move, hence game over, but since we must provide an action, \\boxed{L} is the only possible move, even though it's fatal.\n\nAlternatively, maybe the",
-        "state": "**Current Turn**: \\( t_0 = 7 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(2, 1), (1, 1), (1, 2)]\n**Snake Head Direction**: R\n**Food Positions, Life Span and Value**:\n\t- (4, 1, 3, 1)\n\t- (6, 2, 4, 1)\n\t- (6, 4, 7, 1)\n\t- (6, 1, 10, 1)\n",
-        "action": "L"
+        "state": {
+            "snake": [
+                [
+                    2,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    2
+                ]
+            ],
+            "direction": "R",
+            "food": [
+                [
+                    4,
+                    1,
+                    3,
+                    1
+                ],
+                [
+                    6,
+                    2,
+                    4,
+                    1
+                ],
+                [
+                    6,
+                    4,
+                    7,
+                    1
+                ],
+                [
+                    6,
+                    1,
+                    10,
+                    1
+                ]
+            ],
+            "obstacles": [
+                [
+                    3,
+                    2
+                ],
+                [
+                    4,
+                    5
+                ],
+                [
+                    3,
+                    6
+                ],
+                [
+                    3,
+                    1
+                ],
+                [
+                    2,
+                    2
+                ],
+                [
+                    4,
+                    6
+                ],
+                [
+                    2,
+                    3
+                ],
+                [
+                    2,
+                    5
+                ]
+            ],
+            "game_turn": 7,
+            "terminal": false
+        },
+        "action": "L",
+        "original_state": "**Current Turn**: \\( t_0 = 7 \\)\n**Cells occupied by walls**:\n\t - Border Cells: x=0/x=7 or y=0/y=7.\n\t - Internal Obstacles: [(3, 2), (4, 5), (3, 6), (3, 1), (2, 2), (4, 6), (2, 3), (2, 5)]\n**Snake Positions**:[(2, 1), (1, 1), (1, 2)]\n**Snake Head Direction**: R\n**Food Positions, Life Span and Value**:\n\t- (4, 1, 3, 1)\n\t- (6, 2, 4, 1)\n\t- (6, 4, 7, 1)\n\t- (6, 1, 10, 1)\n"
     }
 ]
