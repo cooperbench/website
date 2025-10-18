@@ -416,6 +416,485 @@ function getCarColor(length) {
 
 //////////////////////////////////////////////////// End of Freeway Rendering ////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////// Begin of Overcooked Rendering ////////////////////////////////////////////////////
+
+let overcookedSprites = {
+  loaded: false,
+  images: {},
+  compositeCache: {}
+};
+
+function preloadOvercookedSprites() {
+  return new Promise((resolve) => {
+    const basePath = 'assets/overcooked/';
+    const spriteFiles = {
+      'floor': 'floor.png',
+      'counter': 'counter.png',
+      'pot': 'pot.png',
+      'onion_dispenser': 'onion_dispenser.png',
+      'tomato_dispenser': 'tomato_dispenser.png',
+      'dish_dispenser': 'dish_dispenser.png',
+      'serve': 'serve.png',
+      'wall': 'wall.png',
+      'onion': 'onion.png',
+      'tomato': 'tomato.png',
+      'dish': 'dish.png',
+      'player_NORTH': 'NORTH.png',
+      'player_SOUTH': 'SOUTH.png',
+      'player_EAST': 'EAST.png',
+      'player_WEST': 'WEST.png',
+      'player_NORTH_onion': 'NORTH-onion.png',
+      'player_SOUTH_onion': 'SOUTH-onion.png',
+      'player_EAST_onion': 'EAST-onion.png',
+      'player_WEST_onion': 'WEST-onion.png',
+      'player_NORTH_tomato': 'NORTH-tomato.png',
+      'player_SOUTH_tomato': 'SOUTH-tomato.png',
+      'player_EAST_tomato': 'EAST-tomato.png',
+      'player_WEST_tomato': 'WEST-tomato.png',
+      'player_NORTH_dish': 'NORTH-dish.png',
+      'player_SOUTH_dish': 'SOUTH-dish.png',
+      'player_EAST_dish': 'EAST-dish.png',
+      'player_WEST_dish': 'WEST-dish.png',
+      'player_NORTH_soup_onion': 'NORTH-soup-onion.png',
+      'player_SOUTH_soup_onion': 'SOUTH-soup-onion.png',
+      'player_EAST_soup_onion': 'EAST-soup-onion.png',
+      'player_WEST_soup_onion': 'WEST-soup-onion.png',
+      'player_NORTH_soup_tomato': 'NORTH-soup-tomato.png',
+      'player_SOUTH_soup_tomato': 'SOUTH-soup-tomato.png',
+      'player_EAST_soup_tomato': 'EAST-soup-tomato.png',
+      'player_WEST_soup_tomato': 'WEST-soup-tomato.png',
+      'hat_NORTH_blue': 'NORTH-bluehat.png',
+      'hat_SOUTH_blue': 'SOUTH-bluehat.png',
+      'hat_EAST_blue': 'EAST-bluehat.png',
+      'hat_WEST_blue': 'WEST-bluehat.png',
+      'hat_NORTH_green': 'NORTH-greenhat.png',
+      'hat_SOUTH_green': 'SOUTH-greenhat.png',
+      'hat_EAST_green': 'EAST-greenhat.png',
+      'hat_WEST_green': 'WEST-greenhat.png',
+      'soup_idle_0_1': 'soup_idle_tomato_0_onion_1.png',
+      'soup_idle_0_2': 'soup_idle_tomato_0_onion_2.png',
+      'soup_idle_0_3': 'soup_idle_tomato_0_onion_3.png',
+      'soup_idle_1_0': 'soup_idle_tomato_1_onion_0.png',
+      'soup_idle_1_1': 'soup_idle_tomato_1_onion_1.png',
+      'soup_idle_1_2': 'soup_idle_tomato_1_onion_2.png',
+      'soup_idle_2_0': 'soup_idle_tomato_2_onion_0.png',
+      'soup_idle_2_1': 'soup_idle_tomato_2_onion_1.png',
+      'soup_idle_3_0': 'soup_idle_tomato_3_onion_0.png',
+      'soup_cooking_0_1': 'soup-onion-1-cooking.png',
+      'soup_cooking_0_2': 'soup-onion-2-cooking.png',
+      'soup_cooking_0_3': 'soup-onion-3-cooking.png',
+      'soup_cooking_1_0': 'soup-tomato-1-cooking.png',
+      'soup_cooking_1_1': 'soup-tomato-1-cooking.png',
+      'soup_cooking_1_2': 'soup-tomato-2-cooking.png',
+      'soup_cooking_2_0': 'soup-tomato-2-cooking.png',
+      'soup_cooking_2_1': 'soup-tomato-2-cooking.png',
+      'soup_cooking_3_0': 'soup-tomato-3-cooking.png',
+      'soup_cooked_0_1': 'soup_cooked_tomato_0_onion_1.png',
+      'soup_cooked_0_2': 'soup_cooked_tomato_0_onion_2.png',
+      'soup_cooked_0_3': 'soup_cooked_tomato_0_onion_3.png',
+      'soup_cooked_1_0': 'soup_cooked_tomato_1_onion_0.png',
+      'soup_cooked_1_1': 'soup_cooked_tomato_1_onion_1.png',
+      'soup_cooked_1_2': 'soup_cooked_tomato_1_onion_2.png',
+      'soup_cooked_2_0': 'soup_cooked_tomato_2_onion_0.png',
+      'soup_cooked_2_1': 'soup_cooked_tomato_2_onion_1.png',
+      'soup_cooked_3_0': 'soup_cooked_tomato_3_onion_0.png',
+      'soup_done_0_1': 'soup_done_tomato_0_onion_1.png',
+      'soup_done_0_2': 'soup_done_tomato_0_onion_2.png',
+      'soup_done_0_3': 'soup_done_tomato_0_onion_3.png',
+      'soup_done_1_0': 'soup_done_tomato_1_onion_0.png',
+      'soup_done_1_1': 'soup_done_tomato_1_onion_1.png',
+      'soup_done_1_2': 'soup_done_tomato_1_onion_2.png',
+      'soup_done_2_0': 'soup_done_tomato_2_onion_0.png',
+      'soup_done_2_1': 'soup_done_tomato_2_onion_1.png',
+      'soup_done_3_0': 'soup_done_tomato_3_onion_0.png'
+    };
+    
+    let loadedCount = 0;
+    const totalCount = Object.keys(spriteFiles).length;
+    
+    Object.keys(spriteFiles).forEach(name => {
+      const img = new Image();
+      img.onload = () => {
+        overcookedSprites.images[name] = img;
+        loadedCount++;
+        if (loadedCount === totalCount) {
+          overcookedSprites.loaded = true;
+          console.log('✓ Overcooked sprites loaded successfully');
+          resolve();
+        }
+      };
+      img.onerror = () => {
+        console.warn(`Failed to load Overcooked sprite: ${name}`);
+        loadedCount++;
+        if (loadedCount === totalCount) {
+          overcookedSprites.loaded = true;
+          resolve();
+        }
+      };
+      img.src = basePath + spriteFiles[name];
+    });
+  });
+}
+
+function createCompositePlayerImage(baseImg, hatImg) {
+  return new Promise((resolve) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = baseImg.width;
+    canvas.height = baseImg.height;
+    const ctx = canvas.getContext('2d');
+    
+    ctx.drawImage(baseImg, 0, 0);
+    ctx.drawImage(hatImg, 0, 0);
+    
+    const compositeImg = new Image();
+    compositeImg.onload = () => resolve(compositeImg);
+    compositeImg.onerror = () => resolve(baseImg);
+    compositeImg.src = canvas.toDataURL();
+  });
+}
+
+async function getPlayerSprite(orientation, heldItem, hatColor) {
+  const cacheKey = `${orientation}_${heldItem || 'empty'}_${hatColor}`;
+  
+  if (overcookedSprites.compositeCache[cacheKey]) {
+    return overcookedSprites.compositeCache[cacheKey];
+  }
+  
+  let baseKey = `player_${orientation}`;
+  if (heldItem) {
+    if (heldItem.startsWith('soup_')) {
+      const soupType = heldItem.split('_')[1];
+      baseKey = `player_${orientation}_soup_${soupType}`;
+    } else {
+      baseKey = `player_${orientation}_${heldItem}`;
+    }
+  }
+  
+  const baseImg = overcookedSprites.images[baseKey];
+  const hatImg = overcookedSprites.images[`hat_${orientation}_${hatColor}`];
+  
+  if (!baseImg || !hatImg) {
+    return baseImg;
+  }
+  
+  const composite = await createCompositePlayerImage(baseImg, hatImg);
+  overcookedSprites.compositeCache[cacheKey] = composite;
+  return composite;
+}
+
+async function renderOvercookedState(ctx, width, height, state) {
+  if (!state.terrain_mtx) {
+    console.error('Invalid Overcooked state: missing terrain_mtx');
+    return;
+  }
+  
+  const rows = state.terrain_mtx.length;
+  const cols = state.terrain_mtx[0].length;
+  const cellSize = Math.min(width / cols, height / rows);
+  
+  const offsetX = (width - cols * cellSize) / 2;
+  const offsetY = (height - rows * cellSize) / 2;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#2d3748';
+  ctx.fillRect(0, 0, width, height);
+  
+  if (!overcookedSprites.loaded) {
+    renderOvercookedStateFallback(ctx, width, height, state);
+    return;
+  }
+  
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const x = offsetX + col * cellSize;
+      const y = offsetY + row * cellSize;
+      const terrainType = state.terrain_mtx[row][col];
+      
+      let sprite;
+      switch (terrainType) {
+        case 'X': sprite = overcookedSprites.images['wall']; break;
+        case 'P': sprite = overcookedSprites.images['pot']; break;
+        case 'O': sprite = overcookedSprites.images['onion_dispenser']; break;
+        case 'T': sprite = overcookedSprites.images['tomato_dispenser']; break;
+        case 'D': sprite = overcookedSprites.images['dish_dispenser']; break;
+        case 'S': sprite = overcookedSprites.images['serve']; break;
+        case ' ': sprite = overcookedSprites.images['floor']; break;
+        default: sprite = overcookedSprites.images['counter']; break;
+      }
+      
+      if (sprite) {
+        ctx.drawImage(sprite, x, y, cellSize, cellSize);
+      } else {
+        const colors = {
+          'X': '#4a5568', 'P': '#805ad5', 'O': '#48bb78', 'T': '#f56565',
+          'D': '#ed8936', 'S': '#4299e1', ' ': '#edf2f7'
+        };
+        ctx.fillStyle = colors[terrainType] || '#cbd5e0';
+        ctx.fillRect(x, y, cellSize, cellSize);
+      }
+    }
+  }
+  
+  if (state.objects && Array.isArray(state.objects)) {
+    for (const obj of state.objects) {
+      const [col, row] = obj.position;
+      const x = offsetX + col * cellSize;
+      const y = offsetY + row * cellSize;
+      
+      if (obj.name === 'soup') {
+        const tomatoCount = obj.ingredients.filter(i => i === 'tomato').length;
+        const onionCount = obj.ingredients.filter(i => i === 'onion').length;
+        
+        let soupKey;
+        const isCooking = obj.is_cooking || false;
+        const isReady = obj.is_ready || false;
+        
+        if (!isCooking && !isReady) {
+          soupKey = `soup_idle_${tomatoCount}_${onionCount}`;
+        } else if (isCooking && !isReady) {
+          soupKey = `soup_cooking_${tomatoCount}_${onionCount}`;
+        } else if (isReady) {
+          soupKey = `soup_cooked_${tomatoCount}_${onionCount}`;
+        }
+        
+        const sprite = overcookedSprites.images[soupKey];
+        if (sprite) {
+          ctx.drawImage(sprite, x, y, cellSize, cellSize);
+        } else {
+          ctx.fillStyle = isReady ? '#f6ad55' : isCooking ? '#fc8181' : '#e53e3e';
+          ctx.beginPath();
+          ctx.arc(x + cellSize/2, y + cellSize/2, cellSize * 0.3, 0, Math.PI * 2);
+          ctx.fill();
+          
+          ctx.fillStyle = '#ffffff';
+          ctx.font = `bold ${cellSize * 0.2}px Inter`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(`${tomatoCount}T ${onionCount}O`, x + cellSize/2, y + cellSize/2);
+        }
+      } else {
+        const sprite = overcookedSprites.images[obj.name];
+        if (sprite) {
+          const objSize = cellSize * 0.6;
+          ctx.drawImage(sprite, 
+            x + (cellSize - objSize) / 2, 
+            y + (cellSize - objSize) / 2, 
+            objSize, objSize);
+        } else {
+          const colors = { 'onion': '#48bb78', 'tomato': '#f56565', 'dish': '#cbd5e0' };
+          ctx.fillStyle = colors[obj.name] || '#a0aec0';
+          ctx.beginPath();
+          ctx.arc(x + cellSize/2, y + cellSize/2, cellSize * 0.25, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+  }
+  
+  if (state.players && Array.isArray(state.players)) {
+    const hatColors = ['blue', 'green', 'orange', 'purple', 'red'];
+    
+    for (let i = 0; i < state.players.length; i++) {
+      const player = state.players[i];
+      const [col, row] = player.position;
+      const x = offsetX + col * cellSize;
+      const y = offsetY + row * cellSize;
+      
+      const orientation = player.orientation.toUpperCase();
+      const hatColor = hatColors[i] || 'blue';
+      
+      let heldItemKey = null;
+      if (player.held_object) {
+        const heldName = player.held_object.name;
+        if (heldName === 'soup') {
+          const ingredients = player.held_object.ingredients || [];
+          const hasTomato = ingredients.some(i => i === 'tomato');
+          const hasOnion = ingredients.some(i => i === 'onion');
+          
+          if (hasTomato && hasOnion) {
+            heldItemKey = 'soup_tomato';
+          } else if (hasTomato) {
+            heldItemKey = 'soup_tomato';
+          } else if (hasOnion) {
+            heldItemKey = 'soup_onion';
+          } else {
+            heldItemKey = 'dish';
+          }
+        } else {
+          heldItemKey = heldName;
+        }
+      }
+      
+      const playerSprite = await getPlayerSprite(orientation, heldItemKey, hatColor);
+      
+      if (playerSprite) {
+        ctx.drawImage(playerSprite, x, y, cellSize, cellSize);
+      } else {
+        const colors = ['#4299e1', '#48bb78', '#ed8936', '#9f7aea', '#f56565'];
+        ctx.fillStyle = colors[i] || '#a0aec0';
+        ctx.beginPath();
+        ctx.arc(x + cellSize/2, y + cellSize/2, cellSize * 0.35, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#ffffff';
+        const dirMap = {
+          'NORTH': [0, -0.2], 'SOUTH': [0, 0.2],
+          'EAST': [0.2, 0], 'WEST': [-0.2, 0]
+        };
+        const [dx, dy] = dirMap[orientation] || [0, -0.2];
+        ctx.beginPath();
+        ctx.arc(x + cellSize/2 + dx * cellSize, y + cellSize/2 + dy * cellSize, 
+                cellSize * 0.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+  
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.fillRect(5, 5, 75, 25);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = 'bold 14px Inter';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText(`Turn: ${state.game_turn || 0}`, 12, 12);
+  // ctx.fillText(`Score: ${state.score || 0}`, 12, 32);
+  
+  if (state.terminal) {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(0, 0, width, height);
+    
+    ctx.fillStyle = '#48bb78';
+    ctx.font = 'bold 32px Inter';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('GAME OVER', width / 2, height / 2);
+    ctx.font = '16px Inter';
+    ctx.fillText(`Final Score: ${state.score || 0}`, width / 2, height / 2 + 40);
+  }
+}
+
+function renderOvercookedStateFallback(ctx, width, height, state) {
+  const rows = state.terrain_mtx.length;
+  const cols = state.terrain_mtx[0].length;
+  const cellSize = Math.min(width / cols, height / rows);
+  
+  const offsetX = (width - cols * cellSize) / 2;
+  const offsetY = (height - rows * cellSize) / 2;
+  
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#2d3748';
+  ctx.fillRect(0, 0, width, height);
+  
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const x = offsetX + col * cellSize;
+      const y = offsetY + row * cellSize;
+      const terrainType = state.terrain_mtx[row][col];
+      
+      const colors = {
+        'X': '#4a5568', 'P': '#805ad5', 'O': '#48bb78', 'T': '#f56565',
+        'D': '#ed8936', 'S': '#4299e1', ' ': '#edf2f7'
+      };
+      ctx.fillStyle = colors[terrainType] || '#cbd5e0';
+      ctx.fillRect(x, y, cellSize, cellSize);
+      
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x, y, cellSize, cellSize);
+      
+      if (terrainType !== ' ' && terrainType !== 'X') {
+        ctx.fillStyle = '#ffffff';
+        ctx.font = `bold ${cellSize * 0.3}px Inter`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(terrainType, x + cellSize/2, y + cellSize/2);
+      }
+    }
+  }
+  
+  if (state.objects) {
+    state.objects.forEach(obj => {
+      const [col, row] = obj.position;
+      const x = offsetX + col * cellSize;
+      const y = offsetY + row * cellSize;
+      
+      if (obj.name === 'soup') {
+        const isCooking = obj.is_cooking || false;
+        const isReady = obj.is_ready || false;
+        ctx.fillStyle = isReady ? '#f6ad55' : isCooking ? '#fc8181' : '#e53e3e';
+      } else {
+        const colors = { 'onion': '#48bb78', 'tomato': '#f56565', 'dish': '#cbd5e0' };
+        ctx.fillStyle = colors[obj.name] || '#a0aec0';
+      }
+      
+      ctx.beginPath();
+      ctx.arc(x + cellSize/2, y + cellSize/2, cellSize * 0.25, 0, Math.PI * 2);
+      ctx.fill();
+      
+      if (obj.name === 'soup' && obj.ingredients) {
+        const tomatoCount = obj.ingredients.filter(i => i === 'tomato').length;
+        const onionCount = obj.ingredients.filter(i => i === 'onion').length;
+        ctx.fillStyle = '#ffffff';
+        ctx.font = `bold ${cellSize * 0.15}px Inter`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${tomatoCount}T ${onionCount}O`, x + cellSize/2, y + cellSize/2);
+      }
+    });
+  }
+  
+  if (state.players) {
+    const colors = ['#4299e1', '#48bb78', '#ed8936', '#9f7aea', '#f56565'];
+    state.players.forEach((player, index) => {
+      const [col, row] = player.position;
+      const x = offsetX + col * cellSize;
+      const y = offsetY + row * cellSize;
+      
+      ctx.fillStyle = colors[index] || '#a0aec0';
+      ctx.beginPath();
+      ctx.arc(x + cellSize/2, y + cellSize/2, cellSize * 0.35, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${cellSize * 0.25}px Inter`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(index + 1, x + cellSize/2, y + cellSize/2);
+      
+      if (player.held_object) {
+        ctx.fillStyle = '#ffffff';
+        ctx.font = `${cellSize * 0.15}px Inter`;
+        ctx.fillText(player.held_object.name.substring(0, 1).toUpperCase(), 
+                     x + cellSize * 0.7, y + cellSize * 0.3);
+      }
+    });
+  }
+  
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.fillRect(5, 5, 75, 25);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = 'bold 14px Inter';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText(`Turn: ${state.game_turn || 0}`, 12, 12);
+  // ctx.fillText(`Score: ${state.score || 0}`, 12, 32);
+  
+  if (state.terminal) {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = '#48bb78';
+    ctx.font = 'bold 32px Inter';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('GAME OVER', width / 2, height / 2);
+    ctx.font = '16px Inter';
+    ctx.fillText(`Final Score: ${state.score || 0}`, width / 2, height / 2 + 40);
+  }
+}
+
+//////////////////////////////////////////////////// End of Overcooked Rendering ////////////////////////////////////////////////////
+
+
 //////////////////////////////////////////////////// Begin of Snake Rendering ////////////////////////////////////////////////////
 let snakeSprites = {
   loaded: false,
@@ -1189,6 +1668,8 @@ async function loadComparison() {
     await preloadFreewaySprites();
   } else if (game === 'snake' && !snakeSprites.loaded) {
     await preloadSnakeSprites();
+  } else if (game === 'overcooked' && !overcookedSprites.loaded) {
+    await preloadOvercookedSprites();
   }
     
     // Load data from external files
@@ -1377,6 +1858,8 @@ function renderGameState(ctx, width, height, state, game) {
     renderFreewayState(ctx, width, height, state);
   } else if (game === 'snake') {
     renderSnakeState(ctx, width, height, state);
+  } else if (game === 'overcooked') {
+    renderOvercookedState(ctx, width, height, state);
   } else {
     // Placeholder for other games
     ctx.clearRect(0, 0, width, height);
