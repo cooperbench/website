@@ -1798,6 +1798,9 @@ function updateStepDisplay() {
 
 // Extract content from last \boxed{} in text
 function extractBoxedContent(text) {
+  if (text === "Still thinking...") {
+    return 'Thinking...';
+  }
   if (!text) return 'Keep';
   
   // Find all \boxed{ positions

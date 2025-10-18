@@ -449,7 +449,7 @@
               <select id="game-select"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900">
                 <option value="freeway">Freeway</option>
-                <option value="snake">Snake</option>
+                <option value="snake" selected>Snake</option>
                 <option value="overcooked">Overcooked</option>
               </select>
             </div>
@@ -459,7 +459,7 @@
               <select id="cognitive-load-select"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900">
                 <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
+                <option value="medium" selected>Medium</option>
                 <option value="hard">Hard</option>
               </select>
             </div>
@@ -469,7 +469,7 @@
               <select id="time-pressure-select"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900">
                 <option value="4k">Extreme</option>
-                <option value="8k">High</option>
+                <option value="8k" selected>High</option>
                 <option value="16k">Moderate</option>
                 <option value="32k">Low</option>
               </select>
@@ -493,10 +493,10 @@
 
           <div class="flex justify-center mt-8">
             <button id="load-btn"
-              class="inline-flex items-center px-8 py-4 bg-primary text-white font-bold text-lg rounded-lg hover:bg-primary-hover hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-xl"
+              class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white font-bold text-lg rounded-lg hover:from-purple-600 hover:via-pink-600 hover:to-red-600 hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-2xl animate-pulse"
               onclick="loadComparison()">
               <i class="fas fa-play mr-3"></i>
-              <span>Load Comparison</span>
+              <span>Load Comparison!</span>
             </button>
           </div>
         </div>
