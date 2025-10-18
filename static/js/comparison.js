@@ -417,17 +417,102 @@ function getCarColor(length) {
 //////////////////////////////////////////////////// End of Freeway Rendering ////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////// Begin of Snake Rendering ////////////////////////////////////////////////////
-
-// Snake sprite cache
 let snakeSprites = {
   loaded: false,
   images: {},
-  pendingLoads: 0
+  pendingLoads: 0,
+  failedLoads: []
 };
 
-// Preload Snake sprites
+const DEBUG_CONFIG = {
+  enabled: true,
+  logRendering: true,
+  logStateChanges: true,
+  highlightUpdates: true,
+  logDirections: true
+};
+
+let lastRenderState = {};
+
+function debugLog(category, message, data = null) {
+  if (!DEBUG_CONFIG.enabled) return;
+  
+  const timestamp = new Date().toISOString().split('T')[1].slice(0, -1);
+  const prefix = `[${timestamp}][${category}]`;
+  
+  if (data) {
+    console.log(prefix, message, data);
+  } else {
+    console.log(prefix, message);
+  }
+}
+
+function compareStates(oldState, newState, agentName) {
+  if (!DEBUG_CONFIG.logStateChanges) return;
+  
+  const changes = [];
+  
+  if (JSON.stringify(oldState.snake) !== JSON.stringify(newState.snake)) {
+    changes.push(`Snake moved: ${JSON.stringify(newState.snake?.[0])} (head)`);
+  }
+  
+  const oldTurn = oldState.game_turn ?? oldState.turn ?? 0;
+  const newTurn = newState.game_turn ?? newState.turn ?? 0;
+  if (oldTurn !== newTurn) {
+    changes.push(`Turn: ${oldTurn} → ${newTurn}`);
+  }
+  
+  if (oldState.direction !== newState.direction) {
+    changes.push(`Direction: ${oldState.direction} → ${newState.direction}`);
+  }
+  
+  if (JSON.stringify(oldState.food) !== JSON.stringify(newState.food)) {
+    changes.push(`Food changed: ${newState.food?.length || 0} items`);
+  }
+  
+  if (oldState.terminal !== newState.terminal) {
+    changes.push(`Terminal: ${oldState.terminal} → ${newState.terminal}`);
+  }
+  
+  if (changes.length > 0) {
+    debugLog(agentName, '🔄 State Changes:', changes);
+  } else {
+    debugLog(agentName, '⚠️ No state changes detected!');
+  }
+}
+
+function isImageValid(img) {
+  if (!img) return false;
+  if (img.complete === false) return false;
+  if (img.naturalWidth === 0) return false;
+  return true;
+}
+
+function rotateImage(img, degrees) {
+  return new Promise((resolve) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.rotate(degrees * Math.PI / 180);
+    ctx.drawImage(img, -img.width / 2, -img.height / 2);
+    
+    const rotatedImg = new Image();
+    rotatedImg.onload = () => resolve(rotatedImg);
+    rotatedImg.onerror = () => {
+      debugLog('LOADER', `❌ Failed to create rotated image (${degrees}°)`);
+      resolve(null);
+    };
+    rotatedImg.src = canvas.toDataURL();
+  });
+}
+
 function preloadSnakeSprites() {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
+    debugLog('LOADER', '📦 Starting sprite preload...');
+    
     const basePath = 'assets/snake/';
     const spriteFiles = {
       'apple': 'apple.png',
@@ -441,162 +526,241 @@ function preloadSnakeSprites() {
     
     let loadedCount = 0;
     const totalCount = Object.keys(spriteFiles).length;
+    const asyncTasks = [];
     
     Object.keys(spriteFiles).forEach(name => {
       const img = new Image();
-      img.onload = () => {
+      
+      img.onload = async () => {
+        if (!isImageValid(img)) {
+          debugLog('LOADER', `❌ Image loaded but invalid: ${name}`);
+          snakeSprites.failedLoads.push(name);
+          loadedCount++;
+          checkCompletion();
+          return;
+        }
+        
+        debugLog('LOADER', `✓ Loaded: ${name}`);
+        
         if (name === 'head_down') {
-          // Wait for image to be fully loaded before rotating
           snakeSprites.images['head_down'] = img;
-          snakeSprites.pendingLoads += 4;
-          setTimeout(() => {
-            snakeSprites.images['head_up'] = rotateImage(img, 180);
-            snakeSprites.images['head_left'] = rotateImage(img, -90);
-            snakeSprites.images['head_right'] = rotateImage(img, 90);
-            snakeSprites.pendingLoads -= 4;
-          }, 0);
+          
+          const task = (async () => {
+            debugLog('LOADER', '↻ Rotating head sprites...');
+            const [up, left, right] = await Promise.all([
+              rotateImage(img, 180),
+              rotateImage(img, -90),
+              rotateImage(img, 90)
+            ]);
+            
+            if (up) snakeSprites.images['head_up'] = up;
+            if (left) snakeSprites.images['head_left'] = left;
+            if (right) snakeSprites.images['head_right'] = right;
+            debugLog('LOADER', '✓ Head rotations complete');
+          })();
+          asyncTasks.push(task);
+          
         } else if (name === 'snake_sheet') {
-          // Wait for sheet to load before processing
-          snakeSprites.pendingLoads += 1;
-          setTimeout(() => {
-            processSnakeSpriteSheet(img);
-            snakeSprites.pendingLoads -= 1;
-          }, 0);
+          const task = (async () => {
+            debugLog('LOADER', '✂️ Processing sprite sheet...');
+            await processSnakeSpriteSheet(img);
+            debugLog('LOADER', '✓ Sprite sheet complete');
+          })();
+          asyncTasks.push(task);
+          
         } else {
           snakeSprites.images[name] = img;
         }
         
         loadedCount++;
-        if (loadedCount === totalCount) {
-          // Wait a bit for async processing to complete
-          setTimeout(() => {
-            snakeSprites.loaded = true;
-            console.log('✓ Snake sprites loaded successfully');
-            resolve();
-          }, 100);
-        }
+        checkCompletion();
       };
+      
       img.onerror = () => {
-        console.warn(`Failed to load sprite: ${name}`);
+        debugLog('LOADER', `❌ Failed to load: ${name}`);
+        snakeSprites.failedLoads.push(name);
         loadedCount++;
-        if (loadedCount === totalCount) {
-          snakeSprites.loaded = true;
-          resolve();
-        }
+        checkCompletion();
       };
+      
       img.src = basePath + spriteFiles[name];
     });
+    
+    async function checkCompletion() {
+      if (loadedCount === totalCount) {
+        debugLog('LOADER', '⏳ Waiting for async processing...');
+        
+        await Promise.all(asyncTasks);
+        
+        const criticalSprites = ['snake_sheet'];
+        const criticalFailed = criticalSprites.some(s => snakeSprites.failedLoads.includes(s));
+        
+        if (criticalFailed || snakeSprites.failedLoads.length === totalCount) {
+          debugLog('LOADER', '⚠️ Critical sprites failed, using fallback');
+          snakeSprites.loaded = false;
+        } else {
+          snakeSprites.loaded = true;
+          debugLog('LOADER', '✅ All sprites ready!');
+        }
+        
+        debugLog('LOADER', 'Failed loads:', snakeSprites.failedLoads);
+        debugLog('LOADER', 'Available sprites:', Object.keys(snakeSprites.images));
+        resolve();
+      }
+    }
   });
 }
 
-// Helper function to rotate image
-function rotateImage(img, degrees) {
-  const canvas = document.createElement('canvas');
-  canvas.width = img.width;
-  canvas.height = img.height;
-  const ctx = canvas.getContext('2d');
-  
-  ctx.translate(canvas.width / 2, canvas.height / 2);
-  ctx.rotate(degrees * Math.PI / 180);
-  ctx.drawImage(img, -img.width / 2, -img.height / 2);
-  
-  const rotatedImg = new Image();
-  rotatedImg.src = canvas.toDataURL();
-  return rotatedImg;
-}
-
-// Process snake sprite sheet into individual sprites
-function processSnakeSpriteSheet(sheet) {
+async function processSnakeSpriteSheet(sheet) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   
   const spriteWidth = sheet.width / 2;
   const spriteHeight = sheet.height / 2;
   
-  // Extract head sprite (top-left)
   canvas.width = spriteWidth;
   canvas.height = spriteHeight;
-  ctx.drawImage(sheet, 0, 0, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
-  const headUp = new Image();
-  headUp.src = canvas.toDataURL();
-  snakeSprites.images['snake_head_up'] = headUp;
   
-  // Create rotated versions
-  snakeSprites.images['snake_head_right'] = rotateImage(headUp, -90);
-  snakeSprites.images['snake_head_down'] = rotateImage(headUp, 180);
-  snakeSprites.images['snake_head_left'] = rotateImage(headUp, 90);
+  const extractSprite = (sx, sy) => {
+    return new Promise((resolve) => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(sheet, sx, sy, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(null);
+      img.src = canvas.toDataURL();
+    });
+  };
   
-  // Extract straight body (top-right) - vertical
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(sheet, spriteWidth, 0, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
-  const straightVertical = new Image();
-  straightVertical.src = canvas.toDataURL();
-  snakeSprites.images['straight_vertical'] = straightVertical;
-  snakeSprites.images['straight_horizontal'] = rotateImage(straightVertical, 90);
+  const headUp = await extractSprite(0, 0);
+  if (headUp) {
+    snakeSprites.images['snake_head_up'] = headUp;
+    const [left, down, right] = await Promise.all([
+      rotateImage(headUp, -90),
+      rotateImage(headUp, 180),
+      rotateImage(headUp, 90)
+    ]);
+    if (right) snakeSprites.images['snake_head_right'] = right;
+    if (down) snakeSprites.images['snake_head_down'] = down;
+    if (left) snakeSprites.images['snake_head_left'] = left;
+  }
   
-  // Extract tail (bottom-left) - pointing left
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(sheet, 0, spriteHeight, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
-  const tailLeft = new Image();
-  tailLeft.src = canvas.toDataURL();
-  snakeSprites.images['tail_left'] = tailLeft;
-  snakeSprites.images['tail_up'] = rotateImage(tailLeft, -90);
-  snakeSprites.images['tail_right'] = rotateImage(tailLeft, 180);
-  snakeSprites.images['tail_down'] = rotateImage(tailLeft, 90);
+  const straightVert = await extractSprite(spriteWidth, 0);
+  if (straightVert) {
+    snakeSprites.images['straight_vertical'] = straightVert;
+    const horiz = await rotateImage(straightVert, 90);
+    if (horiz) snakeSprites.images['straight_horizontal'] = horiz;
+  }
   
-  // Extract turn sprite (bottom-right) - up-left turn
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(sheet, spriteWidth, spriteHeight, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
-  const turnUpLeft = new Image();
-  turnUpLeft.src = canvas.toDataURL();
-  snakeSprites.images['turn_up_left'] = turnUpLeft;
-  snakeSprites.images['turn_up_right'] = rotateImage(turnUpLeft, -90);
-  snakeSprites.images['turn_down_right'] = rotateImage(turnUpLeft, 180);
-  snakeSprites.images['turn_down_left'] = rotateImage(turnUpLeft, 90);
+  const tailLeft = await extractSprite(0, spriteHeight);
+  if (tailLeft) {
+    const [up, right, down] = await Promise.all([
+      rotateImage(tailLeft, -90),
+      rotateImage(tailLeft, 180),
+      rotateImage(tailLeft, 90)
+    ]);
+
+    snakeSprites.images['tail_right'] = tailLeft;
+    if (up) snakeSprites.images['tail_up'] = up;
+    if (right) snakeSprites.images['tail_left'] = right;
+    if (down) snakeSprites.images['tail_down'] = down;
+  }
+  
+  const turnUpLeft = await extractSprite(spriteWidth, spriteHeight);
+  if (turnUpLeft) {
+    const [upRight, downRight, downLeft] = await Promise.all([
+      rotateImage(turnUpLeft, -90),
+      rotateImage(turnUpLeft, 180),
+      rotateImage(turnUpLeft, 90)
+    ]);
+    snakeSprites.images['turn_up_left'] = turnUpLeft;
+    if (upRight) snakeSprites.images['turn_down_left'] = upRight;
+    if (downRight) snakeSprites.images['turn_down_right'] = downRight;
+    if (downLeft) snakeSprites.images['turn_up_right'] = downLeft;
+  }
 }
 
-// Get snake body sprite based on positions
-function getSnakeBodySprite(prevPos, currPos, nextPos) {
+function getSnakeBodySprite(prevPos, currPos, nextPos, segmentIndex) {
   if (!prevPos || !nextPos) {
+    if (DEBUG_CONFIG.logDirections) {
+      debugLog('DIRECTION', `⚠️ Body segment ${segmentIndex}: Missing neighbor, using default horizontal`);
+    }
     return snakeSprites.images['straight_horizontal'];
   }
   
   const fromDir = [prevPos[0] - currPos[0], prevPos[1] - currPos[1]];
   const toDir = [nextPos[0] - currPos[0], nextPos[1] - currPos[1]];
   
-  // Straight segments
+  if (DEBUG_CONFIG.logDirections) {
+    debugLog('DIRECTION', `📍 Body segment ${segmentIndex}:`, {
+      prev: prevPos,
+      curr: currPos,
+      next: nextPos,
+      fromDir: fromDir,
+      toDir: toDir,
+      fromDirStr: `(${fromDir[0]}, ${fromDir[1]})`,
+      toDirStr: `(${toDir[0]}, ${toDir[1]})`
+    });
+  }
+  
   if (fromDir[0] === 0 && toDir[0] === 0) {
+    if (DEBUG_CONFIG.logDirections) {
+      debugLog('DIRECTION', `  → Vertical straight line`);
+    }
     return snakeSprites.images['straight_vertical'];
   }
   if (fromDir[1] === 0 && toDir[1] === 0) {
+    if (DEBUG_CONFIG.logDirections) {
+      debugLog('DIRECTION', `  → Horizontal straight line`);
+    }
     return snakeSprites.images['straight_horizontal'];
   }
   
-  // Turn segments
-  const dirs = [fromDir, toDir].sort((a, b) => {
-    if (a[0] !== b[0]) return a[0] - b[0];
-    return a[1] - b[1];
-  });
+  const dirKey = `${fromDir[0]},${fromDir[1]}_${toDir[0]},${toDir[1]}`;
   
-  const key = `${dirs[0][0]},${dirs[0][1]}_${dirs[1][0]},${dirs[1][1]}`;
   const turnMap = {
-    '-1,0_0,1': 'turn_up_left',
+    '1,0_0,1': 'turn_up_right',
     '0,1_1,0': 'turn_up_right',
+    '-1,0_0,1': 'turn_up_left',
+    '0,1_-1,0': 'turn_up_left',
+    '1,0_0,-1': 'turn_down_right',
     '0,-1_1,0': 'turn_down_right',
-    '-1,0_0,-1': 'turn_down_left'
+    '-1,0_0,-1': 'turn_down_left',
+    '0,-1_-1,0': 'turn_down_left'
   };
   
-  return snakeSprites.images[turnMap[key]] || snakeSprites.images['straight_horizontal'];
+  const spriteName = turnMap[dirKey];
+  
+  if (DEBUG_CONFIG.logDirections) {
+    if (spriteName) {
+      debugLog('DIRECTION', `  → Turn detected: ${spriteName} (key: ${dirKey})`);
+    } else {
+      debugLog('DIRECTION', `  ⚠️ Unknown turn pattern: ${dirKey}, using default`);
+    }
+  }
+  
+  return snakeSprites.images[spriteName] || snakeSprites.images['straight_horizontal'];
 }
 
-// Get snake tail sprite based on direction
 function getSnakeTailSprite(prevPos, currPos) {
   if (!prevPos) {
+    if (DEBUG_CONFIG.logDirections) {
+      debugLog('DIRECTION', '⚠️ Tail: No previous position, using default left');
+    }
     return snakeSprites.images['tail_left'];
   }
   
-  const dx = currPos[0] - prevPos[0];
-  const dy = currPos[1] - prevPos[1];
+  const dx = prevPos[0] - currPos[0];
+  const dy = prevPos[1] - currPos[1];
+  
+  if (DEBUG_CONFIG.logDirections) {
+    debugLog('DIRECTION', `🎯 Tail:`, {
+      prev: prevPos,
+      curr: currPos,
+      direction: `(${dx}, ${dy})`,
+      interpretation: dx > 0 ? 'pointing right' : dx < 0 ? 'pointing left' : dy > 0 ? 'pointing up' : 'pointing down'
+    });
+  }
   
   const dirMap = {
     '1,0': 'tail_right',
@@ -605,154 +769,184 @@ function getSnakeTailSprite(prevPos, currPos) {
     '0,-1': 'tail_down'
   };
   
-  return snakeSprites.images[dirMap[`${dx},${dy}`]] || snakeSprites.images['tail_left'];
+  const dirKey = `${dx},${dy}`;
+  const spriteName = dirMap[dirKey];
+  
+  if (DEBUG_CONFIG.logDirections) {
+    if (spriteName) {
+      debugLog('DIRECTION', `  → Tail sprite: ${spriteName}`);
+    } else {
+      debugLog('DIRECTION', `  ⚠️ Unknown tail direction: ${dirKey}, using default`);
+    }
+  }
+  
+  return snakeSprites.images[spriteName] || snakeSprites.images['tail_left'];
 }
 
-// Draw life bar for food
 function drawLifeBar(ctx, life, maxLife, x, y, cellSize) {
   const barWidth = cellSize - 4;
   const barHeight = 6;
   const barX = x + 2;
   const barY = y + 10;
   
-  // Background (dark red)
   ctx.fillStyle = 'rgb(100, 0, 0)';
   ctx.fillRect(barX, barY, barWidth, barHeight);
   
-  // Life bar
   const lifeRatio = Math.max(0, life / maxLife);
   if (lifeRatio > 0) {
     const lifeWidth = barWidth * lifeRatio;
     
-    // Color based on life ratio
     if (lifeRatio > 0.6) {
-      ctx.fillStyle = 'rgb(0, 255, 0)'; // Green
+      ctx.fillStyle = 'rgb(0, 255, 0)';
     } else if (lifeRatio > 0.3) {
-      ctx.fillStyle = 'rgb(255, 255, 0)'; // Yellow
+      ctx.fillStyle = 'rgb(255, 255, 0)';
     } else {
-      ctx.fillStyle = 'rgb(255, 0, 0)'; // Red
+      ctx.fillStyle = 'rgb(255, 0, 0)';
     }
     
     ctx.fillRect(barX, barY, lifeWidth, barHeight);
   }
   
-  // Border
   ctx.strokeStyle = 'rgb(255, 255, 255)';
   ctx.lineWidth = 1;
   ctx.strokeRect(barX, barY, barWidth, barHeight);
 }
 
-// Render Snake game state
-function renderSnakeState(ctx, width, height, state) {
+function safeDrawImage(ctx, img, x, y, width, height) {
+  try {
+    if (!isImageValid(img)) {
+      return false;
+    }
+    ctx.drawImage(img, x, y, width, height);
+    return true;
+  } catch (e) {
+    debugLog('RENDER', '❌ drawImage error:', e.message);
+    return false;
+  }
+}
+
+function renderSnakeState(ctx, width, height, state, agentName = 'UNKNOWN') {
   const BOARD_SIZE = 8;
   const cellSize = width / BOARD_SIZE;
   
-  // Clear canvas
+  const turnNum = state.game_turn !== undefined ? state.game_turn : (state.turn || 0);
+  
+  debugLog('RENDER', `State for ${agentName}:`, {
+    snakeLength: state.snake?.length,
+    snakeHead: state.snake?.[0],
+    direction: state.direction,
+    food: state.food?.length,
+    obstacles: state.obstacles?.length,
+    terminal: state.terminal
+  });
+  
+  
+  const lastKey = `${agentName}_last`;
+  if (lastRenderState[lastKey]) {
+    compareStates(lastRenderState[lastKey], state, agentName);
+  }
+  lastRenderState[lastKey] = JSON.parse(JSON.stringify(state));
+  
   ctx.clearRect(0, 0, width, height);
   
-  // If sprites not loaded, use fallback
   if (!snakeSprites.loaded) {
+    debugLog('RENDER', `⚠️ Using fallback for ${agentName}`);
     renderSnakeStateFallback(ctx, width, height, state);
     return;
   }
   
-  // Draw checkerboard background
   ctx.fillStyle = 'rgb(0, 51, 51)';
   ctx.fillRect(0, 0, width, height);
   
   for (let i = 0; i < BOARD_SIZE; i++) {
     for (let j = 0; j < BOARD_SIZE; j++) {
-      // Skip borders
-      if (i === 0 || i === BOARD_SIZE - 1 || j === 0 || j === BOARD_SIZE - 1) {
-        continue;
-      }
+      if (i === 0 || i === BOARD_SIZE - 1 || j === 0 || j === BOARD_SIZE - 1) continue;
       
       const x = j * cellSize;
       const y = (BOARD_SIZE - 1 - i) * cellSize;
-      
-      if ((i + j) % 2 === 0) {
-        ctx.fillStyle = 'rgb(0, 77, 77)';
-      } else {
-        ctx.fillStyle = 'rgb(0, 102, 102)';
-      }
+      ctx.fillStyle = (i + j) % 2 === 0 ? 'rgb(0, 77, 77)' : 'rgb(0, 102, 102)';
       ctx.fillRect(x, y, cellSize, cellSize);
     }
   }
   
-  // Draw obstacles
   if (state.obstacles && Array.isArray(state.obstacles)) {
     state.obstacles.forEach(([ox, oy]) => {
       const x = ox * cellSize;
       const y = (BOARD_SIZE - 1 - oy) * cellSize;
-      if (snakeSprites.images['obstacle']) {
-        ctx.drawImage(snakeSprites.images['obstacle'], x, y, cellSize, cellSize);
+      if (!safeDrawImage(ctx, snakeSprites.images['obstacle'], x, y, cellSize, cellSize)) {
+        ctx.fillStyle = 'rgb(139, 69, 19)';
+        ctx.fillRect(x, y, cellSize, cellSize);
       }
     });
   }
   
-  // Draw food with life bars
   if (state.food && Array.isArray(state.food)) {
     state.food.forEach(food => {
       const [fx, fy, life, value] = food;
-      const x = fx * cellSize;
-      const y = (BOARD_SIZE - 1 - fy) * cellSize;
-      
-      if (life > 0 && snakeSprites.images['apple']) {
-        ctx.drawImage(snakeSprites.images['apple'], x, y, cellSize, cellSize);
+      if (life > 0) {
+        const x = fx * cellSize;
+        const y = (BOARD_SIZE - 1 - fy) * cellSize;
+        
+        if (!safeDrawImage(ctx, snakeSprites.images['apple'], x, y, cellSize, cellSize)) {
+          ctx.fillStyle = 'rgb(255, 0, 0)';
+          ctx.beginPath();
+          ctx.arc(x + cellSize/2, y + cellSize/2, cellSize * 0.3, 0, Math.PI * 2);
+          ctx.fill();
+        }
         drawLifeBar(ctx, life, 12, x, y, cellSize);
       }
     });
   }
   
-  // Draw snake
   if (state.snake && Array.isArray(state.snake) && state.snake.length > 0) {
     const snakeArray = state.snake;
+    
+    if (DEBUG_CONFIG.logDirections) {
+      debugLog('DIRECTION', `\n========== RENDERING SNAKE (${agentName}) ==========`);
+    }
     
     snakeArray.forEach((pos, i) => {
       const [sx, sy] = pos;
       const x = sx * cellSize;
       const y = (BOARD_SIZE - 1 - sy) * cellSize;
       
-      // Head is at the FIRST position (index = 0)
+      if (DEBUG_CONFIG.logDirections) {
+        debugLog('DIRECTION', `Rendering position [${sx}, ${sy}] → canvas (${x.toFixed(1)}, ${y.toFixed(1)}), Y-flip: ${BOARD_SIZE - 1 - sy}`);
+      }
+      
       if (i === 0) {
-        // Head
         const dirMap = { 'R': 'right', 'D': 'down', 'L': 'left', 'U': 'up' };
         const dir = dirMap[state.direction] || 'up';
-        const headSprite = snakeArray.length === 1 
-          ? snakeSprites.images[`head_${dir}`]
-          : snakeSprites.images[`snake_head_${dir}`];
+
+        // const headSprite = snakeArray.length === 1 
+        //   ? snakeSprites.images[`head_${dir}`]
+        //   : snakeSprites.images[`snake_head_${dir}`];
+        const headSprite = snakeSprites.images[`snake_head_${dir}`];
         
-        if (headSprite && headSprite.complete) {
-          ctx.drawImage(headSprite, x, y, cellSize, cellSize);
-        } else {
-          // Fallback: draw colored circle for head
+        if (DEBUG_CONFIG.logDirections) {
+          debugLog('DIRECTION', `👑 HEAD (segment 0): direction=${state.direction} → ${dir}`);
+        }
+        
+        if (!safeDrawImage(ctx, headSprite, x, y, cellSize, cellSize)) {
           ctx.fillStyle = 'rgb(0, 200, 0)';
           ctx.beginPath();
           ctx.arc(x + cellSize/2, y + cellSize/2, cellSize * 0.35, 0, Math.PI * 2);
           ctx.fill();
         }
       } else if (i === snakeArray.length - 1) {
-        // Tail is at LAST position (index = length - 1)
         const prevPos = snakeArray.length > 1 ? snakeArray[i - 1] : null;
         const tailSprite = getSnakeTailSprite(prevPos, pos);
-        if (tailSprite && tailSprite.complete) {
-          ctx.drawImage(tailSprite, x, y, cellSize, cellSize);
-        } else {
-          // Fallback: draw colored circle for tail
+        if (!safeDrawImage(ctx, tailSprite, x, y, cellSize, cellSize)) {
           ctx.fillStyle = 'rgb(0, 150, 0)';
           ctx.beginPath();
           ctx.arc(x + cellSize/2, y + cellSize/2, cellSize * 0.25, 0, Math.PI * 2);
           ctx.fill();
         }
       } else {
-        // Body segments
         const prevPos = i > 0 ? snakeArray[i - 1] : null;
         const nextPos = i < snakeArray.length - 1 ? snakeArray[i + 1] : null;
-        const bodySprite = getSnakeBodySprite(prevPos, pos, nextPos);
-        if (bodySprite && bodySprite.complete) {
-          ctx.drawImage(bodySprite, x, y, cellSize, cellSize);
-        } else {
-          // Fallback: draw colored circle for body
+        const bodySprite = getSnakeBodySprite(prevPos, pos, nextPos, i);
+        if (!safeDrawImage(ctx, bodySprite, x, y, cellSize, cellSize)) {
           ctx.fillStyle = 'rgb(0, 180, 0)';
           ctx.beginPath();
           ctx.arc(x + cellSize/2, y + cellSize/2, cellSize * 0.3, 0, Math.PI * 2);
@@ -760,33 +954,42 @@ function renderSnakeState(ctx, width, height, state) {
         }
       }
     });
+    
+    if (DEBUG_CONFIG.logDirections) {
+      debugLog('DIRECTION', `========== END SNAKE RENDERING ==========\n`);
+    }
   }
   
-  // Draw thinking/idea indicator
   if (state.show_thinking !== undefined && state.show_thinking !== null && state.snake && state.snake.length > 0) {
     const [headX, headY] = state.snake[0];
     const x = headX * cellSize + cellSize * 0.7;
     const y = (BOARD_SIZE - 1 - headY) * cellSize - cellSize * 0.5;
     
     const iconName = state.show_thinking ? 'thinking' : 'idea';
-    const icon = snakeSprites.images[iconName];
-    if (icon && icon.complete) {
-      const iconSize = cellSize * 0.8;
-      ctx.drawImage(icon, x, y, iconSize, iconSize);
+    const iconSize = cellSize * 0.8;
+    safeDrawImage(ctx, snakeSprites.images[iconName], x, y, iconSize, iconSize);
+  }
+  
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.fillRect(5, 5, 120, 30);
+  
+  if (DEBUG_CONFIG.highlightUpdates && lastRenderState[lastKey + '_prev']) {
+    const prevTurn = lastRenderState[lastKey + '_prev'].game_turn || 0;
+    if (prevTurn !== turnNum) {
+      ctx.strokeStyle = 'rgb(0, 255, 0)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(3, 3, 124, 34);
     }
   }
   
-  // Draw game info - ALWAYS show turn number
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(5, 5, 120, 30);
   ctx.fillStyle = '#FFFFFF';
   ctx.font = 'bold 16px Inter';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
-  const turnNum = state.game_turn !== undefined ? state.game_turn : (state.turn || 0);
   ctx.fillText(`Turn: ${turnNum}`, 12, 12);
   
-  // Draw terminal state
+  lastRenderState[lastKey + '_prev'] = { game_turn: turnNum };
+  
   if (state.terminal) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(0, 0, width, height);
@@ -803,18 +1006,17 @@ function renderSnakeState(ctx, width, height, state) {
     const rewardVal = state.reward !== undefined ? state.reward : (state.score || 0);
     ctx.fillText(`Reward: ${rewardVal}`, width / 2, height / 2 + 40);
   }
+  
+  debugLog('RENDER', `✅ Complete for ${agentName}`);
 }
 
-// Fallback rendering without sprites
 function renderSnakeStateFallback(ctx, width, height, state) {
   const BOARD_SIZE = 8;
   const cellSize = width / BOARD_SIZE;
   
-  // Clear and draw background
   ctx.fillStyle = 'rgb(0, 51, 51)';
   ctx.fillRect(0, 0, width, height);
   
-  // Draw checkerboard
   for (let i = 0; i < BOARD_SIZE; i++) {
     for (let j = 0; j < BOARD_SIZE; j++) {
       if (i === 0 || i === BOARD_SIZE - 1 || j === 0 || j === BOARD_SIZE - 1) continue;
@@ -826,7 +1028,6 @@ function renderSnakeStateFallback(ctx, width, height, state) {
     }
   }
   
-  // Draw obstacles
   if (state.obstacles) {
     ctx.fillStyle = 'rgb(139, 69, 19)';
     state.obstacles.forEach(([ox, oy]) => {
@@ -836,9 +1037,8 @@ function renderSnakeStateFallback(ctx, width, height, state) {
     });
   }
   
-  // Draw food
   if (state.food) {
-    state.food.forEach(([fx, fy, value, life]) => {
+    state.food.forEach(([fx, fy, life, value]) => {
       if (life > 0) {
         const x = fx * cellSize + cellSize / 2;
         const y = (BOARD_SIZE - 1 - fy) * cellSize + cellSize / 2;
@@ -850,19 +1050,16 @@ function renderSnakeStateFallback(ctx, width, height, state) {
     });
   }
   
-  // Draw snake - head is at FIRST position
   if (state.snake) {
     state.snake.forEach(([sx, sy], i) => {
       const x = sx * cellSize + cellSize / 2;
       const y = (BOARD_SIZE - 1 - sy) * cellSize + cellSize / 2;
-      // Head is larger and at index 0
       const radius = i === 0 ? cellSize * 0.35 : cellSize * 0.3;
       ctx.fillStyle = i === 0 ? 'rgb(0, 255, 0)' : 'rgb(0, 200, 0)';
       ctx.beginPath();
       ctx.arc(x, y, radius, 0, Math.PI * 2);
       ctx.fill();
       
-      // Draw eyes on head
       if (i === 0) {
         ctx.fillStyle = 'rgb(0, 0, 0)';
         ctx.beginPath();
@@ -873,7 +1070,6 @@ function renderSnakeStateFallback(ctx, width, height, state) {
     });
   }
   
-  // Game info
   ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
   ctx.fillRect(5, 5, 120, 30);
   ctx.fillStyle = '#FFFFFF';
@@ -884,6 +1080,65 @@ function renderSnakeStateFallback(ctx, width, height, state) {
   ctx.fillText(`Turn: ${turnNum}`, 12, 12);
 }
 
+window.snakeDebug = {
+  enable: () => { 
+    DEBUG_CONFIG.enabled = true; 
+    console.log('🐛 Debug enabled'); 
+  },
+  disable: () => { 
+    DEBUG_CONFIG.enabled = false; 
+    console.log('🐛 Debug disabled'); 
+  },
+  toggleRendering: () => { 
+    DEBUG_CONFIG.logRendering = !DEBUG_CONFIG.logRendering; 
+    console.log('🎨 Rendering logs:', DEBUG_CONFIG.logRendering ? 'ON' : 'OFF');
+  },
+  toggleStateChanges: () => { 
+    DEBUG_CONFIG.logStateChanges = !DEBUG_CONFIG.logStateChanges; 
+    console.log('🔄 State change logs:', DEBUG_CONFIG.logStateChanges ? 'ON' : 'OFF');
+  },
+  toggleDirections: () => {
+    DEBUG_CONFIG.logDirections = !DEBUG_CONFIG.logDirections;
+    console.log('🧭 Direction logs:', DEBUG_CONFIG.logDirections ? 'ON' : 'OFF');
+  },
+  enableDirectionsOnly: () => {
+    DEBUG_CONFIG.enabled = true;
+    DEBUG_CONFIG.logRendering = false;
+    DEBUG_CONFIG.logStateChanges = false;
+    DEBUG_CONFIG.logDirections = true;
+    console.log('🎯 Direction-only debug mode enabled');
+  },
+  getLastStates: () => lastRenderState,
+  clearHistory: () => { 
+    lastRenderState = {}; 
+    console.log('🗑️ History cleared'); 
+  },
+  getSpriteStatus: () => {
+    console.log('Sprite Status:', {
+      loaded: snakeSprites.loaded,
+      failedLoads: snakeSprites.failedLoads,
+      availableSprites: Object.keys(snakeSprites.images),
+      pendingLoads: snakeSprites.pendingLoads
+    });
+  },
+  help: () => {
+    console.log(`
+🐛 Snake Debug Commands:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+snakeDebug.enable()              - 启用所有调试
+snakeDebug.disable()             - 禁用所有调试
+snakeDebug.toggleRendering()     - 切换渲染日志
+snakeDebug.toggleStateChanges()  - 切换状态变化日志
+snakeDebug.toggleDirections()    - 切换方向调试日志
+snakeDebug.enableDirectionsOnly() - 只启用方向调试
+snakeDebug.getSpriteStatus()     - 查看精灵加载状态
+snakeDebug.getLastStates()       - 获取最后的状态
+snakeDebug.clearHistory()        - 清除历史记录
+snakeDebug.help()                - 显示此帮助
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    `);
+  }
+};
 ////////////////////////////////////////////////////// End of Snake Rendering ////////////////////////////////////////////////////
 
 
