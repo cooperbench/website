@@ -1793,10 +1793,87 @@ function updateStepDisplay() {
   updateModelDisplay('agile', comparisonData.agile, currentStep);
 }
 
+
+// Extract content from last \boxed{} in text
+
+// Extract content from last \boxed{} in text
+function extractBoxedContent(text) {
+  if (!text) return 'Keep';
+  
+  // Find all \boxed{ positions
+  const boxedPositions = [];
+  let index = 0;
+  while ((index = text.indexOf('\\boxed{', index)) !== -1) {
+    boxedPositions.push(index);
+    index += 7; // length of '\boxed{'
+  }
+  
+  if (boxedPositions.length === 0) {
+    return 'Keep';
+  }
+  
+  // Extract content from the last \boxed{...} with proper brace matching
+  const lastBoxedPos = boxedPositions[boxedPositions.length - 1];
+  const startPos = lastBoxedPos + 7; // position after '\boxed{'
+  
+  // Count braces to find the matching closing brace
+  let braceCount = 1;
+  let endPos = startPos;
+  
+  while (endPos < text.length && braceCount > 0) {
+    if (text[endPos] === '{') {
+      braceCount++;
+    } else if (text[endPos] === '}') {
+      braceCount--;
+    }
+    endPos++;
+  }
+  
+  if (braceCount !== 0) {
+    // Unmatched braces, return Keep
+    return 'Keep';
+  }
+  
+  // Extract the content (excluding the final closing brace)
+  let result_text = text.substring(startPos, endPos - 1);
+  
+  console.log('Extracted boxed content:', result_text);
+
+  // Extract only the action letters (L, R, U, D, S, I)
+  const actions = result_text.match(/[LRUDSI]/g);
+  
+  if (!actions || actions.length === 0) {
+    return 'Keep';
+  }
+
+  // Convert letters to full action names and join with spaces
+  result_text = actions.map(letter => {
+    switch(letter) {
+      case 'S': return 'Stay';
+      case 'L': return 'Left';
+      case 'R': return 'Right';
+      case 'U': return 'Up';
+      case 'D': return 'Down';
+      case 'I': return 'Interact';
+      default: return letter;
+    }
+  }).join(' ');
+
+  console.log('Result:', result_text);
+  return result_text;
+}
+
 // Update individual model display
 function updateModelDisplay(model, dataArray, currentStep) {
   const isGameOver = currentStep >= dataArray.length;
   const data = isGameOver ? dataArray[dataArray.length - 1] : dataArray[currentStep];
+  
+  // Update score
+  document.getElementById(`score-${model}`).textContent = data.score;
+  
+  // Update thinking result
+  const thinkingResult = extractBoxedContent(data.thinking);
+  document.getElementById(`thinking-result-${model}`).textContent = thinkingResult;
   
   // Update score
   document.getElementById(`score-${model}`).textContent = data.score;
