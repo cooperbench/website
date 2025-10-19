@@ -226,14 +226,14 @@ function renderFreewayState(ctx, width, height, state) {
     }
   }
   
-  // Draw game info
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(5, 5, 120, 30);
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 16px Inter';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
-  ctx.fillText(`Turn: ${state.game_turn || 0}`, 12, 12);
+  // // Draw game info
+  // ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  // ctx.fillRect(5, 5, 120, 30);
+  // ctx.fillStyle = '#FFFFFF';
+  // ctx.font = 'bold 16px Inter';
+  // ctx.textAlign = 'left';
+  // ctx.textBaseline = 'top';
+  // ctx.fillText(`Turn: ${state.game_turn || 0}`, 12, 12);
   
   // Draw terminal state
   if (state.terminal) {
@@ -373,14 +373,14 @@ function renderFreewayStateFallback(ctx, width, height, state) {
   ctx.closePath();
   ctx.fill();
   
-  // Game info
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(5, 5, 120, 30);
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 16px Inter';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
-  ctx.fillText(`Turn: ${state.game_turn || 0}`, 12, 12);
+  // // Game info
+  // ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  // ctx.fillRect(5, 5, 120, 30);
+  // ctx.fillStyle = '#FFFFFF';
+  // ctx.font = 'bold 16px Inter';
+  // ctx.textAlign = 'left';
+  // ctx.textBaseline = 'top';
+  // ctx.fillText(`Turn: ${state.game_turn || 0}`, 12, 12);
   
   if (state.terminal) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -750,14 +750,14 @@ async function renderOvercookedState(ctx, width, height, state) {
     }
   }
   
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(5, 5, 75, 25);
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 14px Inter';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
-  ctx.fillText(`Turn: ${state.game_turn || 0}`, 12, 12);
-  // ctx.fillText(`Score: ${state.score || 0}`, 12, 32);
+  // ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  // ctx.fillRect(5, 5, 75, 25);
+  // ctx.fillStyle = '#FFFFFF';
+  // ctx.font = 'bold 14px Inter';
+  // ctx.textAlign = 'left';
+  // ctx.textBaseline = 'top';
+  // ctx.fillText(`Turn: ${state.game_turn || 0}`, 12, 12);
+  // // ctx.fillText(`Score: ${state.score || 0}`, 12, 32);
   
   if (state.terminal) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -870,14 +870,14 @@ function renderOvercookedStateFallback(ctx, width, height, state) {
     });
   }
   
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(5, 5, 75, 25);
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 14px Inter';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
-  ctx.fillText(`Turn: ${state.game_turn || 0}`, 12, 12);
-  // ctx.fillText(`Score: ${state.score || 0}`, 12, 32);
+  // ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  // ctx.fillRect(5, 5, 75, 25);
+  // ctx.fillStyle = '#FFFFFF';
+  // ctx.font = 'bold 14px Inter';
+  // ctx.textAlign = 'left';
+  // ctx.textBaseline = 'top';
+  // ctx.fillText(`Turn: ${state.game_turn || 0}`, 12, 12);
+  // // ctx.fillText(`Score: ${state.score || 0}`, 12, 32);
   
   if (state.terminal) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -1449,23 +1449,23 @@ function renderSnakeState(ctx, width, height, state, agentName = 'UNKNOWN') {
     safeDrawImage(ctx, snakeSprites.images[iconName], x, y, iconSize, iconSize);
   }
   
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(5, 5, 120, 30);
+  // ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  // ctx.fillRect(5, 5, 120, 30);
   
-  if (DEBUG_CONFIG.highlightUpdates && lastRenderState[lastKey + '_prev']) {
-    const prevTurn = lastRenderState[lastKey + '_prev'].game_turn || 0;
-    if (prevTurn !== turnNum) {
-      ctx.strokeStyle = 'rgb(0, 255, 0)';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(3, 3, 124, 34);
-    }
-  }
+  // if (DEBUG_CONFIG.highlightUpdates && lastRenderState[lastKey + '_prev']) {
+  //   const prevTurn = lastRenderState[lastKey + '_prev'].game_turn || 0;
+  //   if (prevTurn !== turnNum) {
+  //     ctx.strokeStyle = 'rgb(0, 255, 0)';
+  //     ctx.lineWidth = 2;
+  //     ctx.strokeRect(3, 3, 124, 34);
+  //   }
+  // }
   
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 16px Inter';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
-  ctx.fillText(`Turn: ${turnNum}`, 12, 12);
+  // ctx.fillStyle = '#FFFFFF';
+  // ctx.font = 'bold 16px Inter';
+  // ctx.textAlign = 'left';
+  // ctx.textBaseline = 'top';
+  // ctx.fillText(`Turn: ${turnNum}`, 12, 12);
   
   lastRenderState[lastKey + '_prev'] = { game_turn: turnNum };
   
@@ -1549,14 +1549,14 @@ function renderSnakeStateFallback(ctx, width, height, state) {
     });
   }
   
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(5, 5, 120, 30);
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 16px Inter';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
-  const turnNum = state.game_turn !== undefined ? state.game_turn : (state.turn || 0);
-  ctx.fillText(`Turn: ${turnNum}`, 12, 12);
+  // ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  // ctx.fillRect(5, 5, 120, 30);
+  // ctx.fillStyle = '#FFFFFF';
+  // ctx.font = 'bold 16px Inter';
+  // ctx.textAlign = 'left';
+  // ctx.textBaseline = 'top';
+  // const turnNum = state.game_turn !== undefined ? state.game_turn : (state.turn || 0);
+  // ctx.fillText(`Turn: ${turnNum}`, 12, 12);
 }
 
 window.snakeDebug = {
