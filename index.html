@@ -755,13 +755,13 @@
               <p class="text-gray-600 text-sm mb-3">Always react quickly with bounded compute; no planning thread.</p>
               <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto">
                 <code class="text-sm text-gray-300 font-mono leading-relaxed">
-<span class="text-gray-500">class</span> ReactiveAgent:<br>
-&nbsp;&nbsp;<span class="text-gray-500">def</span> think(timeout):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;start_reactive_thread(current_observation, <span class="text-cyan-600">""</span>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;run_reactive_thread(internal_budget)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-gray-500">if</span> reactive_thread_is_alive():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s1_budget_forcing()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;action = get_reactive_thread_response()
+<span class="text-purple-400">class</span> <span class="text-yellow-400">ReactiveAgent</span>:<br>
+&nbsp;&nbsp;<span class="text-purple-400">def</span> <span class="text-green-400">think</span>(<span class="text-yellow-400">timeout</span>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">start_reactive_thread</span>(<span class="text-yellow-400">current_observation</span>, <span class="text-orange-400">""</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">run_reactive_thread</span>(<span class="text-yellow-400">internal_budget</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-green-400">reactive_thread_is_alive</span>():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">s1_budget_forcing</span>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">action</span> = <span class="text-green-400">get_reactive_thread_response</span>()
                 </code>
               </div>
             </div>
@@ -778,14 +778,14 @@
               <p class="text-gray-600 text-sm mb-3">Plan first within the full timeout, then execute the first action.</p>
               <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto">
                 <code class="text-sm text-gray-300 font-mono leading-relaxed">
-<span class="text-gray-500">class</span> PlanningAgent:<br>
-&nbsp;&nbsp;<span class="text-gray-500">def</span> think(timeout):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-gray-500">if not</span> planning_thread_is_alive():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;start_planning_thread(current_observation)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;run_planning_thread(timeout)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-gray-500">if not</span> planning_thread_is_alive():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plan = get_planning_thread_response()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;action = plan[0]; plan = plan[1:]
+<span class="text-purple-400">class</span> <span class="text-yellow-400">PlanningAgent</span>:<br>
+&nbsp;&nbsp;<span class="text-purple-400">def</span> <span class="text-green-400">think</span>(<span class="text-yellow-400">timeout</span>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-purple-400">not</span> <span class="text-green-400">planning_thread_is_alive</span>():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">start_planning_thread</span>(<span class="text-yellow-400">current_observation</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">run_planning_thread</span>(<span class="text-yellow-400">timeout</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-purple-400">not</span> <span class="text-green-400">planning_thread_is_alive</span>():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">plan</span> = <span class="text-green-400">get_planning_thread_response</span>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">action</span> = <span class="text-yellow-400">plan</span>[0]; <span class="text-yellow-400">plan</span> = <span class="text-yellow-400">plan</span>[1:]
                 </code>
               </div>
             </div>
@@ -802,16 +802,16 @@
               <p class="text-gray-600 text-sm mb-3">Plan in parallel with a fast reactive thread; use budget-aware forcing.</p>
               <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto">
                 <code class="text-sm text-gray-300 font-mono leading-relaxed">
-<span class="text-gray-500">class</span> AgileThinker:<br>
-&nbsp;&nbsp;<span class="text-gray-500">def</span> think(timeout):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-gray-500">if not</span> planning_thread_is_alive():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;start_planning_thread(current_observation)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;run_planning_thread(timeout - internal_budget)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;plan = get_planning_thread_response()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;start_reactive_thread(current_observation, plan)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;run_reactive_thread(internal_budget)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-gray-500">if</span> reactive_thread_is_alive(): s1_budget_forcing()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;action = get_reactive_thread_response()
+<span class="text-purple-400">class</span> <span class="text-yellow-400">AgileThinker</span>:<br>
+&nbsp;&nbsp;<span class="text-purple-400">def</span> <span class="text-green-400">think</span>(<span class="text-yellow-400">timeout</span>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-purple-400">not</span> <span class="text-green-400">planning_thread_is_alive</span>():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">start_planning_thread</span>(<span class="text-yellow-400">current_observation</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">run_planning_thread</span>(<span class="text-yellow-400">timeout</span> - <span class="text-yellow-400">internal_budget</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">plan</span> = <span class="text-green-400">get_planning_thread_response</span>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">start_reactive_thread</span>(<span class="text-yellow-400">current_observation</span>, <span class="text-yellow-400">plan</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">run_reactive_thread</span>(<span class="text-yellow-400">internal_budget</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-green-400">reactive_thread_is_alive</span>(): <span class="text-green-400">s1_budget_forcing</span>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">action</span> = <span class="text-green-400">get_reactive_thread_response</span>()
                 </code>
               </div>
             </div>
