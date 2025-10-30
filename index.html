@@ -742,9 +742,9 @@
             <h3 class="text-2xl font-bold text-gray-900">Agent Implementations (Pseudocode)</h3>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
             <!-- Reactive Agent -->
-            <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
+            <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
               <div class="flex items-center mb-4">
                 <i class="fas fa-bolt text-blue-500 text-xl mr-3"></i>
                 <div>
@@ -753,8 +753,8 @@
                 </div>
               </div>
               <p class="text-gray-600 text-sm mb-3">Always react quickly with bounded compute; no planning thread.</p>
-              <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto">
-                <code class="text-sm text-gray-300 font-mono leading-relaxed">
+              <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto mt-auto">
+                <code class="text-sm text-gray-300 font-mono leading-relaxed break-words">
 <span class="text-purple-400">class</span> <span class="text-yellow-400">ReactiveAgent</span>:<br>
 &nbsp;&nbsp;<span class="text-purple-400">def</span> <span class="text-green-400">think</span>(<span class="text-yellow-400">timeout</span>):<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">start_reactive_thread</span>(<span class="text-yellow-400">current_observation</span>, <span class="text-orange-400">""</span>)<br>
@@ -767,7 +767,7 @@
             </div>
 
             <!-- Planning Agent -->
-            <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
+            <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
               <div class="flex items-center mb-4">
                 <i class="fas fa-route text-yellow-500 text-xl mr-3"></i>
                 <div>
@@ -776,8 +776,8 @@
                 </div>
               </div>
               <p class="text-gray-600 text-sm mb-3">Plan first within the full timeout, then execute the first action.</p>
-              <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto">
-                <code class="text-sm text-gray-300 font-mono leading-relaxed">
+              <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto mt-auto">
+                <code class="text-sm text-gray-300 font-mono leading-relaxed break-words">
 <span class="text-purple-400">class</span> <span class="text-yellow-400">PlanningAgent</span>:<br>
 &nbsp;&nbsp;<span class="text-purple-400">def</span> <span class="text-green-400">think</span>(<span class="text-yellow-400">timeout</span>):<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-purple-400">not</span> <span class="text-green-400">planning_thread_is_alive</span>():<br>
@@ -791,7 +791,7 @@
             </div>
 
             <!-- AgileThinker -->
-            <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
+            <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
               <div class="flex items-center mb-4">
                 <i class="fas fa-sync-alt text-green-600 text-xl mr-3"></i>
                 <div>
@@ -800,8 +800,8 @@
                 </div>
               </div>
               <p class="text-gray-600 text-sm mb-3">Plan in parallel with a fast reactive thread; use budget-aware forcing.</p>
-              <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto">
-                <code class="text-sm text-gray-300 font-mono leading-relaxed">
+              <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto mt-auto">
+                <code class="text-sm text-gray-300 font-mono leading-relaxed break-words">
 <span class="text-purple-400">class</span> <span class="text-yellow-400">AgileThinker</span>:<br>
 &nbsp;&nbsp;<span class="text-purple-400">def</span> <span class="text-green-400">think</span>(<span class="text-yellow-400">timeout</span>):<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-purple-400">not</span> <span class="text-green-400">planning_thread_is_alive</span>():<br>
