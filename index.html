@@ -753,8 +753,8 @@
                 </div>
               </div>
               <p class="text-gray-600 text-sm mb-3">Always react quickly with bounded compute; no planning thread.</p>
-              <div class="bg-gray-50 rounded-lg p-3 overflow-x-auto">
-                <code class="text-sm text-gray-800 font-mono leading-relaxed">
+              <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto">
+                <code class="text-sm text-gray-300 font-mono leading-relaxed">
 <span class="text-gray-500">class</span> ReactiveAgent:<br>
 &nbsp;&nbsp;<span class="text-gray-500">def</span> think(timeout):<br>
 &nbsp;&nbsp;&nbsp;&nbsp;start_reactive_thread(current_observation, <span class="text-cyan-600">""</span>)<br>
@@ -776,8 +776,8 @@
                 </div>
               </div>
               <p class="text-gray-600 text-sm mb-3">Plan first within the full timeout, then execute the first action.</p>
-              <div class="bg-gray-50 rounded-lg p-3 overflow-x-auto">
-                <code class="text-sm text-gray-800 font-mono leading-relaxed">
+              <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto">
+                <code class="text-sm text-gray-300 font-mono leading-relaxed">
 <span class="text-gray-500">class</span> PlanningAgent:<br>
 &nbsp;&nbsp;<span class="text-gray-500">def</span> think(timeout):<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-gray-500">if not</span> planning_thread_is_alive():<br>
@@ -800,8 +800,8 @@
                 </div>
               </div>
               <p class="text-gray-600 text-sm mb-3">Plan in parallel with a fast reactive thread; use budget-aware forcing.</p>
-              <div class="bg-gray-50 rounded-lg p-3 overflow-x-auto">
-                <code class="text-sm text-gray-800 font-mono leading-relaxed">
+              <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto">
+                <code class="text-sm text-gray-300 font-mono leading-relaxed">
 <span class="text-gray-500">class</span> AgileThinker:<br>
 &nbsp;&nbsp;<span class="text-gray-500">def</span> think(timeout):<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-gray-500">if not</span> planning_thread_is_alive():<br>
