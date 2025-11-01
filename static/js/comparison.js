@@ -1799,7 +1799,7 @@ function updateStepDisplay() {
 // Extract content from last \boxed{} in text
 function extractBoxedContent(text) {
   if (text === "Still thinking...") {
-    return 'Thinking...';
+    return 'N/A';
   }
   if (!text) return 'Keep';
   
@@ -1980,6 +1980,8 @@ function updateModelDisplay(model, dataArray, currentStep) {
   
   // Update score
   document.getElementById(`score-${model}`).textContent = data.score;
+
+  
   
   // Update thinking result
   const thinkingResult = extractBoxedContent(data.thinking);
@@ -2001,6 +2003,11 @@ function updateModelDisplay(model, dataArray, currentStep) {
     }
   }
   document.getElementById(`thinking-content-${model}`).innerHTML = thinkingContent;
+
+  // Convert `Still thinking...` to `Thinking is not finished in current step`
+  if (data.thinking === 'Still thinking...') {
+    document.getElementById(`thinking-content-${model}`).textContent = 'Reasoning is not finished in current step';
+  }
   
   // Update canvas
   const canvas = document.getElementById(`game-canvas-${model}`);
