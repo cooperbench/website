@@ -87,3 +87,86 @@ body {
     transition: none !important;
   }
 }
+
+/* Markdown rendering styles for thinking content */
+#thinking-content-reactive,
+#thinking-content-planning,
+#thinking-content-agile {
+  /* Override default list styles */
+}
+
+#thinking-content-reactive h1,
+#thinking-content-planning h1,
+#thinking-content-agile h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+#thinking-content-reactive h2,
+#thinking-content-planning h2,
+#thinking-content-agile h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-top: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+#thinking-content-reactive h3,
+#thinking-content-planning h3,
+#thinking-content-agile h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+#thinking-content-reactive p,
+#thinking-content-planning p,
+#thinking-content-agile p {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+#thinking-content-reactive ul,
+#thinking-content-reactive ol,
+#thinking-content-planning ul,
+#thinking-content-planning ol,
+#thinking-content-agile ul,
+#thinking-content-agile ol {
+  margin-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  padding-left: 1rem;
+}
+
+#thinking-content-reactive li,
+#thinking-content-planning li,
+#thinking-content-agile li {
+  margin-bottom: 0.25rem;
+  line-height: 1.5;
+}
+
+#thinking-content-reactive strong,
+#thinking-content-planning strong,
+#thinking-content-agile strong {
+  font-weight: 600;
+}
+
+#thinking-content-reactive code,
+#thinking-content-planning code,
+#thinking-content-agile code {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+}
+
+#thinking-content-reactive hr,
+#thinking-content-planning hr,
+#thinking-content-agile hr {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 1rem 0;
+}

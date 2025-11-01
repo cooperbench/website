@@ -1878,13 +1878,19 @@ function updateModelDisplay(model, dataArray, currentStep) {
   const thinkingResult = extractBoxedContent(data.thinking);
   document.getElementById(`thinking-result-${model}`).textContent = thinkingResult;
   
-  // Update score
-  document.getElementById(`score-${model}`).textContent = data.score;
-  
   // Update thinking process
-  const thinkingContent = isGameOver 
-    ? '<p class="text-red-600 font-bold text-center py-4">GAME OVER</p>'
-    : `<p class="whitespace-pre-wrap">${data.thinking}</p>`;
+  let thinkingContent;
+  if (isGameOver) {
+    thinkingContent = '<p class="text-red-600 font-bold text-center py-4">GAME OVER</p>';
+  } else {
+    // Render Markdown content if marked.js is available
+    if (typeof marked !== 'undefined') {
+      thinkingContent = marked.parse(data.thinking);
+    } else {
+      // Fallback: plain text with line breaks
+      thinkingContent = `<p class="whitespace-pre-wrap">${data.thinking}</p>`;
+    }
+  }
   document.getElementById(`thinking-content-${model}`).innerHTML = thinkingContent;
   
   // Update canvas
