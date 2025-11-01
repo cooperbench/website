@@ -1866,6 +1866,113 @@ function extractBoxedContent(text) {
   return result_text;
 }
 
+// Render \boxed{} content with special styling
+function renderBoxedContent(htmlContent) {
+  // Helper function to extract boxed content with proper brace matching
+  const extractBoxedMatch = (text, startPos, skipLength = 7) => {
+    let index = startPos + skipLength; // position after '\boxed{' or '\\boxed{'
+    let braceCount = 1;
+    let endPos = index;
+    
+    while (endPos < text.length && braceCount > 0) {
+      if (text[endPos] === '{') {
+        braceCount++;
+      } else if (text[endPos] === '}') {
+        braceCount--;
+      }
+      endPos++;
+    }
+    
+    if (braceCount === 0) {
+      return text.substring(index, endPos - 1);
+    }
+    return null;
+  };
+  
+  // Find and replace all \boxed{} occurrences (handle both escaped and non-escaped)
+  let result = htmlContent;
+  let searchPos = 0;
+  
+  while (true) {
+    // Try both \\boxed{ and \boxed{ (escaped by markdown or not)
+    let boxedPos = result.indexOf('\\boxed{', searchPos);
+    let escapedPos = result.indexOf('\\\\boxed{', searchPos);
+    
+    // Find the earliest valid occurrence
+    let actualPos = -1;
+    let skipLength = 7;
+    if (boxedPos !== -1 && escapedPos !== -1) {
+      actualPos = Math.min(boxedPos, escapedPos);
+      skipLength = (actualPos === escapedPos) ? 8 : 7;
+    } else if (boxedPos !== -1) {
+      actualPos = boxedPos;
+      skipLength = 7;
+    } else if (escapedPos !== -1) {
+      actualPos = escapedPos;
+      skipLength = 8;
+    }
+    
+    if (actualPos === -1) break;
+    
+    const content = extractBoxedMatch(result, actualPos, skipLength);
+    if (content !== null) {
+      const replacement = formatBoxedContent(content);
+      result = result.substring(0, actualPos) + replacement + result.substring(actualPos + skipLength + content.length + 1);
+      searchPos = actualPos + replacement.length;
+    } else {
+      searchPos = actualPos + skipLength;
+    }
+  }
+  
+  return result;
+}
+
+// Format the content inside \boxed{}
+function formatBoxedContent(content) {
+    // Trim whitespace
+    const trimmedContent = content.trim();
+    
+    // Check if content contains line breaks (multi-line boxed)
+    if (trimmedContent.includes('\\') || trimmedContent.includes('\n')) {
+      // Multi-line: split by \\ or \n and render as list
+      const lines = trimmedContent.split(/\\\\|\n/).map(line => line.trim()).filter(line => line.length > 0);
+      const formattedLines = lines.map(line => {
+        // Extract action from patterns like "Turn 0: D (down)" or just "D (down)"
+        const actionMatch = line.match(/(?:Turn \d+:\s*)?([A-Z])\s*\([^)]+\)/);
+        if (actionMatch) {
+          const action = actionMatch[1];
+          const actionName = getActionName(action);
+          const turnMatch = line.match(/Turn (\d+):/);
+          const turnLabel = turnMatch ? `<span class="text-xs text-gray-500 mr-2">Turn ${turnMatch[1]}</span>` : '';
+          return `<div class="flex items-center mb-1">${turnLabel}<span class="font-bold text-primary w-8">${action}</span><span class="text-sm text-gray-600">${actionName}</span></div>`;
+        }
+        return `<div class="mb-1">${line}</div>`;
+      }).join('');
+      
+      return `<div class="boxed-multi-line mt-3 mb-3 p-4 bg-gradient-to-br from-blue-50 to-purple-50 border-l-4 border-primary rounded-lg shadow-sm">${formattedLines}</div>`;
+    } else {
+      // Single-line: render as simple badge
+      const action = trimmedContent.match(/^([A-Z])$/);
+      if (action) {
+        return `<span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 font-bold rounded-lg border-2 border-blue-300">${trimmedContent}</span>`;
+      }
+      return `<span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 font-semibold rounded-md border border-blue-300">${trimmedContent}</span>`;
+    }
+}
+
+// Helper function to get action name from letter
+function getActionName(letter) {
+  const actionMap = {
+    'L': 'Left',
+    'R': 'Right',
+    'U': 'Up',
+    'D': 'Down',
+    'S': 'Stay',
+    'I': 'Interact'
+  };
+  return actionMap[letter] || letter;
+}
+
 // Update individual model display
 function updateModelDisplay(model, dataArray, currentStep) {
   const isGameOver = currentStep >= dataArray.length;
@@ -1886,6 +1993,8 @@ function updateModelDisplay(model, dataArray, currentStep) {
     // Render Markdown content if marked.js is available
     if (typeof marked !== 'undefined') {
       thinkingContent = marked.parse(data.thinking);
+      // Post-process to render \boxed{} with special styling
+      thinkingContent = renderBoxedContent(thinkingContent);
     } else {
       // Fallback: plain text with line breaks
       thinkingContent = `<p class="whitespace-pre-wrap">${data.thinking}</p>`;
