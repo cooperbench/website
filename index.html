@@ -637,7 +637,7 @@
           </div>
         </h2>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <!-- Installation -->
           <div class="bg-white rounded-2xl shadow-lg p-8">
             <div class="flex items-center mb-6">
@@ -725,7 +725,6 @@
           </div>
         </div>
 
-        <!-- Code Example -->
         <!-- Agent Implementations (Pseudocode) -->
         <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
           <div class="flex items-center mb-6">
@@ -740,21 +739,24 @@
             <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
               <div class="flex items-center mb-4">
                 <i class="fas fa-bolt text-blue-500 text-xl mr-3"></i>
-                <div>
+                <div class="flex-1">
                   <h4 class="text-lg font-semibold text-gray-900">Reactive Agent</h4>
                   <p class="text-blue-600 text-xs">Fast, intuitive System 1</p>
                 </div>
+                <button onclick="toggleCodeBlock('reactive-code')" class="ml-2 text-gray-400 hover:text-gray-600 transition-colors" title="Toggle code">
+                  <i class="fas fa-chevron-down transition-transform" id="reactive-code-icon"></i>
+                </button>
               </div>
               <p class="text-gray-600 text-sm mb-3">Always react quickly with bounded compute; no planning thread.</p>
-              <div class="bg-gray-900 rounded-lg p-3 overflow-auto h-56 mt-auto">
+              <div id="reactive-code" class="bg-gray-900 rounded-lg p-3 overflow-auto h-56 mt-auto transition-all duration-300" style="max-height: 224px;">
                 <code class="text-sm text-gray-300 font-mono leading-relaxed whitespace-nowrap">
-<span class="text-purple-400">class</span> <span class="text-yellow-400">ReactiveAgent</span>:<br>
+                  <br><span class="text-purple-400">class</span> <span class="text-yellow-400">ReactiveAgent</span>:<br>
 &nbsp;&nbsp;<span class="text-purple-400">def</span> <span class="text-green-400">think</span>(<span class="text-yellow-400">timeout</span>):<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">start_reactive_thread</span>(<span class="text-yellow-400">current_observation</span>, <span class="text-orange-400">""</span>)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">run_reactive_thread</span>(<span class="text-yellow-400">internal_budget</span>)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-green-400">reactive_thread_is_alive</span>():<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">s1_budget_forcing</span>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">action</span> = <span class="text-green-400">get_reactive_thread_response</span>()
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">action</span> = <span class="text-green-400">get_reactive_thread_response</span>()<br>
                 </code>
               </div>
             </div>
@@ -763,22 +765,25 @@
             <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
               <div class="flex items-center mb-4">
                 <i class="fas fa-route text-yellow-500 text-xl mr-3"></i>
-                <div>
+                <div class="flex-1">
                   <h4 class="text-lg font-semibold text-gray-900">Planning Agent</h4>
                   <p class="text-yellow-600 text-xs">Slow, deliberate System 2</p>
                 </div>
+                <button onclick="toggleCodeBlock('planning-code')" class="ml-2 text-gray-400 hover:text-gray-600 transition-colors" title="Toggle code">
+                  <i class="fas fa-chevron-down transition-transform" id="planning-code-icon"></i>
+                </button>
               </div>
               <p class="text-gray-600 text-sm mb-3">Plan first within the full timeout, then execute the first action.</p>
-              <div class="bg-gray-900 rounded-lg p-3 overflow-auto h-56 mt-auto">
+              <div id="planning-code" class="bg-gray-900 rounded-lg p-3 overflow-auto h-56 mt-auto transition-all duration-300" style="max-height: 224px;">
                 <code class="text-sm text-gray-300 font-mono leading-relaxed whitespace-nowrap">
-<span class="text-purple-400">class</span> <span class="text-yellow-400">PlanningAgent</span>:<br>
+                  <br><span class="text-purple-400">class</span> <span class="text-yellow-400">PlanningAgent</span>:<br>
 &nbsp;&nbsp;<span class="text-purple-400">def</span> <span class="text-green-400">think</span>(<span class="text-yellow-400">timeout</span>):<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-purple-400">not</span> <span class="text-green-400">planning_thread_is_alive</span>():<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">start_planning_thread</span>(<span class="text-yellow-400">current_observation</span>)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">run_planning_thread</span>(<span class="text-yellow-400">timeout</span>)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-purple-400">not</span> <span class="text-green-400">planning_thread_is_alive</span>():<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">plan</span> = <span class="text-green-400">get_planning_thread_response</span>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">action</span> = <span class="text-yellow-400">plan</span>[0]; <span class="text-yellow-400">plan</span> = <span class="text-yellow-400">plan</span>[1:]
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">action</span> = <span class="text-yellow-400">plan</span>[0]; <span class="text-yellow-400">plan</span> = <span class="text-yellow-400">plan</span>[1:]<br>
                 </code>
               </div>
             </div>
@@ -787,15 +792,18 @@
             <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300 flex flex-col h-full md:col-span-2 xl:col-span-full">
               <div class="flex items-center mb-4">
                 <i class="fas fa-sync-alt text-green-600 text-xl mr-3"></i>
-                <div>
+                <div class="flex-1">
                   <h4 class="text-lg font-semibold text-gray-900">AgileThinker</h4>
                   <p class="text-green-600 text-xs">Parallel: System 1 + System 2</p>
                 </div>
+                <button onclick="toggleCodeBlock('agile-code')" class="ml-2 text-gray-400 hover:text-gray-600 transition-colors" title="Toggle code">
+                  <i class="fas fa-chevron-down transition-transform" id="agile-code-icon"></i>
+                </button>
               </div>
               <p class="text-gray-600 text-sm mb-3">Plan in parallel with a fast reactive thread; use budget-aware forcing.</p>
-              <div class="bg-gray-900 rounded-lg p-3 overflow-auto h-56 mt-auto">
+              <div id="agile-code" class="bg-gray-900 rounded-lg p-3 overflow-auto h-56 mt-auto transition-all duration-300" style="max-height: 224px;">
                 <code class="text-sm text-gray-300 font-mono leading-relaxed whitespace-nowrap">
-<span class="text-purple-400">class</span> <span class="text-yellow-400">AgileThinker</span>:<br>
+                  <br><span class="text-purple-400">class</span> <span class="text-yellow-400">AgileThinker</span>:<br>
 &nbsp;&nbsp;<span class="text-purple-400">def</span> <span class="text-green-400">think</span>(<span class="text-yellow-400">timeout</span>):<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-purple-400">not</span> <span class="text-green-400">planning_thread_is_alive</span>():<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">start_planning_thread</span>(<span class="text-yellow-400">current_observation</span>)<br>
@@ -804,15 +812,14 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">start_reactive_thread</span>(<span class="text-yellow-400">current_observation</span>, <span class="text-yellow-400">plan</span>)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">run_reactive_thread</span>(<span class="text-yellow-400">internal_budget</span>)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-green-400">reactive_thread_is_alive</span>(): <span class="text-green-400">s1_budget_forcing</span>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">action</span> = <span class="text-green-400">get_reactive_thread_response</span>()
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">action</span> = <span class="text-green-400">get_reactive_thread_response</span>()<br>
                 </code>
               </div>
             </div>
           </div>
         </div>
-        <!-- End Agent Implementations (Pseudocode) -->
         
-        <!-- Code Example -->
+        <!-- Complete Example -->
         <div class="bg-white rounded-2xl shadow-lg p-8">
           <div class="flex items-center mb-6">
             <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
@@ -821,8 +828,14 @@
             <h3 class="text-2xl font-bold text-gray-900">Complete Example</h3>
           </div>
 
-          <div class="bg-gray-900 rounded-lg p-6 overflow-x-auto">
-            <code class="text-gray-300 font-mono text-sm leading-relaxed">
+          <details class="group">
+            <summary class="cursor-pointer list-none flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300 mb-4">
+              <span class="text-gray-700 font-semibold">Show complete code example</span>
+              <i class="fas fa-chevron-down text-gray-500 group-open:rotate-180 transition-transform duration-300"></i>
+            </summary>
+            
+            <div class="bg-gray-900 rounded-lg p-6 overflow-x-auto">
+              <code class="text-gray-300 font-mono text-sm leading-relaxed">
 <span class="text-purple-400">import</span> <span class="text-blue-400">rlr_gym</span><br>
 <span class="text-purple-400">from</span> <span class="text-blue-400">rlr_gym.agents</span> <span class="text-purple-400">import</span> <span class="text-yellow-400">AgileThinker</span><br>
 <br>
@@ -843,10 +856,11 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">break</span><br>
 <br>
 <span class="text-blue-400">print</span>(<span class="text-orange-400">f"Total reward: {total_reward}"</span>)
-            </code>
-          </div>
+              </code>
+            </div>
+          </details>
 
-          <div class="mt-6 flex flex-wrap gap-4">
+          <div class="flex flex-wrap gap-4">
             <a href="https://github.com/wenyl22/RealtimeGym" target="_blank"
               class="inline-flex items-center px-4 py-2 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors duration-300">
               <i class="fab fa-github mr-2"></i>
@@ -926,7 +940,34 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-
+    function toggleCodeBlock(blockId) {
+      const block = document.getElementById(blockId);
+      const icon = document.getElementById(blockId + '-icon');
+      
+      if (block && icon) {
+        // Check if collapsed by checking if max-height is set to 0 or if class contains collapsed
+        const isCollapsed = block.classList.contains('collapsed') || block.style.maxHeight === '0px';
+        
+        if (isCollapsed) {
+          // Expand
+          block.classList.remove('collapsed');
+          block.style.maxHeight = '224px'; // h-56 = 14rem = 224px
+          block.style.overflow = 'auto';
+          icon.classList.remove('fa-chevron-up');
+          icon.classList.add('fa-chevron-down');
+          icon.style.transform = 'rotate(0deg)';
+        } else {
+          // Collapse
+          block.classList.add('collapsed');
+          block.style.maxHeight = '0px';
+          block.style.overflow = 'hidden';
+          block.style.marginTop = '0';
+          icon.classList.remove('fa-chevron-down');
+          icon.classList.add('fa-chevron-up');
+          icon.style.transform = 'rotate(180deg)';
+        }
+      }
+    }
 
     function copyBibTeX() {
       const bibtexCode = document.getElementById('bibtex-code').textContent;
