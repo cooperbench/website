@@ -611,7 +611,8 @@
       }
 
       // Auto-load random settings on page load
-      window.addEventListener('DOMContentLoaded', function() {
+      // Use window.onload to ensure comparison.js is loaded
+      window.addEventListener('load', function() {
         randomizeSettings();
       });
     </script>
