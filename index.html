@@ -615,7 +615,10 @@
       window.addEventListener('load', function() {
         console.log('Page loaded, checking if loadComparison exists:', typeof loadComparison);
         if (typeof loadComparison === 'function') {
-          randomizeSettings();
+          // Wait a bit for the page to fully render, then randomize
+          setTimeout(function() {
+            randomizeSettings();
+          }, 100);
         } else {
           console.error('loadComparison is not defined yet, retrying...');
           setTimeout(randomizeSettings, 500);
@@ -1062,7 +1065,6 @@
 
 
   </script>
-  <script defer src="static/js/comparison.js"></script>
 </body>
 
 </html>
