@@ -305,7 +305,7 @@
         <div class="py-8">
           <img src="static/images/fig1.png" alt="Figure 1 showing the overview of AgileThinker architecture"
             class="w-full rounded-2xl transition-shadow duration-300" />
-          <h2 class="text-gray-700 mt-6 leading-relaxed">
+          <h2 class="text-gray-700 mt-6 font-serif leading-relaxed">
             We create three real-time games, <em>Freeway</em>, <em>Snake</em> and <em>Overcooked</em>, to study the
             challenge of real-time reasoning. In these games, agents need to deal with dynamic environments smartly and
             timely to achieve high rewards. Experiments show that under <em>cognitive load</em> and <em>time
@@ -323,14 +323,16 @@
       <div class="max-w-4xl mx-auto">
         <div class="flex justify-center">
           <div class="w-full max-w-4xl text-center">
-            <h2 class="text-4xl font-bold text-gray-900 mb-8 relative inline-block">
-              Abstract
-              <div
-                class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
-              </div>
-            </h2>
-            <div class="text-lg leading-relaxed text-gray-700 text-justify">
-              <p>
+            <button onclick="toggleAbstract()" class="w-full flex items-center justify-center gap-3 mb-6 group">
+              <h2 class="text-2xl md:text-3xl font-bold text-gray-900 relative inline-block group-hover:text-primary transition-colors">
+                Abstract
+                <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
+                </div>
+              </h2>
+              <i class="fas fa-chevron-down text-gray-600 transition-transform duration-300 group-hover:text-primary" id="abstract-icon"></i>
+            </button>
+            <div id="abstract-content" class="leading-relaxed text-gray-700 text-justify overflow-hidden transition-all duration-500" style="max-height: 0;">
+              <p class="mb-4">
                 Agents in the real world need to make not only logical but also <em>timely judgments</em>, which demands
                 continuous awareness of the dynamic environment where hazards emerge, opportunities arise, and other
                 agents act - all while the agent's own reasoning is still unfolding. Despite significant advances in
@@ -355,6 +357,21 @@
       </div>
     </section>
     <!-- End paper abstract -->
+
+    <script>
+      function toggleAbstract() {
+        const content = document.getElementById('abstract-content');
+        const icon = document.getElementById('abstract-icon');
+
+        if (content.style.maxHeight === '0px' || content.style.maxHeight === '') {
+          content.style.maxHeight = content.scrollHeight + 'px';
+          icon.style.transform = 'rotate(180deg)';
+        } else {
+          content.style.maxHeight = '0px';
+          icon.style.transform = 'rotate(0deg)';
+        }
+      }
+    </script>
 
     <!-- Real-Time Reasoning Demos -->
     <!-- <section class="py-16 px-6 animate-fade-in-up">
