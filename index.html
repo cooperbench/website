@@ -386,8 +386,20 @@
                 onclick="previousStep()" disabled>
                 <i class="fas fa-chevron-left mr-1 md:mr-2"></i>
                 <span class="hidden sm:inline">Previous</span>
-                <span class="sm:hidden">Prev</span>
               </button>
+
+              <div class="flex items-center gap-2">
+                <button id="play-btn"
+                  class="inline-flex items-center px-3 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-all duration-300 text-sm"
+                  onclick="togglePlayPause()">
+                  <i class="fas fa-play"></i>
+                </button>
+                <button id="pause-btn"
+                  class="inline-flex items-center px-3 py-2 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition-all duration-300 text-sm hidden"
+                  onclick="togglePlayPause()">
+                  <i class="fas fa-pause"></i>
+                </button>
+              </div>
 
               <div class="text-center">
                 <div class="text-xs md:text-sm text-gray-600 mb-1">Current Step</div>
@@ -400,7 +412,6 @@
                 class="inline-flex items-center px-3 md:px-6 py-2 md:py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
                 onclick="nextStep()">
                 <span class="hidden sm:inline">Next</span>
-                <span class="sm:hidden">Next</span>
                 <i class="fas fa-chevron-right ml-1 md:ml-2"></i>
               </button>
             </div>
@@ -418,24 +429,26 @@
                 <div class="mb-4 bg-gray-100 rounded-lg overflow-hidden max-w-sm mx-auto" style="aspect-ratio: 1/1;">
                   <canvas id="game-canvas-reactive" class="w-full h-full"></canvas>
                 </div>
-                <div class="mb-4 p-3 bg-blue-50 rounded-lg">
-                  <div class="text-sm text-gray-600">Score</div>
-                  <div class="text-2xl font-bold text-blue-600" id="score-reactive">0</div>
-                </div>
-                <div class="mb-4 p-3 bg-blue-50 rounded-lg">
-                  <div class="text-sm text-gray-600">Next Action</div>
-                  <div class="text-2xl font-bold text-blue-600" id="thinking-result-reactive">Keep</div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-1 mb-4 p-3 bg-blue-50 rounded-lg">
+                        <div class="text-sm text-gray-600">Score</div>
+                        <div class="text-sm font-bold text-blue-600" id="score-reactive">0</div>
+                    </div>
+                    <div class="col-span-1 mb-4 p-3 bg-blue-50 rounded-lg">
+                        <div class="text-sm text-gray-600">Next Action</div>
+                        <div class="text-sm font-bold text-blue-600" id="thinking-result-reactive">Keep</div>
+                    </div>
                 </div>
                 <div class="border border-gray-200 rounded-lg">
                   <button
                     class="w-full px-4 py-3 flex items-center justify-between text-left font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
                     onclick="toggleThinking('reactive')">
-                    <span>Reasoning for Action</span>
+                    <span>Agent Reasoning</span>
                     <i class="fas fa-chevron-down transition-transform" id="thinking-icon-reactive"></i>
                   </button>
                   <div id="thinking-content-reactive" class="px-4 pb-4 text-sm text-gray-700 leading-relaxed"
                     style="display: none;">
-                    <p class="italic text-gray-500">Loading reasoning for action...</p>
+                    <p class="italic text-gray-500">Loading Agent Reasoning...</p>
                   </div>
                 </div>
               </div>
@@ -451,24 +464,26 @@
                 <div class="mb-4 bg-gray-100 rounded-lg overflow-hidden max-w-sm mx-auto" style="aspect-ratio: 1/1;">
                   <canvas id="game-canvas-planning" class="w-full h-full"></canvas>
                 </div>
-                <div class="mb-4 p-3 bg-yellow-50 rounded-lg">
-                  <div class="text-sm text-gray-600">Score</div>
-                  <div class="text-2xl font-bold text-yellow-600" id="score-planning">0</div>
-                </div>
-                <div class="mb-4 p-3 bg-yellow-50 rounded-lg">
-                  <div class="text-sm text-gray-600">Next Action</div>
-                  <div class="text-2xl font-bold text-yellow-600" id="thinking-result-planning">Keep</div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="mb-4 p-3 bg-yellow-50 rounded-lg">
+                        <div class="text-sm text-gray-600">Score</div>
+                        <div class="text-sm font-bold text-yellow-600" id="score-planning">0</div>
+                    </div>
+                    <div class="mb-4 p-3 bg-yellow-50 rounded-lg">
+                        <div class="text-sm text-gray-600">Next Action</div>
+                        <div class="text-sm font-bold text-yellow-600" id="thinking-result-planning">Keep</div>
+                    </div>
                 </div>
                 <div class="border border-gray-200 rounded-lg">
                   <button
                     class="w-full px-4 py-3 flex items-center justify-between text-left font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
                     onclick="toggleThinking('planning')">
-                    <span>Reasoning for Action</span>
+                    <span>Agent Reasoning</span>
                     <i class="fas fa-chevron-down transition-transform" id="thinking-icon-planning"></i>
                   </button>
                   <div id="thinking-content-planning" class="px-4 pb-4 text-sm text-gray-700 leading-relaxed"
                     style="display: none;">
-                    <p class="italic text-gray-500">Loading reasoning for action...</p>
+                    <p class="italic text-gray-500">Loading Agent Reasoning...</p>
                   </div>
                 </div>
               </div>
@@ -484,24 +499,26 @@
                 <div class="mb-4 bg-gray-100 rounded-lg overflow-hidden max-w-sm mx-auto" style="aspect-ratio: 1/1;">
                   <canvas id="game-canvas-agile" class="w-full h-full"></canvas>
                 </div>
-                <div class="mb-4 p-3 bg-green-50 rounded-lg">
-                  <div class="text-sm text-gray-600">Score</div>
-                  <div class="text-2xl font-bold text-green-600" id="score-agile">0</div>
-                </div>
-                <div class="mb-4 p-3 bg-green-50 rounded-lg">
-                  <div class="text-sm text-gray-600">Next Action</div>
-                  <div class="text-2xl font-bold text-green-600" id="thinking-result-agile">Keep</div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="mb-4 p-3 bg-green-50 rounded-lg">
+                        <div class="text-sm text-gray-600">Score</div>
+                        <div class="text-sm font-bold text-green-600" id="score-agile">0</div>
+                    </div>
+                    <div class="mb-4 p-3 bg-green-50 rounded-lg">
+                        <div class="text-sm text-gray-600">Next Action</div>
+                        <div class="text-sm font-bold text-green-600" id="thinking-result-agile">Keep</div>
+                    </div>
                 </div>
                 <div class="border border-gray-200 rounded-lg">
                   <button
                     class="w-full px-4 py-3 flex items-center justify-between text-left font-semibold text-gray-text-gray-900 hover:bg-gray-50 transition-colors"
                     onclick="toggleThinking('agile')">
-                    <span>Reasoning for Action</span>
+                    <span>Agent Reasoning</span>
                     <i class="fas fa-chevron-down transition-transform" id="thinking-icon-agile"></i>
                   </button>
                   <div id="thinking-content-agile" class="px-4 pb-4 text-sm text-gray-700 leading-relaxed"
                     style="display: none;">
-                    <p class="italic text-gray-500">Loading reasoning for action...</p>
+                    <p class="italic text-gray-500">Loading Agent Reasoning...</p>
                   </div>
                 </div>
               </div>
@@ -608,6 +625,43 @@
 
         // Trigger loading with new random settings
         loadComparison();
+      }
+
+      // Play/Pause functionality
+      let playInterval = null;
+      let isPlaying = false;
+
+      function togglePlayPause() {
+        const playBtn = document.getElementById('play-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+
+        if (isPlaying) {
+          // Pause
+          clearInterval(playInterval);
+          playInterval = null;
+          isPlaying = false;
+          playBtn.classList.remove('hidden');
+          pauseBtn.classList.add('hidden');
+        } else {
+          // Play
+          isPlaying = true;
+          playBtn.classList.add('hidden');
+          pauseBtn.classList.remove('hidden');
+
+          // Auto-advance every 1 second
+          playInterval = setInterval(function() {
+            if (typeof nextStep === 'function') {
+              nextStep();
+
+              // Stop at the end
+              const currentStep = parseInt(document.getElementById('current-step').textContent);
+              const totalSteps = parseInt(document.getElementById('total-steps').textContent);
+              if (currentStep >= totalSteps) {
+                togglePlayPause();
+              }
+            }
+          }, 1000);
+        }
       }
 
       // Auto-load random settings on page load
