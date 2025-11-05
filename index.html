@@ -434,7 +434,7 @@
 
     <!-- Agent Reasoning Progress Comparison -->
     <section class="py-16 px-6 bg-gray-50 animate-fade-in-up">
-      <div class="max-w-7xl mx-auto">
+      <div class="max-w-5xl mx-auto">
         <h2 class="text-4xl font-bold text-gray-900 text-center mb-12 relative inline-block">
           Agent Reasoning Progress Comparison
           <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
@@ -442,9 +442,9 @@
         </h2>
 
         <!-- Settings Selection -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-          <h3 class="text-2xl font-bold text-gray-900 mb-6">Choose Your Settings</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-8">
+          <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-6">Choose Your Settings</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">Game</label>
               <select id="game-select"
@@ -492,11 +492,11 @@
             </div>
           </div>
 
-          <div class="flex justify-center mt-8">
+          <div class="flex justify-center mt-6 md:mt-8">
             <button id="load-btn"
-              class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white font-bold text-lg rounded-lg hover:from-purple-600 hover:via-pink-600 hover:to-red-600 hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-2xl animate-pulse"
+              class="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white font-bold text-base md:text-lg rounded-lg hover:from-purple-600 hover:via-pink-600 hover:to-red-600 hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-2xl animate-pulse"
               onclick="loadComparison()">
-              <i class="fas fa-play mr-3"></i>
+              <i class="fas fa-play mr-2 md:mr-3"></i>
               <span>Load Comparison!</span>
             </button>
           </div>
@@ -505,41 +505,43 @@
         <!-- Comparison Results -->
         <div id="comparison-results" style="display: none;">
           <!-- Step Navigation -->
-          <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
-            <div class="flex items-center justify-between">
+          <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 mb-6 md:mb-8">
+            <div class="flex items-center justify-between gap-2">
               <button id="prev-step-btn"
-                class="inline-flex items-center px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="inline-flex items-center px-3 md:px-6 py-2 md:py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
                 onclick="previousStep()" disabled>
-                <i class="fas fa-chevron-left mr-2"></i>
-                <span>Previous Step</span>
+                <i class="fas fa-chevron-left mr-1 md:mr-2"></i>
+                <span class="hidden sm:inline">Previous</span>
+                <span class="sm:hidden">Prev</span>
               </button>
 
               <div class="text-center">
-                <div class="text-sm text-gray-600 mb-1">Current Step</div>
-                <div class="text-2xl font-bold text-gray-900">
+                <div class="text-xs md:text-sm text-gray-600 mb-1">Current Step</div>
+                <div class="text-lg md:text-2xl font-bold text-gray-900">
                   <span id="current-step">0</span> / <span id="total-steps">0</span>
                 </div>
               </div>
 
               <button id="next-step-btn"
-                class="inline-flex items-center px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="inline-flex items-center px-3 md:px-6 py-2 md:py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
                 onclick="nextStep()">
-                <span>Next Step</span>
-                <i class="fas fa-chevron-right ml-2"></i>
+                <span class="hidden sm:inline">Next</span>
+                <span class="sm:hidden">Next</span>
+                <i class="fas fa-chevron-right ml-1 md:ml-2"></i>
               </button>
             </div>
           </div>
 
           <!-- Three Model Comparison -->
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 gap-6">
             <!-- Reactive Agent -->
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
-                <h3 class="text-xl font-bold text-white">Reactive Agent</h3>
-                <p class="text-blue-100 text-sm">Fast, Intuitive Reasoning</p>
+              <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-4 md:px-6 py-3 md:py-4">
+                <h3 class="text-lg md:text-xl font-bold text-white">Reactive Agent</h3>
+                <p class="text-blue-100 text-xs md:text-sm">Fast, Intuitive Reasoning</p>
               </div>
-              <div class="p-6">
-                <div class="mb-4 bg-gray-100 rounded-lg overflow-hidden" style="aspect-ratio: 1/1;">
+              <div class="p-4 md:p-6">
+                <div class="mb-4 bg-gray-100 rounded-lg overflow-hidden max-w-md mx-auto" style="aspect-ratio: 1/1;">
                   <canvas id="game-canvas-reactive" class="w-full h-full"></canvas>
                 </div>
                 <div class="mb-4 p-3 bg-blue-50 rounded-lg">
@@ -567,12 +569,12 @@
 
             <!-- Planning Agent -->
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 px-6 py-4">
-                <h3 class="text-xl font-bold text-white">Planning Agent</h3>
-                <p class="text-yellow-100 text-sm">Slow, Deliberate Reasoning</p>
+              <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 px-4 md:px-6 py-3 md:py-4">
+                <h3 class="text-lg md:text-xl font-bold text-white">Planning Agent</h3>
+                <p class="text-yellow-100 text-xs md:text-sm">Slow, Deliberate Reasoning</p>
               </div>
-              <div class="p-6">
-                <div class="mb-4 bg-gray-100 rounded-lg overflow-hidden" style="aspect-ratio: 1/1;">
+              <div class="p-4 md:p-6">
+                <div class="mb-4 bg-gray-100 rounded-lg overflow-hidden max-w-md mx-auto" style="aspect-ratio: 1/1;">
                   <canvas id="game-canvas-planning" class="w-full h-full"></canvas>
                 </div>
                 <div class="mb-4 p-3 bg-yellow-50 rounded-lg">
@@ -600,12 +602,12 @@
 
             <!-- AgileThinker Model -->
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div class="bg-gradient-to-r from-blue-500 via-green-500 to-yellow-500 px-6 py-4">
-                <h3 class="text-xl font-bold text-white">AgileThinker</h3>
-                <p class="text-green-100 text-sm">Parallel Reasoning System</p>
+              <div class="bg-gradient-to-r from-blue-500 via-green-500 to-yellow-500 px-4 md:px-6 py-3 md:py-4">
+                <h3 class="text-lg md:text-xl font-bold text-white">AgileThinker</h3>
+                <p class="text-green-100 text-xs md:text-sm">Parallel Reasoning System</p>
               </div>
-              <div class="p-6">
-                <div class="mb-4 bg-gray-100 rounded-lg overflow-hidden" style="aspect-ratio: 1/1;">
+              <div class="p-4 md:p-6">
+                <div class="mb-4 bg-gray-100 rounded-lg overflow-hidden max-w-md mx-auto" style="aspect-ratio: 1/1;">
                   <canvas id="game-canvas-agile" class="w-full h-full"></canvas>
                 </div>
                 <div class="mb-4 p-3 bg-green-50 rounded-lg">
