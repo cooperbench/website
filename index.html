@@ -632,6 +632,19 @@
       let playInterval = null;
       let isPlaying = false;
 
+      function getPlaySpeed() {
+        const timePressure = document.getElementById('time-pressure-select').value;
+        // Map time pressure to play speed (in milliseconds)
+        // Higher time pressure = faster playback
+        const speedMap = {
+          '4k': 250,    // Extreme: 4x speed (0.25 seconds)
+          '8k': 500,    // High: 2x speed (0.5 seconds)
+          '16k': 1000,  // Moderate: 1x speed (1 second)
+          '32k': 2000   // Low: 0.5x speed (2 seconds)
+        };
+        return speedMap[timePressure] || 1000;
+      }
+
       function togglePlayPause() {
         const playBtn = document.getElementById('play-btn');
         const pauseBtn = document.getElementById('pause-btn');
@@ -649,7 +662,9 @@
           playBtn.classList.add('hidden');
           pauseBtn.classList.remove('hidden');
 
-          // Auto-advance every 1 second
+          // Auto-advance based on time pressure setting
+          const speed = getPlaySpeed();
+          console.log('Playing at speed:', speed, 'ms per step');
           playInterval = setInterval(function() {
             if (typeof nextStep === 'function') {
               nextStep();
@@ -661,7 +676,7 @@
                 togglePlayPause();
               }
             }
-          }, 1000);
+          }, speed);
         }
       }
 
