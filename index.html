@@ -55,6 +55,7 @@
   <!-- Additional SEO -->
   <meta name="theme-color" content="#2563eb">
   <meta name="msapplication-TileColor" content="#2563eb">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
@@ -180,7 +181,7 @@
         "name": "Real-Time Reasoning"
       },
       {
-        "@type": "Thing", 
+        "@type": "Thing",
         "name": "Language Agents"
       }
     ]
@@ -825,7 +826,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Complete Example -->
         <div class="bg-white rounded-2xl shadow-lg p-8">
           <div class="flex items-center mb-6">
@@ -840,7 +841,7 @@
               <span class="text-gray-700 font-semibold">Show complete code example</span>
               <i class="fas fa-chevron-down text-gray-500 group-open:rotate-180 transition-transform duration-300"></i>
             </summary>
-            
+
 <div class="bg-gray-900 rounded-lg p-6 overflow-x-auto">
   <code class="text-gray-300 font-mono text-sm leading-relaxed">
 <span class="text-purple-400">import</span> <span class="text-blue-400">realtimegym</span><br>
@@ -945,11 +946,11 @@
     function toggleCodeBlock(blockId) {
       const block = document.getElementById(blockId);
       const icon = document.getElementById(blockId + '-icon');
-      
+
       if (block && icon) {
         // Check if collapsed by checking if max-height is set to 0 or if class contains collapsed
         const isCollapsed = block.classList.contains('collapsed') || block.style.maxHeight === '0px';
-        
+
         if (isCollapsed) {
           // Expand
           block.classList.remove('collapsed');
