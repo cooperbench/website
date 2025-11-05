@@ -340,7 +340,7 @@
               <label class="block text-xs font-semibold text-gray-600 mb-1">Time Pressure</label>
               <select id="time-pressure-select"
                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900"
-                onchange="loadComparison()">
+                onchange="loadComparison(); updatePlaySpeed();">
                 <option value="4k">Extreme</option>
                 <option value="8k" selected>High</option>
                 <option value="16k">Moderate</option>
@@ -665,6 +665,27 @@
           // Auto-advance based on time pressure setting
           const speed = getPlaySpeed();
           console.log('Playing at speed:', speed, 'ms per step');
+          playInterval = setInterval(function() {
+            if (typeof nextStep === 'function') {
+              nextStep();
+
+              // Stop at the end
+              const currentStep = parseInt(document.getElementById('current-step').textContent);
+              const totalSteps = parseInt(document.getElementById('total-steps').textContent);
+              if (currentStep >= totalSteps) {
+                togglePlayPause();
+              }
+            }
+          }, speed);
+        }
+      }
+
+      function updatePlaySpeed() {
+        // If currently playing, restart with new speed
+        if (isPlaying) {
+          clearInterval(playInterval);
+          const speed = getPlaySpeed();
+          console.log('Updating play speed to:', speed, 'ms per step');
           playInterval = setInterval(function() {
             if (typeof nextStep === 'function') {
               nextStep();
