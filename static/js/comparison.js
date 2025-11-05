@@ -1902,11 +1902,13 @@ async function loadComparison() {
   // Store game type in global state
   comparisonData.game = game;
 
-  // Show loading state
+  // Show loading state (if load button exists)
   const loadBtn = document.getElementById("load-btn");
-  loadBtn.innerHTML =
-    '<i class="fas fa-spinner fa-spin mr-3"></i><span>Loading...</span>';
-  loadBtn.disabled = true;
+  if (loadBtn) {
+    loadBtn.innerHTML =
+      '<i class="fas fa-spinner fa-spin mr-3"></i><span>Loading...</span>';
+    loadBtn.disabled = true;
+  }
 
   try {
     // Preload sprites for freeway game
@@ -1936,10 +1938,12 @@ async function loadComparison() {
     console.error("Error loading comparison data:", error);
     alert("Failed to load comparison data. Please try again.");
   } finally {
-    // Reset button
-    loadBtn.innerHTML =
-      '<i class="fas fa-play mr-3"></i><span>Load Comparison</span>';
-    loadBtn.disabled = false;
+    // Reset button (if it exists)
+    if (loadBtn) {
+      loadBtn.innerHTML =
+        '<i class="fas fa-play mr-3"></i><span>Load Comparison</span>';
+      loadBtn.disabled = false;
+    }
   }
 }
 
