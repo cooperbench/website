@@ -613,7 +613,13 @@
       // Auto-load random settings on page load
       // Use window.onload to ensure comparison.js is loaded
       window.addEventListener('load', function() {
-        randomizeSettings();
+        console.log('Page loaded, checking if loadComparison exists:', typeof loadComparison);
+        if (typeof loadComparison === 'function') {
+          randomizeSettings();
+        } else {
+          console.error('loadComparison is not defined yet, retrying...');
+          setTimeout(randomizeSettings, 500);
+        }
       });
     </script>
 
