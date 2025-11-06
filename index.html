@@ -87,6 +87,8 @@
   <!-- Custom Tailwind Config -->
   <script>
     tailwind.config = {
+      darkMode: 'class', // optional: enable class-based dark mode
+      plugins: [require('@tailwindcss/typography')],
       theme: {
         extend: {
           colors: {
@@ -305,14 +307,19 @@
     <!-- Agent Reasoning Progress Comparison -->
     <section class="py-16 px-6 bg-gray-50 animate-fade-in-up">
       <div class="max-w-4xl mx-auto">
-        <h2 class="text-2xl font-bold text-gray-900 text-center mb-12 relative inline-block">
+        <h2 class="text-2xl font-bold text-gray-900 text-center mb-4 relative inline-block">
           Watch real-time games
           <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
           </div>
         </h2>
 
+        <p class="prose mb-12">
+            Play with different cognitive loads and time pressures. Do you notice any difference in how the three agents think and act?
+            Under each settings which agent performs the best? Use the "Random" button to sample different settings quickly!
+        </p>
+
         <!-- Settings Selection -->
-        <div class="bg-white rounded-xl shadow-md p-4 md:p-6 mb-6">
+        <div class="rounded-xl py-4">
           <div class="flex flex-wrap items-center gap-3 md:gap-4">
             <div class="flex-1 min-w-[140px]">
               <label class="block text-xs font-semibold text-gray-600 mb-1">Game</label>
@@ -379,10 +386,10 @@
         <!-- Comparison Results -->
         <div id="comparison-results" style="display: none;">
           <!-- Step Navigation -->
-          <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 mb-6 md:mb-8">
+          <div class="rounded-2xl mb-6 md:mb-8">
             <div class="flex items-center justify-between gap-2">
               <button id="prev-step-btn"
-                class="inline-flex items-center px-3 md:px-6 py-2 md:py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
+                class="inline-flex items-center px-3 md:px-6 py-2 md:py-3 font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
                 onclick="previousStep()" disabled>
                 <i class="fas fa-chevron-left mr-1 md:mr-2"></i>
                 <span class="hidden sm:inline">Previous</span>
@@ -409,7 +416,7 @@
                   <span class="hidden md:inline">Pause</span>
                 </button>
                 <button id="next-step-btn"
-                  class="inline-flex items-center px-3 md:px-6 py-2 md:py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
+                  class="inline-flex items-center px-3 md:px-6 py-2 md:py-3 font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
                   onclick="nextStep()">
                   <span class="hidden sm:inline">Next</span>
                   <i class="fas fa-chevron-right ml-1 md:ml-2"></i>
@@ -419,7 +426,7 @@
           </div>
 
           <!-- Three Model Comparison -->
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <!-- Reactive Agent -->
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
               <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-4 md:px-6 py-3 md:py-4">
@@ -530,14 +537,53 @@
     </section>
     <!-- End Agent Reasoning Progress Comparison -->
 
+    <section class="py-2 px-6 animate-fade-in-up">
+      <div class="max-w-4xl mx-auto">
+        <div class="py-4">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center relative inline-block">
+                Why do we want agents to be real-time?
+              <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
+              </div>
+            </h2>
+          <h2 class="prose">
+            The time current LLM-based agents take to think is not negligible. When encountering real-world tasks,
+            an agent spending too long to think may miss critical opportunities or fail to respond to urgent situations.
+          </h2>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-2 px-6 animate-fade-in-up">
+      <div class="max-w-4xl mx-auto">
+        <div class="py-4">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center relative inline-block">
+                Why games, why these games?
+              <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
+              </div>
+            </h2>
+          <h2 class="prose">
+              Games provide an awesome testbed for us to control the difficulty and the time flow speed of the environment.
+                We choose Freeway, Snake and Overcooked as they represent different types of real-time challenges: Freeway tests
+                reaction to emergent hazards, Snake tests taking emergent opportunities, and Overcooked tests collaboration with
+                dynamic partners.
+          </h2>
+        </div>
+      </div>
+    </section>
+
     <!-- Teaser figure-->
     <section class="py-8 px-6 animate-fade-in-up">
-      <div class="max-w-2xl mx-auto">
+      <div class="max-w-4xl mx-auto">
         <div class="py-8">
+            <h2 class="text-2xl font-bold text-gray-900 text-center mb-12 relative inline-block">
+                What did we find?
+              <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
+              </div>
+            </h2>
           <img src="static/images/fig1.png" alt="Figure 1 showing the overview of AgileThinker architecture"
-            class="w-full rounded-2xl transition-shadow duration-300" />
-          <h2 class="text-gray-700 mt-6 font-serif leading-relaxed">
-            We create three real-time games, <em>Freeway</em>, <em>Snake</em> and <em>Overcooked</em>, to study the
+            class="w-full max-w-2xl mx-auto rounded-2xl transition-shadow duration-300" />
+          <h2 class="text-gray-700 mt-6 leading-relaxed">
+            We now have three real-time games on our platform, Freeway, Snake and Overcooked, to study the
             challenge of real-time reasoning. In these games, agents need to deal with dynamic environments smartly and
             timely to achieve high rewards. Experiments show that under <em>cognitive load</em> and <em>time
               pressure</em>, <strong>AgileThinker</strong> (Ours), which engages two LLMs with both System 1 and 2
