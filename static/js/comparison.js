@@ -1929,11 +1929,8 @@ async function loadComparison() {
     // Initialize step display
     updateStepDisplay();
 
-    // Scroll to results
-    document.getElementById("comparison-results").scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    // Don't auto-scroll on initial page load (only scroll on user-initiated changes)
+    // This prevents the page from jumping down when first loaded
   } catch (error) {
     console.error("Error loading comparison data:", error);
     alert("Failed to load comparison data. Please try again.");
