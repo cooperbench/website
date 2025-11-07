@@ -99,6 +99,7 @@
           },
           fontFamily: {
             'sans': ['Inter', 'Segoe UI', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            'clash': ['Clash Display', 'sans-serif'],
           },
           animation: {
             'fade-in-up': 'fadeInUp 0.6s ease-out',
@@ -116,6 +117,17 @@
 
   <!-- Fonts - Optimized loading -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Local Clash Display Font -->
+  <style>
+    @font-face {
+      font-family: 'Clash Display';
+      src: url('static/fonts/ClashDisplay Semibold.otf') format('opentype');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
 
   <!-- Structured Data for Academic Papers -->
   <script type="application/ld+json">
@@ -219,6 +231,30 @@
 
 <body>
 
+  <!-- Header Navigation Bar -->
+  <header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <div class="flex-shrink-0">
+          <a href="#" style="font-family: 'Clash Display', sans-serif;" class="text-2xl font-bold text-gray-900 hover:text-primary transition-colors duration-300">
+            Real-Time Gym
+          </a>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="flex items-center space-x-8">
+          <a href="#" class="text-sm font-semibold text-gray-700 hover:text-primary transition-colors duration-300">
+            Home
+          </a>
+          <a href="#about" class="text-sm font-semibold text-gray-700 hover:text-primary transition-colors duration-300">
+            About
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
   <!-- Scroll to Top Button -->
   <button
     class="fixed bottom-8 right-8 w-12 h-12 bg-primary text-white rounded-full opacity-0 invisible transition-all duration-300 z-50 flex items-center justify-center text-lg shadow-lg hover:bg-primary-hover hover:-translate-y-1 hover:shadow-xl scroll-to-top"
@@ -228,7 +264,7 @@
 
 
 
-  <main id="main-content">
+  <main id="main-content" class="pt-16">
     <section class="py-16 px-6 animate-fade-in-up">
       <div class="max-w-4xl mx-auto">
         <div class="flex justify-center">
@@ -332,43 +368,48 @@
               </select>
             </div>
 
-            <div class="flex-1 min-w-[140px]">
-              <label class="block text-xs font-semibold text-gray-600 mb-1">Cognitive Load</label>
-              <select id="cognitive-load-select"
-                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900"
-                onchange="loadComparison()">
-                <option value="easy">Easy</option>
-                <option value="medium" selected>Medium</option>
-                <option value="hard">Hard</option>
-              </select>
-            </div>
-
-            <div class="flex-1 min-w-[140px]">
-              <label class="block text-xs font-semibold text-gray-600 mb-1">Time Pressure</label>
-              <select id="time-pressure-select"
-                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900"
-                onchange="loadComparison(); updatePlaySpeed();">
-                <option value="4k">Extreme</option>
-                <option value="8k" selected>High</option>
-                <option value="16k">Moderate</option>
-                <option value="32k">Low</option>
-              </select>
-            </div>
-
             <div class="flex-1 min-w-[120px]">
-              <label class="block text-xs font-semibold text-gray-600 mb-1">Seed</label>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Task ID</label>
               <select id="seed-select"
                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900"
                 onchange="loadComparison()">
-                <option value="seed0">seed0</option>
-                <option value="seed1">seed1</option>
-                <option value="seed2" selected>seed2</option>
-                <option value="seed3">seed3</option>
-                <option value="seed4">seed4</option>
-                <option value="seed5">seed5</option>
-                <option value="seed6">seed6</option>
-                <option value="seed7">seed7</option>
+                <option value="seed0">Task 0</option>
+                <option value="seed1">Task 1</option>
+                <option value="seed2" selected>Task 2</option>
+                <option value="seed3">Task 3</option>
+                <option value="seed4">Task 4</option>
+                <option value="seed5">Task 5</option>
+                <option value="seed6">Task 6</option>
+                <option value="seed7">Task 7</option>
               </select>
+            </div>
+
+            <div class="flex-1 min-w-[140px]">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">
+                Cognitive Load: <span id="cognitive-load-label" class="text-primary">Medium</span>
+              </label>
+              <input type="range" id="cognitive-load-select" min="0" max="2" value="1" step="1"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
+                oninput="updateCognitiveLoadLabel(this.value)"
+                onchange="loadComparison()">
+              <div class="flex justify-between text-xs text-gray-500 mt-1">
+                <span>Easy</span>
+                <span>Hard</span>
+              </div>
+            </div>
+
+            <div class="flex-1 min-w-[140px]">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">
+                Time Pressure: <span id="time-pressure-label" class="text-primary">High</span>
+              </label>
+              <input type="range" id="time-pressure-select" min="0" max="3" value="1" step="1"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
+                oninput="updateTimePressureLabel(this.value)"
+                onchange="loadComparison(); updatePlaySpeed();">
+              <div class="flex justify-between text-xs text-gray-500 mt-1">
+                <span>Low</span>
+                <span>Extreme</span>
+              </div>
             </div>
 
             <div class="flex-shrink-0">
@@ -500,7 +541,7 @@
             <!-- AgileThinker Model -->
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
               <div class="bg-gradient-to-r from-blue-500 via-green-500 to-yellow-500 px-4 md:px-6 py-3 md:py-4">
-                <h3 class="text-lg md:text-xl font-bold text-white">AgileThinker</h3>
+                <h3 class="text-lg md:text-xl font-bold text-white" style="font-family: 'Clash Display', sans-serif;">AgileThinker</h3>
                 <p class="text-green-100 text-xs md:text-sm">Parallel Reasoning System</p>
               </div>
               <div class="p-4 md:p-6">
@@ -574,7 +615,7 @@
       <div class="max-w-4xl mx-auto">
         <div class="py-4">
             <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center relative inline-block">
-                What is AgileThinker, why we need it?
+                What is <span style="font-family: 'Clash Display', sans-serif;">AgileThinker</span>, why we need it?
               <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
               </div>
             </h2>
@@ -582,7 +623,7 @@
             The <strong>reactive agent</strong>, which uses bounded computation, ensures timeliness but sacrifices decision quality when cognitive load is high. The <strong>planning agent</strong>, which uses unbounded computation, improves decision quality but struggles under time pressure.
             <br />
             <br />
-            <strong>AgileThinker</strong> avoids this decision efficiency-quality trade-off by engaging both reactive and planning thinking systems. The two systems work <strong>in parallel</strong>, and the streaming output from planning system will be immediately used to enhance the reactive system's fast decisions. Therefore, it achieves robust performance across different levels of cognitive load and time pressure.
+            <strong style="font-family: 'Clash Display', sans-serif;">AgileThinker</strong> avoids this decision efficiency-quality trade-off by engaging both reactive and planning thinking systems. The two systems work <strong>in parallel</strong>, and the streaming output from planning system will be immediately used to enhance the reactive system's fast decisions. Therefore, it achieves robust performance across different levels of cognitive load and time pressure.
           </h2>
         </div>
       </div>
@@ -597,13 +638,13 @@
               <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
               </div>
             </h2>
-          <img src="static/images/fig1.png" alt="Figure 1 showing the overview of AgileThinker architecture"
+          <img src="static/images/fig1.png" alt="Figure 1 showing the overview of AgileThinker architecture" style="font-family: 'Clash Display', sans-serif;"
             class="w-full max-w-2xl mx-auto rounded-2xl transition-shadow duration-300" />
           <h2 class="text-gray-700 mt-6 leading-relaxed">
             We now have three real-time games on our platform, Freeway, Snake and Overcooked, to study the
             challenge of real-time reasoning. In these games, agents need to deal with dynamic environments smartly and
             timely to achieve high rewards. Experiments show that under <em>cognitive load</em> and <em>time
-              pressure</em>, <strong>AgileThinker</strong> (Ours), which engages two LLMs with both System 1 and 2
+              pressure</em>, <strong style="font-family: 'Clash Display', sans-serif;">AgileThinker</strong> (Ours), which engages two LLMs with both System 1 and 2
             reasoning, greatly outperforms agents engaging only one LLM. Here scores are normalized to [0, 1] for each
             game and then taken an average.
           </h2>
@@ -638,7 +679,7 @@
                   responses</em>, and System 2 Agent, which allows <em>extended computation for complex problems</em>.
                 Our experiments reveal that even state-of-the-art language models struggle with making logical and
                 timely judgment via either of the two paradigms. To address this limitation, we propose
-                <strong>AgileThinker</strong>, a parallel architecture that simultaneously engages <em>both reasoning
+                <strong style="font-family: 'Clash Display', sans-serif;">AgileThinker</strong>, a parallel architecture that simultaneously engages <em>both reasoning
                   systems</em>. This approach demonstrates superior performance as task difficulty and time pressure
                 increase, managing the trade-off between reasoning depth and response latency. Our work establishes
                 real-time reasoning as a critical frontier for developing practical reasoning agents and provides a
@@ -666,21 +707,42 @@
         }
       }
 
+      // Convert slider values to actual values
+      function getCognitiveLoadValue(sliderValue) {
+        const values = ['easy', 'medium', 'hard'];
+        return values[sliderValue] || 'medium';
+      }
+
+      function getTimePressureValue(sliderValue) {
+        const values = ['32k', '16k', '8k', '4k'];
+        return values[sliderValue] || '8k';
+      }
+
+      function updateCognitiveLoadLabel(sliderValue) {
+        const labels = ['Easy', 'Medium', 'Hard'];
+        document.getElementById('cognitive-load-label').textContent = labels[sliderValue] || 'Medium';
+      }
+
+      function updateTimePressureLabel(sliderValue) {
+        const labels = ['Low', 'Moderate', 'High', 'Extreme'];
+        document.getElementById('time-pressure-label').textContent = labels[sliderValue] || 'High';
+      }
+
       function randomizeSettings() {
         // Randomize game
         const games = ['freeway', 'snake', 'overcooked'];
         const randomGame = games[Math.floor(Math.random() * games.length)];
         document.getElementById('game-select').value = randomGame;
 
-        // Randomize cognitive load
-        const cognitiveLoads = ['easy', 'medium', 'hard'];
-        const randomLoad = cognitiveLoads[Math.floor(Math.random() * cognitiveLoads.length)];
+        // Randomize cognitive load (0-2)
+        const randomLoad = Math.floor(Math.random() * 3);
         document.getElementById('cognitive-load-select').value = randomLoad;
+        updateCognitiveLoadLabel(randomLoad);
 
-        // Randomize time pressure
-        const timePressures = ['4k', '8k', '16k', '32k'];
-        const randomPressure = timePressures[Math.floor(Math.random() * timePressures.length)];
+        // Randomize time pressure (0-3)
+        const randomPressure = Math.floor(Math.random() * 4);
         document.getElementById('time-pressure-select').value = randomPressure;
+        updateTimePressureLabel(randomPressure);
 
         // Randomize seed
         const seeds = ['seed0', 'seed1', 'seed2', 'seed3', 'seed4', 'seed5', 'seed6', 'seed7'];
@@ -696,7 +758,8 @@
       let isPlaying = false;
 
       function getPlaySpeed() {
-        const timePressure = document.getElementById('time-pressure-select').value;
+        const sliderValue = document.getElementById('time-pressure-select').value;
+        const timePressure = getTimePressureValue(sliderValue);
         // Map time pressure to play speed (in milliseconds)
         // Higher time pressure = faster playback
         const speedMap = {
@@ -1022,7 +1085,7 @@
               <div class="flex items-center mb-4">
                 <i class="fas fa-sync-alt text-green-600 text-xl mr-3"></i>
                 <div class="flex-1">
-                  <h4 class="text-lg font-semibold text-gray-900">AgileThinker</h4>
+                  <h4 class="text-lg font-semibold text-gray-900" style="font-family: 'Clash Display', sans-serif;">AgileThinker</h4>
                   <p class="text-green-600 text-xs">Parallel: System 1 + System 2</p>
                 </div>
                 <button onclick="toggleCodeBlock('agile-code')" class="ml-2 text-gray-400 hover:text-gray-600 transition-colors" title="Toggle code">
