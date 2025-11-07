@@ -1,0 +1,96 @@
+# Real-Time Reasoning Agents in Evolving Environments
+
+> Project URL: https://realtimegym.saltlab.stanford.edu/
+> Research Paper: https://arxiv.org/pdf/COMING_SOON.pdf
+> GitHub Repository: https://github.com/SALT-NLP/RealtimeGym
+> Dataset: https://huggingface.co/datasets/SALT-NLP/RealtimeGym
+
+## Overview
+
+This is an academic research project from Stanford University (SALT-NLP) that introduces real-time reasoning as a new problem formulation for bringing reasoning capabilities to agents operating in evolving environments.
+
+## Key Concepts
+
+- **Real-Time Reasoning**: Making logical AND timely judgments in dynamic environments where hazards emerge, opportunities arise, and other agents act - all while the agent's own reasoning is still unfolding.
+
+- **Real-Time Reasoning Gym**: A platform with three game environments (Freeway, Snake, Overcooked) to evaluate and advance real-time reasoning capabilities of language agents.
+
+- **AgileThinker**: A parallel architecture that simultaneously engages both System 1 (fast, intuitive) and System 2 (slow, deliberate) reasoning paradigms. Demonstrates superior performance as task difficulty and time pressure increase.
+
+## Research Team
+
+- Yule Wen (Tsinghua University) - Co-leading author
+- Yixin Ye (Shanghai Jiao Tong University) - Co-leading author
+- Yanzhe Zhang (Georgia Institute of Technology)
+- Diyi Yang (Stanford University)
+- Hao Zhu (Stanford University)
+
+## Agent Architectures
+
+### Reactive Agent (System 1)
+Fast, intuitive reasoning with bounded computation. Ensures timeliness but sacrifices decision quality under high cognitive load.
+
+### Planning Agent (System 2)
+Slow, deliberate reasoning with unbounded computation. Improves decision quality but struggles under time pressure.
+
+### AgileThinker (Parallel System 1 + System 2)
+Runs both reactive and planning systems in parallel. Streaming output from planning system immediately enhances reactive system's fast decisions. Achieves robust performance across different levels of cognitive load and time pressure.
+
+## Game Environments
+
+1. **Freeway**: Tests reaction to emergent hazards (traffic navigation)
+2. **Snake**: Tests taking emergent opportunities (food collection while avoiding obstacles)
+3. **Overcooked**: Tests collaboration with dynamic partners (cooperative cooking)
+
+## Installation & Usage
+
+```bash
+git clone git@github.com:SALT-NLP/RealtimeGym.git
+cd RealtimeGym
+pip install -e .
+```
+
+```python
+import realtimegym
+from realtimegym.agents.agile import AgileThinker
+from realtimegym.prompts import freeway as prompt
+
+env, seed, _ = realtimegym.make_env("Freeway-v0")
+obs, done = env.reset()
+
+agent = AgileThinker(prompt, "freeway_v0_agile.csv", 'token')
+
+while not done:
+    agent.observe(obs)      # Fast observation
+    agent.think(timeout=4096)  # Bounded thinking (token or seconds)
+    action = agent.act()
+    obs, done, reward, reset = env.step(action)
+```
+
+## Key Findings
+
+Experiments show that under cognitive load and time pressure, AgileThinker greatly outperforms agents engaging only one LLM with either System 1 or System 2 reasoning. The parallel architecture manages the trade-off between reasoning depth and response latency.
+
+## Citation
+
+```bibtex
+@article{wen2024realtime,
+  title={Real-Time Reasoning Agents in Evolving Environments},
+  author={Wen, Yule and Ye, Yixin and Zhang, Yanzhe and Yang, Diyi and Zhu, Hao},
+  journal={International Conference on Learning Representations},
+  year={2025},
+  url={https://bleaves.github.io/real-time-reasoning/}
+}
+```
+
+## Technical Details
+
+- **Languages**: Python, JavaScript, HTML/CSS
+- **Framework**: Static website with interactive game visualizations
+- **Features**: Real-time game comparisons between three agent architectures
+- **Meta**: Academic project page template with SEO optimization, responsive design, structured data
+- **Styling**: Tailwind CSS with custom Clash Display font
+
+## License
+
+Website: Creative Commons Attribution-ShareAlike 4.0 International License
