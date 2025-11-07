@@ -628,7 +628,8 @@ async function getPlayerSprite(orientation, heldItem, hatColor) {
   }
 
   const baseImg = overcookedSprites.images[baseKey];
-  const hatImg = overcookedSprites.images[`hat_${real_orientation}_${hatColor}`];
+  const hatImg =
+    overcookedSprites.images[`hat_${real_orientation}_${hatColor}`];
 
   if (!baseImg || !hatImg) {
     return baseImg;
@@ -1891,6 +1892,17 @@ let comparisonData = {
   game: "freeway", // Store current game type
 };
 
+// Helper functions to convert slider values to actual values
+function getCognitiveLoadValue(sliderValue) {
+  const values = ["easy", "medium", "hard"];
+  return values[sliderValue] || "medium";
+}
+
+function getTimePressureValue(sliderValue) {
+  const values = ["32k", "16k", "8k", "4k"];
+  return values[sliderValue] || "8k";
+}
+
 // Toggle thinking process display
 function toggleThinking(model) {
   const content = document.getElementById(`thinking-content-${model}`);
@@ -1908,8 +1920,18 @@ function toggleThinking(model) {
 // Load comparison data
 async function loadComparison() {
   const game = document.getElementById("game-select").value;
-  const cognitiveLoad = document.getElementById("cognitive-load-select").value;
-  const timePressure = document.getElementById("time-pressure-select").value;
+
+  // Get slider values and convert to actual values
+  const cognitiveLoadSlider = document.getElementById(
+    "cognitive-load-select",
+  ).value;
+  const cognitiveLoad = getCognitiveLoadValue(parseInt(cognitiveLoadSlider));
+
+  const timePressureSlider = document.getElementById(
+    "time-pressure-select",
+  ).value;
+  const timePressure = getTimePressureValue(parseInt(timePressureSlider));
+
   const seed = document.getElementById("seed-select").value;
 
   // Store game type in global state
@@ -2003,11 +2025,9 @@ async function loadComparisonData(game, cognitiveLoad, timePressure, seed) {
       comparisonData.reactive = reactiveData;
       comparisonData.planning = planningData;
       comparisonData.agile = agileData;
-      comparisonData.totalSteps = Math.max(
-        reactiveData.length,
-        planningData.length,
-        agileData.length,
-      ) + 1;
+      comparisonData.totalSteps =
+        Math.max(reactiveData.length, planningData.length, agileData.length) +
+        1;
       comparisonData.currentStep = 0;
       console.log("✓ Successfully loaded real data");
       return;
@@ -2069,68 +2089,82 @@ function updateStepDisplay() {
     currentStep === comparisonData.totalSteps - 1;
 
   // Update model displays
-  updateModelDisplay("reactive", comparisonData.reactive, currentStep, comparisonData.game);
-  updateModelDisplay("planning", comparisonData.planning, currentStep, comparisonData.game);
-  updateModelDisplay("agile", comparisonData.agile, currentStep, comparisonData.game);
+  updateModelDisplay(
+    "reactive",
+    comparisonData.reactive,
+    currentStep,
+    comparisonData.game,
+  );
+  updateModelDisplay(
+    "planning",
+    comparisonData.planning,
+    currentStep,
+    comparisonData.game,
+  );
+  updateModelDisplay(
+    "agile",
+    comparisonData.agile,
+    currentStep,
+    comparisonData.game,
+  );
 }
 
 // Extract content from last \boxed{} in text
 
 // Extract content from last \boxed{} in text
 function extractBoxedContent(text, action) {
-//   if (text === "Still thinking...") {
-//     return "N/A";
-//   }
-//   if (!text) return "Keep";
+  //   if (text === "Still thinking...") {
+  //     return "N/A";
+  //   }
+  //   if (!text) return "Keep";
 
   // Find all \boxed{ positions
-//   const boxedPositions = [];
-//   let index = 0;
-//   while ((index = text.indexOf("\\boxed{", index)) !== -1) {
-//     boxedPositions.push(index);
-//     index += 7; // length of '\boxed{'
-//   }
+  //   const boxedPositions = [];
+  //   let index = 0;
+  //   while ((index = text.indexOf("\\boxed{", index)) !== -1) {
+  //     boxedPositions.push(index);
+  //     index += 7; // length of '\boxed{'
+  //   }
 
-//   if (boxedPositions.length === 0) {
-//     return "Keep";
-//   }
+  //   if (boxedPositions.length === 0) {
+  //     return "Keep";
+  //   }
 
-//   // Extract content from the last \boxed{...} with proper brace matching
-//   const lastBoxedPos = boxedPositions[boxedPositions.length - 1];
-//   const startPos = lastBoxedPos + 7; // position after '\boxed{'
+  //   // Extract content from the last \boxed{...} with proper brace matching
+  //   const lastBoxedPos = boxedPositions[boxedPositions.length - 1];
+  //   const startPos = lastBoxedPos + 7; // position after '\boxed{'
 
-//   // Count braces to find the matching closing brace
-//   let braceCount = 1;
-//   let endPos = startPos;
+  //   // Count braces to find the matching closing brace
+  //   let braceCount = 1;
+  //   let endPos = startPos;
 
-//   while (endPos < text.length && braceCount > 0) {
-//     if (text[endPos] === "{") {
-//       braceCount++;
-//     } else if (text[endPos] === "}") {
-//       braceCount--;
-//     }
-//     endPos++;
-//   }
+  //   while (endPos < text.length && braceCount > 0) {
+  //     if (text[endPos] === "{") {
+  //       braceCount++;
+  //     } else if (text[endPos] === "}") {
+  //       braceCount--;
+  //     }
+  //     endPos++;
+  //   }
 
-//   if (braceCount !== 0) {
-//     // Unmatched braces, return Keep
-//     return "Keep";
-//   }
+  //   if (braceCount !== 0) {
+  //     // Unmatched braces, return Keep
+  //     return "Keep";
+  //   }
 
-//   // Extract the content (excluding the final closing brace)
-//   let result_text = text.substring(startPos, endPos - 1);
+  //   // Extract the content (excluding the final closing brace)
+  //   let result_text = text.substring(startPos, endPos - 1);
 
-//   console.log("Extracted boxed content:", result_text);
+  //   console.log("Extracted boxed content:", result_text);
 
-//   // Extract only the action letters (L, R, U, D, S, I)
-//   const actions = result_text.match(/[LRUDSI]/g);
+  //   // Extract only the action letters (L, R, U, D, S, I)
+  //   const actions = result_text.match(/[LRUDSI]/g);
 
-//   if (!actions || actions.length === 0) {
-//     return "Keep";
-//   }
+  //   if (!actions || actions.length === 0) {
+  //     return "Keep";
+  //   }
 
-
-// Convert action to full action name
+  // Convert action to full action name
   result_text = getActionName(action);
   console.log("Result:", result_text);
   return result_text;
@@ -2274,26 +2308,26 @@ function updateModelDisplay(model, dataArray, currentStep, game) {
   if (currentStep < dataArray.length) {
     action = data.action;
     switch (action) {
-        case "L":
-            thinkingResult = "Left";
-            break;
-        case "R":
-            thinkingResult = "Right";
-            break;
-        case "U":
-            thinkingResult = "Up";
-            break;
-        case "D":
-            thinkingResult = "Down";
-            break;
-        case "S":
-            thinkingResult = "Stay";
-            break;
-        case "I":
-            thinkingResult = "Interact";
-            break;
-        default:
-            thinkingResult = "N/A";
+      case "L":
+        thinkingResult = "Left";
+        break;
+      case "R":
+        thinkingResult = "Right";
+        break;
+      case "U":
+        thinkingResult = "Up";
+        break;
+      case "D":
+        thinkingResult = "Down";
+        break;
+      case "S":
+        thinkingResult = "Stay";
+        break;
+      case "I":
+        thinkingResult = "Interact";
+        break;
+      default:
+        thinkingResult = "N/A";
     }
   } else {
     action = "N/A";
