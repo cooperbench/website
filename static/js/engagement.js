@@ -129,23 +129,18 @@ function showThinkingPrompt() {
   const prompt = prompts[Math.floor(Math.random() * prompts.length)];
 
   const promptBox = document.createElement('div');
-  promptBox.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl z-50 max-w-md w-full p-6 border-4 border-blue-500 animate-fade-in-up';
+  promptBox.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl z-50 max-w-md w-full p-6 border border-gray-200';
   promptBox.innerHTML = `
-    <div class="text-center">
-      <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-        <i class="fas fa-brain text-white text-2xl"></i>
-      </div>
-      <h3 class="text-xl font-bold text-gray-900 mb-3">Think About It</h3>
-      <p class="text-gray-700 mb-6">${prompt}</p>
-      <button onclick="this.closest('.fixed').remove()" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl">
-        Got it!
-      </button>
-    </div>
+    <h3 class="text-lg font-medium text-gray-900 mb-3">Think About It</h3>
+    <p class="text-gray-700 mb-6">${prompt}</p>
+    <button onclick="this.closest('.fixed').remove(); document.querySelector('.fixed.bg-black').remove();" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded hover:bg-gray-800 transition-colors">
+      Got it
+    </button>
   `;
 
   // Add backdrop
   const backdrop = document.createElement('div');
-  backdrop.className = 'fixed inset-0 bg-black bg-opacity-50 z-40';
+  backdrop.className = 'fixed inset-0 bg-black bg-opacity-30 z-40';
   backdrop.onclick = () => {
     promptBox.remove();
     backdrop.remove();
@@ -167,8 +162,8 @@ function updateProgressIndicator() {
     // Create progress indicator
     progressBar = document.createElement('div');
     progressBar.id = 'exploration-progress';
-    progressBar.className = 'fixed top-16 left-0 right-0 h-2 bg-gray-200 z-50';
-    progressBar.innerHTML = '<div class="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300" style="width: 0%"></div>';
+    progressBar.className = 'fixed top-16 left-0 right-0 h-1 bg-gray-100 z-50';
+    progressBar.innerHTML = '<div class="h-full bg-gray-900 transition-all duration-300" style="width: 0%"></div>';
     document.body.appendChild(progressBar);
   }
 
