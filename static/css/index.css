@@ -675,14 +675,6 @@ code {
     min-height: 44px;
   }
 
-  /* Mobile toast positioning */
-  .toast-notification {
-    bottom: 5rem !important;
-    right: 1rem !important;
-    left: 1rem !important;
-    max-width: calc(100vw - 2rem) !important;
-  }
-
   /* Improve canvas sizing on mobile */
   canvas {
     max-width: 100% !important;

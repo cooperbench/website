@@ -74,42 +74,6 @@ function copyToClipboard(text) {
   navigator.clipboard.writeText(text);
 }
 
-// Toast notification system
-function showToast(message, type = 'info') {
-  const existingToast = document.querySelector('.toast-notification');
-  if (existingToast) {
-    existingToast.remove();
-  }
-
-  const colors = {
-    'success': 'bg-green-500',
-    'error': 'bg-red-500',
-    'info': 'bg-blue-500'
-  };
-
-  const icons = {
-    'success': 'fa-check-circle',
-    'error': 'fa-exclamation-circle',
-    'info': 'fa-info-circle'
-  };
-
-  const toast = document.createElement('div');
-  toast.className = `toast-notification fixed bottom-24 right-8 ${colors[type]} text-white px-6 py-4 rounded-xl shadow-2xl z-50 flex items-center gap-3 animate-fade-in-up`;
-  toast.innerHTML = `
-    <i class="fas ${icons[type]} text-xl"></i>
-    <span class="font-semibold">${message}</span>
-  `;
-
-  document.body.appendChild(toast);
-
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transform = 'translateY(20px)';
-    toast.style.transition = 'all 0.3s ease-out';
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
-}
-
 // Scroll-triggered animations
 function initScrollAnimations() {
   const observerOptions = {
@@ -217,11 +181,6 @@ function updateProgressIndicator() {
 
   progressBar.querySelector('div').style.width = `${scrollPercentage}%`;
 
-  // Show milestone messages based on scroll
-  if (scrollPercentage >= 50 && scrollPercentage < 55 && !sessionStorage.getItem('milestone50')) {
-    showToast('Halfway there! Keep exploring 🎉', 'success');
-    sessionStorage.setItem('milestone50', 'true');
-  }
 }
 
 // Section observer for tracking
@@ -306,13 +265,11 @@ function initMobileTouchSupport() {
         // Swipe left - next step
         if (typeof nextStep === 'function') {
           nextStep();
-          showToast('Next step', 'info');
         }
       } else {
         // Swipe right - previous step
         if (typeof previousStep === 'function') {
           previousStep();
-          showToast('Previous step', 'info');
         }
       }
     }
@@ -324,15 +281,6 @@ function initResponsiveAdjustments() {
   // Add mobile class to body if on mobile
   if (window.innerWidth <= 768) {
     document.body.classList.add('mobile-view');
-
-    // Show mobile hint for swipe gestures
-    const comparisonResults = document.getElementById('comparison-results');
-    if (comparisonResults && !sessionStorage.getItem('swipeHintShown')) {
-      setTimeout(() => {
-        showToast('💡 Tip: Swipe left/right to navigate steps', 'info');
-        sessionStorage.setItem('swipeHintShown', 'true');
-      }, 2000);
-    }
   }
 
   // Update on resize
@@ -347,4 +295,3 @@ function initResponsiveAdjustments() {
 
 // Make functions globally available
 window.shareConfiguration = shareConfiguration;
-window.showToast = showToast;
