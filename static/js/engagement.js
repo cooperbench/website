@@ -146,7 +146,6 @@ let explorationProgress = {
 function trackGameChange(game) {
   explorationProgress.gamesViewed.add(game);
   explorationProgress.settingsChanged++;
-  updateProgressIndicator();
 
   // Show achievement for trying all games
   if (explorationProgress.gamesViewed.size === 3) {
@@ -199,7 +198,7 @@ function showThinkingPrompt() {
 
 function trackSectionView(sectionId) {
   explorationProgress.sectionsViewed.add(sectionId);
-  updateProgressIndicator();
+  // Section tracking is kept for potential achievements
 }
 
 function updateProgressIndicator() {
@@ -210,29 +209,24 @@ function updateProgressIndicator() {
     progressBar = document.createElement('div');
     progressBar.id = 'exploration-progress';
     progressBar.className = 'fixed top-16 left-0 right-0 h-2 bg-gray-200 z-50';
-    progressBar.innerHTML = '<div class="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-500" style="width: 0%"></div>';
+    progressBar.innerHTML = '<div class="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300" style="width: 0%"></div>';
     document.body.appendChild(progressBar);
-    console.log('Progress bar created');
   }
 
-  const totalItems = 6; // 3 games + 3 key sections
-  const completed = explorationProgress.gamesViewed.size + Math.min(explorationProgress.sectionsViewed.size, 3);
-  const percentage = Math.round((completed / totalItems) * 100);
+  // Calculate scroll progress
+  const windowHeight = window.innerHeight;
+  const documentHeight = document.documentElement.scrollHeight;
+  const scrollTop = window.scrollY;
+  const scrollableDistance = documentHeight - windowHeight;
+  const scrollPercentage = scrollableDistance > 0 ? (scrollTop / scrollableDistance) * 100 : 0;
 
-  console.log('Progress update:', {
-    gamesViewed: Array.from(explorationProgress.gamesViewed),
-    sectionsViewed: Array.from(explorationProgress.sectionsViewed),
-    completed,
-    percentage
-  });
+  progressBar.querySelector('div').style.width = `${scrollPercentage}%`;
 
-  progressBar.querySelector('div').style.width = `${percentage}%`;
-
-  // Show milestone messages
-  if (percentage === 50 && !sessionStorage.getItem('milestone50')) {
+  // Show milestone messages based on scroll
+  if (scrollPercentage >= 50 && scrollPercentage < 55 && !sessionStorage.getItem('milestone50')) {
     showToast('Halfway there! Keep exploring 🎉', 'success');
     sessionStorage.setItem('milestone50', 'true');
-  } else if (percentage === 100 && !sessionStorage.getItem('milestone100')) {
+  } else if (scrollPercentage >= 95 && !sessionStorage.getItem('milestone100')) {
     showAchievement('Master Explorer', 'You\'ve explored everything on this page!');
     sessionStorage.setItem('milestone100', 'true');
   }
@@ -265,14 +259,13 @@ function showAchievement(title, description) {
   }, 5000);
 }
 
-// Section observer for progress tracking
+// Section observer for tracking (used for achievements)
 function initSectionTracking() {
   const sectionObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const sectionId = entry.target.id || entry.target.querySelector('h2')?.textContent;
         if (sectionId) {
-          console.log('Section viewed:', sectionId);
           trackSectionView(sectionId);
         }
       }
@@ -280,7 +273,6 @@ function initSectionTracking() {
   }, { threshold: 0.5 });
 
   const sections = document.querySelectorAll('section');
-  console.log('Tracking', sections.length, 'sections');
   sections.forEach(section => {
     sectionObserver.observe(section);
   });
@@ -290,13 +282,9 @@ function initSectionTracking() {
 function initGameTracking() {
   const gameSelect = document.getElementById('game-select');
   if (gameSelect) {
-    console.log('Game tracking initialized');
     gameSelect.addEventListener('change', (e) => {
-      console.log('Game changed to:', e.target.value);
       trackGameChange(e.target.value);
     });
-  } else {
-    console.log('Game select not found');
   }
 }
 
@@ -307,6 +295,18 @@ document.addEventListener('DOMContentLoaded', () => {
   initGameTracking();
   initMobileTouchSupport();
   initResponsiveAdjustments();
+
+  // Initialize progress bar
+  updateProgressIndicator();
+
+  // Update progress bar on scroll
+  let scrollTimeout;
+  window.addEventListener('scroll', () => {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      updateProgressIndicator();
+    }, 10); // Smooth throttling
+  }, { passive: true });
 
   // Track initial game
   const initialGame = document.getElementById('game-select')?.value;
