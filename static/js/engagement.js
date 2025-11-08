@@ -204,32 +204,29 @@ function trackSectionView(sectionId) {
 
 function updateProgressIndicator() {
   let progressBar = document.getElementById('exploration-progress');
-  let progressBadge = document.getElementById('exploration-badge');
 
   if (!progressBar) {
     // Create progress indicator
     progressBar = document.createElement('div');
     progressBar.id = 'exploration-progress';
-    progressBar.className = 'fixed top-16 left-0 right-0 h-1 bg-gray-200 z-40';
+    progressBar.className = 'fixed top-16 left-0 right-0 h-2 bg-gray-200 z-50';
     progressBar.innerHTML = '<div class="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-500" style="width: 0%"></div>';
     document.body.appendChild(progressBar);
-  }
-
-  if (!progressBadge) {
-    // Create visible percentage badge
-    progressBadge = document.createElement('div');
-    progressBadge.id = 'exploration-badge';
-    progressBadge.className = 'fixed top-20 right-4 bg-white rounded-full px-4 py-2 shadow-lg z-40 text-sm font-bold text-gray-800 border-2 border-blue-500 transition-all duration-500';
-    progressBadge.innerHTML = '<i class="fas fa-chart-line text-blue-500 mr-2"></i><span id="exploration-percentage">0%</span> Explored';
-    document.body.appendChild(progressBadge);
+    console.log('Progress bar created');
   }
 
   const totalItems = 6; // 3 games + 3 key sections
   const completed = explorationProgress.gamesViewed.size + Math.min(explorationProgress.sectionsViewed.size, 3);
   const percentage = Math.round((completed / totalItems) * 100);
 
+  console.log('Progress update:', {
+    gamesViewed: Array.from(explorationProgress.gamesViewed),
+    sectionsViewed: Array.from(explorationProgress.sectionsViewed),
+    completed,
+    percentage
+  });
+
   progressBar.querySelector('div').style.width = `${percentage}%`;
-  document.getElementById('exploration-percentage').textContent = `${percentage}%`;
 
   // Show milestone messages
   if (percentage === 50 && !sessionStorage.getItem('milestone50')) {
@@ -275,13 +272,16 @@ function initSectionTracking() {
       if (entry.isIntersecting) {
         const sectionId = entry.target.id || entry.target.querySelector('h2')?.textContent;
         if (sectionId) {
+          console.log('Section viewed:', sectionId);
           trackSectionView(sectionId);
         }
       }
     });
   }, { threshold: 0.5 });
 
-  document.querySelectorAll('section').forEach(section => {
+  const sections = document.querySelectorAll('section');
+  console.log('Tracking', sections.length, 'sections');
+  sections.forEach(section => {
     sectionObserver.observe(section);
   });
 }
@@ -290,9 +290,13 @@ function initSectionTracking() {
 function initGameTracking() {
   const gameSelect = document.getElementById('game-select');
   if (gameSelect) {
+    console.log('Game tracking initialized');
     gameSelect.addEventListener('change', (e) => {
+      console.log('Game changed to:', e.target.value);
       trackGameChange(e.target.value);
     });
+  } else {
+    console.log('Game select not found');
   }
 }
 
@@ -303,7 +307,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initGameTracking();
   initMobileTouchSupport();
   initResponsiveAdjustments();
-  initFactSystem();
 
   // Track initial game
   const initialGame = document.getElementById('game-select')?.value;
@@ -377,75 +380,6 @@ function initResponsiveAdjustments() {
   });
 }
 
-// "Did you know?" fact system
-const interestingFacts = [
-  "Real-time reasoning requires agents to balance speed and accuracy under time pressure.",
-  "AgileThinker uses two LLMs working in parallel - one for fast reactions, one for deep planning.",
-  "The Snake game tests agents' ability to seize emergent opportunities before they disappear.",
-  "Freeway challenges agents to react to hazards that appear suddenly in dynamic environments.",
-  "Overcooked tests multi-agent collaboration where timing and coordination are critical.",
-  "Traditional LLM agents can take several seconds to think, missing time-critical opportunities.",
-  "System 1 thinking is fast and intuitive, while System 2 is slow and deliberate.",
-  "AgileThinker achieves 40%+ better performance by engaging both reasoning systems simultaneously.",
-  "Cognitive load measures how complex the task is, while time pressure measures urgency.",
-  "The streaming output from the planning system enhances reactive decisions in real-time."
-];
-
-let lastFactIndex = -1;
-
-function showRandomFact() {
-  // Get a different fact than the last one
-  let newIndex;
-  do {
-    newIndex = Math.floor(Math.random() * interestingFacts.length);
-  } while (newIndex === lastFactIndex && interestingFacts.length > 1);
-
-  lastFactIndex = newIndex;
-  const fact = interestingFacts[newIndex];
-
-  const factBox = document.createElement('div');
-  factBox.className = 'fixed bottom-24 left-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-4 rounded-xl shadow-2xl z-50 max-w-sm animate-fade-in-up';
-  factBox.innerHTML = `
-    <div class="flex items-start gap-3">
-      <div class="flex-shrink-0">
-        <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-          <i class="fas fa-lightbulb text-xl"></i>
-        </div>
-      </div>
-      <div class="flex-1">
-        <h4 class="font-bold text-sm mb-1">Did you know?</h4>
-        <p class="text-sm opacity-95">${fact}</p>
-      </div>
-      <button onclick="this.closest('.fixed').remove()" class="text-white opacity-75 hover:opacity-100 text-xl leading-none">&times;</button>
-    </div>
-  `;
-
-  document.body.appendChild(factBox);
-
-  setTimeout(() => {
-    if (factBox.parentNode) {
-      factBox.style.opacity = '0';
-      factBox.style.transform = 'translateX(-400px)';
-      factBox.style.transition = 'all 0.5s ease-out';
-      setTimeout(() => factBox.remove(), 500);
-    }
-  }, 12000); // Show for 12 seconds
-}
-
-// Show first fact after 15 seconds, then every 30 seconds
-function initFactSystem() {
-  setTimeout(() => {
-    showRandomFact();
-    setInterval(() => {
-      // Only show if user is still on page
-      if (!document.hidden) {
-        showRandomFact();
-      }
-    }, 30000); // Every 30 seconds
-  }, 15000); // First fact after 15 seconds
-}
-
 // Make functions globally available
 window.shareConfiguration = shareConfiguration;
 window.showToast = showToast;
-window.showRandomFact = showRandomFact;
