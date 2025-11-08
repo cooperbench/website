@@ -603,56 +603,98 @@ code {
   .hero-body {
     padding: 2rem 1rem;
   }
-  
+
   .publication-header .hero-body {
     padding: 3rem 1rem 2rem;
   }
-  
+
   .publication-title {
     font-size: 2.5rem !important;
     line-height: 1.2 !important;
     margin-bottom: 1.5rem !important;
   }
-  
+
   .publication-authors {
     font-size: 1rem !important;
   }
-  
+
   .button {
     margin: 0.25rem !important;
     font-size: 0.875rem !important;
     padding: 0.75rem 1rem !important;
   }
-  
+
   .more-works-container {
     bottom: 2rem;
     right: 1rem;
     top: auto;
   }
-  
+
   .more-works-btn {
     padding: 0.6rem 1rem;
     font-size: 0.8rem;
   }
-  
+
   .more-works-dropdown {
     width: calc(100vw - 2rem);
     right: -1rem;
     bottom: calc(100% + 0.5rem);
     top: auto;
   }
-  
+
   .results-carousel .item {
     margin: 0.5rem;
     padding: 1rem;
   }
-  
+
   .teaser .hero-body {
     padding: 1rem;
   }
-  
+
   .content.has-text-justified {
     font-size: 1rem;
+  }
+
+  /* Mobile-specific stat cards */
+  .stat-card {
+    padding: 1rem !important;
+  }
+
+  .stat-card .text-3xl {
+    font-size: 2rem !important;
+  }
+
+  /* Mobile-friendly interactive demo controls */
+  #game-select, #seed-select, #cognitive-load-select, #time-pressure-select {
+    font-size: 14px !important;
+    padding: 0.5rem !important;
+  }
+
+  /* Larger touch targets for mobile */
+  button, a, select, input[type="range"] {
+    min-height: 44px;
+  }
+
+  /* Mobile toast positioning */
+  .toast-notification {
+    bottom: 5rem !important;
+    right: 1rem !important;
+    left: 1rem !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
+
+  /* Mobile achievement positioning */
+  .fixed.top-24 {
+    top: 5rem !important;
+    right: 1rem !important;
+    left: 1rem !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
+
+  /* Improve canvas sizing on mobile */
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
   }
 }
 
@@ -717,6 +759,31 @@ code {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .hero, .section {
