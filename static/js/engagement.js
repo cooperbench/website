@@ -133,7 +133,7 @@ function showThinkingPrompt() {
   promptBox.innerHTML = `
     <h3 class="text-lg font-medium text-gray-900 mb-3">Think About It</h3>
     <p class="text-gray-700 mb-6">${prompt}</p>
-    <button onclick="this.closest('.fixed').remove(); document.querySelector('.fixed.bg-black').remove();" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded hover:bg-gray-800 transition-colors">
+    <button onclick="this.closest('.fixed').remove(); document.querySelector('.fixed.bg-black').remove();" class="px-4 py-2 bg-gray-700 text-white text-sm font-medium rounded hover:bg-gray-600 transition-colors">
       Got it
     </button>
   `;
@@ -162,8 +162,8 @@ function updateProgressIndicator() {
     // Create progress indicator
     progressBar = document.createElement('div');
     progressBar.id = 'exploration-progress';
-    progressBar.className = 'fixed top-16 left-0 right-0 h-1 bg-gray-100 z-50';
-    progressBar.innerHTML = '<div class="h-full bg-gray-900 transition-all duration-300" style="width: 0%"></div>';
+    progressBar.className = 'fixed top-16 left-0 right-0 h-1 bg-gray-200 z-50';
+    progressBar.innerHTML = '<div class="h-full bg-gray-600 transition-all duration-300" style="width: 0%"></div>';
     document.body.appendChild(progressBar);
   }
 
