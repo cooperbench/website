@@ -152,6 +152,49 @@ function trackGameChange(game) {
   if (explorationProgress.gamesViewed.size === 3) {
     showAchievement('Explorer', 'You\'ve tried all three games!');
   }
+
+  // Show thinking prompt every 5 setting changes
+  if (explorationProgress.settingsChanged % 5 === 0 && explorationProgress.settingsChanged > 0) {
+    showThinkingPrompt();
+  }
+}
+
+function showThinkingPrompt() {
+  const prompts = [
+    "Which agent do you think will perform best in this scenario?",
+    "Do you notice how the agents adapt to different time pressures?",
+    "Can you spot the moment when AgileThinker switches strategies?",
+    "What happens when cognitive load increases? Watch the reasoning patterns!",
+    "Compare the agent scores - does the winner surprise you?"
+  ];
+
+  const prompt = prompts[Math.floor(Math.random() * prompts.length)];
+
+  const promptBox = document.createElement('div');
+  promptBox.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl z-50 max-w-md w-full p-6 border-4 border-blue-500 animate-fade-in-up';
+  promptBox.innerHTML = `
+    <div class="text-center">
+      <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-brain text-white text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold text-gray-900 mb-3">Think About It</h3>
+      <p class="text-gray-700 mb-6">${prompt}</p>
+      <button onclick="this.closest('.fixed').remove()" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl">
+        Got it!
+      </button>
+    </div>
+  `;
+
+  // Add backdrop
+  const backdrop = document.createElement('div');
+  backdrop.className = 'fixed inset-0 bg-black bg-opacity-50 z-40';
+  backdrop.onclick = () => {
+    promptBox.remove();
+    backdrop.remove();
+  };
+
+  document.body.appendChild(backdrop);
+  document.body.appendChild(promptBox);
 }
 
 function trackSectionView(sectionId) {
@@ -161,6 +204,8 @@ function trackSectionView(sectionId) {
 
 function updateProgressIndicator() {
   let progressBar = document.getElementById('exploration-progress');
+  let progressBadge = document.getElementById('exploration-badge');
+
   if (!progressBar) {
     // Create progress indicator
     progressBar = document.createElement('div');
@@ -170,11 +215,30 @@ function updateProgressIndicator() {
     document.body.appendChild(progressBar);
   }
 
+  if (!progressBadge) {
+    // Create visible percentage badge
+    progressBadge = document.createElement('div');
+    progressBadge.id = 'exploration-badge';
+    progressBadge.className = 'fixed top-20 right-4 bg-white rounded-full px-4 py-2 shadow-lg z-40 text-sm font-bold text-gray-800 border-2 border-blue-500 transition-all duration-500';
+    progressBadge.innerHTML = '<i class="fas fa-chart-line text-blue-500 mr-2"></i><span id="exploration-percentage">0%</span> Explored';
+    document.body.appendChild(progressBadge);
+  }
+
   const totalItems = 6; // 3 games + 3 key sections
   const completed = explorationProgress.gamesViewed.size + Math.min(explorationProgress.sectionsViewed.size, 3);
-  const percentage = (completed / totalItems) * 100;
+  const percentage = Math.round((completed / totalItems) * 100);
 
   progressBar.querySelector('div').style.width = `${percentage}%`;
+  document.getElementById('exploration-percentage').textContent = `${percentage}%`;
+
+  // Show milestone messages
+  if (percentage === 50 && !sessionStorage.getItem('milestone50')) {
+    showToast('Halfway there! Keep exploring 🎉', 'success');
+    sessionStorage.setItem('milestone50', 'true');
+  } else if (percentage === 100 && !sessionStorage.getItem('milestone100')) {
+    showAchievement('Master Explorer', 'You\'ve explored everything on this page!');
+    sessionStorage.setItem('milestone100', 'true');
+  }
 }
 
 function showAchievement(title, description) {
@@ -239,6 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initGameTracking();
   initMobileTouchSupport();
   initResponsiveAdjustments();
+  initFactSystem();
 
   // Track initial game
   const initialGame = document.getElementById('game-select')?.value;
@@ -312,6 +377,75 @@ function initResponsiveAdjustments() {
   });
 }
 
+// "Did you know?" fact system
+const interestingFacts = [
+  "Real-time reasoning requires agents to balance speed and accuracy under time pressure.",
+  "AgileThinker uses two LLMs working in parallel - one for fast reactions, one for deep planning.",
+  "The Snake game tests agents' ability to seize emergent opportunities before they disappear.",
+  "Freeway challenges agents to react to hazards that appear suddenly in dynamic environments.",
+  "Overcooked tests multi-agent collaboration where timing and coordination are critical.",
+  "Traditional LLM agents can take several seconds to think, missing time-critical opportunities.",
+  "System 1 thinking is fast and intuitive, while System 2 is slow and deliberate.",
+  "AgileThinker achieves 40%+ better performance by engaging both reasoning systems simultaneously.",
+  "Cognitive load measures how complex the task is, while time pressure measures urgency.",
+  "The streaming output from the planning system enhances reactive decisions in real-time."
+];
+
+let lastFactIndex = -1;
+
+function showRandomFact() {
+  // Get a different fact than the last one
+  let newIndex;
+  do {
+    newIndex = Math.floor(Math.random() * interestingFacts.length);
+  } while (newIndex === lastFactIndex && interestingFacts.length > 1);
+
+  lastFactIndex = newIndex;
+  const fact = interestingFacts[newIndex];
+
+  const factBox = document.createElement('div');
+  factBox.className = 'fixed bottom-24 left-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-4 rounded-xl shadow-2xl z-50 max-w-sm animate-fade-in-up';
+  factBox.innerHTML = `
+    <div class="flex items-start gap-3">
+      <div class="flex-shrink-0">
+        <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+          <i class="fas fa-lightbulb text-xl"></i>
+        </div>
+      </div>
+      <div class="flex-1">
+        <h4 class="font-bold text-sm mb-1">Did you know?</h4>
+        <p class="text-sm opacity-95">${fact}</p>
+      </div>
+      <button onclick="this.closest('.fixed').remove()" class="text-white opacity-75 hover:opacity-100 text-xl leading-none">&times;</button>
+    </div>
+  `;
+
+  document.body.appendChild(factBox);
+
+  setTimeout(() => {
+    if (factBox.parentNode) {
+      factBox.style.opacity = '0';
+      factBox.style.transform = 'translateX(-400px)';
+      factBox.style.transition = 'all 0.5s ease-out';
+      setTimeout(() => factBox.remove(), 500);
+    }
+  }, 12000); // Show for 12 seconds
+}
+
+// Show first fact after 15 seconds, then every 30 seconds
+function initFactSystem() {
+  setTimeout(() => {
+    showRandomFact();
+    setInterval(() => {
+      // Only show if user is still on page
+      if (!document.hidden) {
+        showRandomFact();
+      }
+    }, 30000); // Every 30 seconds
+  }, 15000); // First fact after 15 seconds
+}
+
 // Make functions globally available
 window.shareConfiguration = shareConfiguration;
 window.showToast = showToast;
+window.showRandomFact = showRandomFact;

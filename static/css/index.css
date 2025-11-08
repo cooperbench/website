@@ -696,6 +696,28 @@ code {
     max-width: 100% !important;
     height: auto !important;
   }
+
+  /* Mobile exploration badge */
+  #exploration-badge {
+    top: 4.5rem !important;
+    right: 0.5rem !important;
+    font-size: 0.75rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  /* Mobile fact boxes */
+  .fixed.bottom-24.left-4 {
+    left: 0.5rem !important;
+    right: 0.5rem !important;
+    bottom: 5rem !important;
+    max-width: calc(100vw - 1rem) !important;
+  }
+
+  /* Mobile thinking prompt */
+  .fixed.top-1\\/2 {
+    max-width: calc(100vw - 2rem) !important;
+    padding: 1.5rem !important;
+  }
 }
 
 @media screen and (max-width: 480px) {

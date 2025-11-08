@@ -392,10 +392,32 @@
           </div>
         </h2>
 
-        <p class="prose mb-12">
+        <p class="prose mb-6">
             Play with different cognitive loads and time pressures. Do you notice any difference in how the three agents think and act?
             Under each settings which agent performs the best? Use the "Random" button to sample different settings quickly!
         </p>
+
+        <!-- Challenge Section -->
+        <div class="bg-gradient-to-r from-purple-100 via-pink-100 to-red-100 rounded-xl p-5 mb-8 border-2 border-purple-300 shadow-lg">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
+                <i class="fas fa-trophy text-white text-lg"></i>
+              </div>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-bold text-gray-900 mb-2 text-lg">Challenge Mode</h3>
+              <p class="text-gray-700 text-sm mb-3">
+                <strong>Can you find a scenario where the Planning Agent outperforms AgileThinker?</strong>
+                Try different combinations of cognitive load and time pressure to discover edge cases!
+              </p>
+              <div class="flex items-center gap-2 text-xs text-gray-600">
+                <i class="fas fa-lightbulb text-yellow-500"></i>
+                <span>Hint: Think about when deliberate planning might be more valuable than quick reactions.</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Settings Selection -->
         <div class="rounded-xl py-4">
@@ -801,6 +823,57 @@
       </div>
     </section>
 
+    <!-- Quick Quiz Section -->
+    <section class="py-12 px-6 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 animate-fade-in-up reveal-on-scroll">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4 relative inline-block">
+            Test Your Understanding
+            <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+          </h2>
+          <p class="text-gray-600">See if you can answer this question based on what you've explored!</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-xl p-8 border-2 border-purple-200">
+          <h3 class="font-bold text-lg text-gray-900 mb-6">When would you choose each agent type?</h3>
+
+          <div class="space-y-4 mb-6">
+            <div class="quiz-option p-4 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all duration-300 cursor-pointer" onclick="checkAnswer(this, 'reactive')">
+              <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 w-6 h-6 mt-1 border-2 border-gray-300 rounded-full"></div>
+                <div class="flex-1">
+                  <p class="font-semibold text-gray-900 mb-1">Use Reactive Agent when...</p>
+                  <p class="text-sm text-gray-600">You need instant responses and tasks are relatively simple with low cognitive load</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="quiz-option p-4 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all duration-300 cursor-pointer" onclick="checkAnswer(this, 'planning')">
+              <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 w-6 h-6 mt-1 border-2 border-gray-300 rounded-full"></div>
+                <div class="flex-1">
+                  <p class="font-semibold text-gray-900 mb-1">Use Planning Agent when...</p>
+                  <p class="text-sm text-gray-600">You have plenty of time and need deep, deliberate reasoning for complex problems</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="quiz-option p-4 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all duration-300 cursor-pointer" onclick="checkAnswer(this, 'agile')">
+              <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 w-6 h-6 mt-1 border-2 border-gray-300 rounded-full"></div>
+                <div class="flex-1">
+                  <p class="font-semibold text-gray-900 mb-1">Use AgileThinker when...</p>
+                  <p class="text-sm text-gray-600">You need both speed AND quality across varying levels of time pressure and task complexity</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="quiz-feedback" class="hidden"></div>
+        </div>
+      </div>
+    </section>
+
     <!-- Teaser figure-->
     <section class="py-8 px-6 animate-fade-in-up">
       <div class="max-w-4xl mx-auto">
@@ -997,6 +1070,74 @@
             }
           }, speed);
         }
+      }
+
+      // Quiz interaction
+      function checkAnswer(element, answer) {
+        // Remove previous selections
+        document.querySelectorAll('.quiz-option').forEach(opt => {
+          opt.classList.remove('border-green-500', 'bg-green-50', 'border-red-500', 'bg-red-50');
+          opt.querySelector('.w-6').innerHTML = '';
+        });
+
+        const feedback = document.getElementById('quiz-feedback');
+        const circle = element.querySelector('.w-6');
+
+        if (answer === 'agile') {
+          element.classList.add('border-green-500', 'bg-green-50');
+          circle.innerHTML = '<i class="fas fa-check text-green-600"></i>';
+          circle.classList.add('bg-green-100');
+
+          feedback.className = 'p-6 bg-green-50 border-2 border-green-500 rounded-xl mt-6';
+          feedback.innerHTML = `
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                  <i class="fas fa-trophy text-white text-xl"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-green-900 mb-2">Excellent! 🎉</h4>
+                <p class="text-green-800 text-sm">
+                  You're absolutely right! <strong>AgileThinker</strong> is the best choice for most real-world scenarios because it adapts to varying conditions. It combines the speed of reactive thinking with the depth of planning, achieving robust performance across different levels of cognitive load and time pressure.
+                </p>
+              </div>
+            </div>
+          `;
+
+          // Show achievement
+          if (typeof showAchievement === 'function') {
+            setTimeout(() => {
+              showAchievement('Quick Learner', 'You understand when to use AgileThinker!');
+            }, 1000);
+          }
+        } else {
+          element.classList.add('border-red-500', 'bg-red-50');
+          circle.innerHTML = '<i class="fas fa-times text-red-600"></i>';
+          circle.classList.add('bg-red-100');
+
+          feedback.className = 'p-6 bg-blue-50 border-2 border-blue-500 rounded-xl mt-6';
+          feedback.innerHTML = `
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                  <i class="fas fa-info-circle text-white text-xl"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-blue-900 mb-2">Not quite, but good thinking!</h4>
+                <p class="text-blue-800 text-sm mb-3">
+                  While ${answer === 'reactive' ? 'Reactive Agent works well for simple, time-critical tasks' : 'Planning Agent excels with complex problems and ample time'}, <strong>AgileThinker</strong> is usually the best choice because it adapts to varying conditions.
+                </p>
+                <p class="text-blue-800 text-sm">
+                  <strong>Why AgileThinker wins:</strong> It combines both approaches, using parallel reasoning systems to handle any situation - from simple urgent tasks to complex time-pressured scenarios.
+                </p>
+              </div>
+            </div>
+          `;
+        }
+
+        feedback.classList.remove('hidden');
       }
 
       // Auto-load random settings on page load
