@@ -1104,13 +1104,6 @@
               </div>
             </div>
           `;
-
-          // Show achievement
-          if (typeof showAchievement === 'function') {
-            setTimeout(() => {
-              showAchievement('Quick Learner', 'You understand when to use AgileThinker!');
-            }, 1000);
-          }
         } else {
           element.classList.add('border-red-500', 'bg-red-50');
           circle.innerHTML = '<i class="fas fa-times text-red-600"></i>';

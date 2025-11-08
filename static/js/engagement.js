@@ -147,11 +147,6 @@ function trackGameChange(game) {
   explorationProgress.gamesViewed.add(game);
   explorationProgress.settingsChanged++;
 
-  // Show achievement for trying all games
-  if (explorationProgress.gamesViewed.size === 3) {
-    showAchievement('Explorer', 'You\'ve tried all three games!');
-  }
-
   // Show thinking prompt every 5 setting changes
   if (explorationProgress.settingsChanged % 5 === 0 && explorationProgress.settingsChanged > 0) {
     showThinkingPrompt();
@@ -226,40 +221,10 @@ function updateProgressIndicator() {
   if (scrollPercentage >= 50 && scrollPercentage < 55 && !sessionStorage.getItem('milestone50')) {
     showToast('Halfway there! Keep exploring 🎉', 'success');
     sessionStorage.setItem('milestone50', 'true');
-  } else if (scrollPercentage >= 95 && !sessionStorage.getItem('milestone100')) {
-    showAchievement('Master Explorer', 'You\'ve explored everything on this page!');
-    sessionStorage.setItem('milestone100', 'true');
   }
 }
 
-function showAchievement(title, description) {
-  const achievement = document.createElement('div');
-  achievement.className = 'fixed top-24 right-8 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-4 rounded-xl shadow-2xl z-50 max-w-sm animate-fade-in-up';
-  achievement.innerHTML = `
-    <div class="flex items-start gap-3">
-      <div class="flex-shrink-0">
-        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-          <i class="fas fa-trophy text-2xl"></i>
-        </div>
-      </div>
-      <div>
-        <h4 class="font-bold text-lg mb-1">Achievement Unlocked!</h4>
-        <p class="text-sm opacity-90"><strong>${title}:</strong> ${description}</p>
-      </div>
-    </div>
-  `;
-
-  document.body.appendChild(achievement);
-
-  setTimeout(() => {
-    achievement.style.opacity = '0';
-    achievement.style.transform = 'translateX(400px)';
-    achievement.style.transition = 'all 0.5s ease-out';
-    setTimeout(() => achievement.remove(), 500);
-  }, 5000);
-}
-
-// Section observer for tracking (used for achievements)
+// Section observer for tracking
 function initSectionTracking() {
   const sectionObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
