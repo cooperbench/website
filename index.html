@@ -1,874 +1,1424 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Primary Meta Tags -->
+        <meta
+            name="title"
+            content="Real-Time Reasoning Agents in Evolving Environments"
+        />
+        <meta
+            name="description"
+            content="We introduce real-time reasoning as a new problem formulation for bringing reasoning capabilities to agents operating in evolving environments, featuring AgileThinker architecture that combines System 1 and System 2 reasoning paradigms."
+        />
+        <meta
+            name="keywords"
+            content="real-time reasoning, language agents, cognitive systems, artificial intelligence, reinforcement learning, system 1, system 2"
+        />
+        <meta
+            name="author"
+            content="Yule Wen, Yixin Ye, Yanzhe Zhang, Diyi Yang, Hao Zhu"
+        />
+        <meta name="robots" content="index, follow" />
+        <meta name="language" content="English" />
 
-  <!-- Primary Meta Tags -->
-  <meta name="title" content="Real-Time Reasoning Agents in Evolving Environments">
-  <meta name="description"
-    content="We introduce real-time reasoning as a new problem formulation for bringing reasoning capabilities to agents operating in evolving environments, featuring AgileThinker architecture that combines System 1 and System 2 reasoning paradigms.">
-  <meta name="keywords"
-    content="real-time reasoning, language agents, cognitive systems, artificial intelligence, reinforcement learning, system 1, system 2">
-  <meta name="author" content="Yule Wen, Yixin Ye, Yanzhe Zhang, Diyi Yang, Hao Zhu">
-  <meta name="robots" content="index, follow">
-  <meta name="language" content="English">
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="article" />
+        <meta property="og:site_name" content="Stanford University" />
+        <meta
+            property="og:title"
+            content="Real-Time Reasoning Agents in Evolving Environments"
+        />
+        <meta
+            property="og:description"
+            content="We introduce real-time reasoning as a new problem formulation for bringing reasoning capabilities to agents operating in evolving environments, featuring AgileThinker architecture that combines System 1 and System 2 reasoning paradigms."
+        />
+        <meta
+            property="og:url"
+            content="https://realtimegym.saltlab.stanford.edu/"
+        />
+        <meta
+            property="og:image"
+            content="https://realtimegym.saltlab.stanford.edu/static/images/social_preview.png"
+        />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta
+            property="og:image:alt"
+            content="Real-Time Reasoning Agents in Evolving Environments - Research Preview"
+        />
+        <meta
+            property="article:published_time"
+            content="2024-01-01T00:00:00.000Z"
+        />
+        <meta property="article:author" content="Yule Wen" />
+        <meta property="article:section" content="Research" />
+        <meta property="article:tag" content="real-time reasoning" />
+        <meta property="article:tag" content="language agents" />
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="Stanford University">
-  <meta property="og:title" content="Real-Time Reasoning Agents in Evolving Environments">
-  <meta property="og:description"
-    content="We introduce real-time reasoning as a new problem formulation for bringing reasoning capabilities to agents operating in evolving environments, featuring AgileThinker architecture that combines System 1 and System 2 reasoning paradigms.">
-  <meta property="og:url" content="https://realtimegym.saltlab.stanford.edu/">
-  <meta property="og:image" content="https://realtimegym.saltlab.stanford.edu/static/images/social_preview.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Real-Time Reasoning Agents in Evolving Environments - Research Preview">
-  <meta property="article:published_time" content="2024-01-01T00:00:00.000Z">
-  <meta property="article:author" content="Yule Wen">
-  <meta property="article:section" content="Research">
-  <meta property="article:tag" content="real-time reasoning">
-  <meta property="article:tag" content="language agents">
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@StanfordNLP" />
+        <meta name="twitter:creator" content="@StanfordNLP" />
+        <meta
+            name="twitter:title"
+            content="Real-Time Reasoning Agents in Evolving Environments"
+        />
+        <meta
+            name="twitter:description"
+            content="We introduce real-time reasoning as a new problem formulation for bringing reasoning capabilities to agents operating in evolving environments, featuring AgileThinker architecture that combines System 1 and System 2 reasoning paradigms."
+        />
+        <meta
+            name="twitter:image"
+            content="https://realtimegym.saltlab.stanford.edu/static/images/social_preview.png"
+        />
+        <meta
+            name="twitter:image:alt"
+            content="Real-Time Reasoning Agents in Evolving Environments - Research Preview"
+        />
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@StanfordNLP">
-  <meta name="twitter:creator" content="@StanfordNLP">
-  <meta name="twitter:title" content="Real-Time Reasoning Agents in Evolving Environments">
-  <meta name="twitter:description"
-    content="We introduce real-time reasoning as a new problem formulation for bringing reasoning capabilities to agents operating in evolving environments, featuring AgileThinker architecture that combines System 1 and System 2 reasoning paradigms.">
-  <meta name="twitter:image" content="https://realtimegym.saltlab.stanford.edu/static/images/social_preview.png">
-  <meta name="twitter:image:alt" content="Real-Time Reasoning Agents in Evolving Environments - Research Preview">
+        <!-- Academic/Research Specific -->
+        <meta
+            name="citation_title"
+            content="Real-Time Reasoning Agents in Evolving Environments"
+        />
+        <meta name="citation_author" content="Wen, Yule" />
+        <meta name="citation_author" content="Ye, Yixin" />
+        <meta name="citation_author" content="Zhang, Yanzhe" />
+        <meta name="citation_author" content="Yang, Diyi" />
+        <meta name="citation_author" content="Zhu, Hao" />
+        <meta name="citation_publication_date" content="2025" />
+        <meta
+            name="citation_pdf_url"
+            content="https://realtimegym.saltlab.stanford.edu/static/pdfs/paper.pdf"
+        />
 
-  <!-- Academic/Research Specific -->
-  <meta name="citation_title" content="Real-Time Reasoning Agents in Evolving Environments">
-  <meta name="citation_author" content="Wen, Yule">
-  <meta name="citation_author" content="Ye, Yixin">
-  <meta name="citation_author" content="Zhang, Yanzhe">
-  <meta name="citation_author" content="Yang, Diyi">
-  <meta name="citation_author" content="Zhu, Hao">
-  <meta name="citation_publication_date" content="2025">
-  <meta name="citation_pdf_url" content="https://realtimegym.saltlab.stanford.edu/static/pdfs/paper.pdf">
+        <!-- Additional SEO -->
+        <meta name="theme-color" content="#2563eb" />
+        <meta name="msapplication-TileColor" content="#2563eb" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
-  <!-- Additional SEO -->
-  <meta name="theme-color" content="#2563eb">
-  <meta name="msapplication-TileColor" content="#2563eb">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <!-- Preconnect for performance -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preconnect" href="https://ajax.googleapis.com" />
+        <link rel="preconnect" href="https://documentcloud.adobe.com" />
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 
-  <!-- Preconnect for performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://ajax.googleapis.com">
-  <link rel="preconnect" href="https://documentcloud.adobe.com">
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+        <title>Real-Time Reasoning Agents in Evolving Environments</title>
 
-  <title>Real-Time Reasoning Agents in Evolving Environments</title>
+        <!-- Favicon and App Icons -->
+        <link rel="icon" type="image/x-icon" href="static/images/favicon.ico" />
+        <link rel="apple-touch-icon" href="static/images/favicon.ico" />
 
-  <!-- Favicon and App Icons -->
-  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
-  <link rel="apple-touch-icon" href="static/images/favicon.ico">
+        <!-- Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="static/css/fontawesome.all.min.css" />
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+        <!-- Academic Icons -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css"
+        />
 
-  <!-- Academic Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+        <!-- Custom Tailwind Styles -->
+        <link rel="stylesheet" href="static/css/tailwind-custom.css" />
 
-  <!-- Custom Tailwind Styles -->
-  <link rel="stylesheet" href="static/css/tailwind-custom.css">
+        <!-- Custom Tailwind Config -->
+        <script>
+            tailwind.config = {
+                darkMode: "class", // optional: enable class-based dark mode
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: "#2563eb",
+                            "primary-hover": "#1d4ed8",
+                            secondary: "#64748b",
+                            accent: "#0ea5e9",
+                        },
+                        fontFamily: {
+                            sans: [
+                                "Inter",
+                                "Segoe UI",
+                                "-apple-system",
+                                "BlinkMacSystemFont",
+                                "sans-serif",
+                            ],
+                            clash: ["Clash Display", "sans-serif"],
+                        },
+                        animation: {
+                            "fade-in-up": "fadeInUp 0.6s ease-out",
+                        },
+                        keyframes: {
+                            fadeInUp: {
+                                from: {
+                                    opacity: "0",
+                                    transform: "translateY(30px)",
+                                },
+                                to: {
+                                    opacity: "1",
+                                    transform: "translateY(0)",
+                                },
+                            },
+                        },
+                    },
+                },
+            };
+        </script>
 
-  <!-- Custom Tailwind Config -->
-  <script>
-    tailwind.config = {
-      darkMode: 'class', // optional: enable class-based dark mode
-      plugins: [require('@tailwindcss/typography')],
-      theme: {
-        extend: {
-          colors: {
-            'primary': '#2563eb',
-            'primary-hover': '#1d4ed8',
-            'secondary': '#64748b',
-            'accent': '#0ea5e9',
-          },
-          fontFamily: {
-            'sans': ['Inter', 'Segoe UI', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-            'clash': ['Clash Display', 'sans-serif'],
-          },
-          animation: {
-            'fade-in-up': 'fadeInUp 0.6s ease-out',
-          },
-          keyframes: {
-            fadeInUp: {
-              'from': { opacity: '0', transform: 'translateY(30px)' },
-              'to': { opacity: '1', transform: 'translateY(0)' },
+        <!-- Fonts - Optimized loading -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Local Clash Display Font -->
+        <style>
+            @font-face {
+                font-family: "Clash Display";
+                src: url("static/fonts/ClashDisplay Semibold.otf")
+                    format("opentype");
+                font-weight: 600;
+                font-style: normal;
+                font-display: swap;
             }
-          }
-        }
-      }
-    }
-  </script>
+        </style>
 
-  <!-- Fonts - Optimized loading -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Local Clash Display Font -->
-  <style>
-    @font-face {
-      font-family: 'Clash Display';
-      src: url('static/fonts/ClashDisplay Semibold.otf') format('opentype');
-      font-weight: 600;
-      font-style: normal;
-      font-display: swap;
-    }
-  </style>
-
-  <!-- Structured Data for Academic Papers -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ScholarlyArticle",
-    "headline": "Real-Time Reasoning Agents in Evolving Environments",
-    "description": "We introduce real-time reasoning as a new problem formulation for bringing reasoning capabilities to agents operating in evolving environments, featuring AgileThinker architecture that combines System 1 and System 2 reasoning paradigms.",
-    "author": [
-      {
-        "@type": "Person",
-        "name": "Yule Wen",
-        "affiliation": {
-          "@type": "Organization",
-          "name": "Tsinghua University"
-        }
-      },
-      {
-        "@type": "Person",
-        "name": "Yixin Ye",
-        "affiliation": {
-          "@type": "Organization",
-          "name": "Shanghai Jiao Tong University"
-        }
-      },
-      {
-        "@type": "Person",
-        "name": "Yanzhe Zhang",
-        "affiliation": {
-          "@type": "Organization",
-          "name": "Georgia Institute of Technology"
-        }
-      },
-      {
-        "@type": "Person",
-        "name": "Diyi Yang",
-        "affiliation": {
-          "@type": "Organization",
-          "name": "Stanford University"
-        }
-      },
-      {
-        "@type": "Person",
-        "name": "Hao Zhu",
-        "affiliation": {
-          "@type": "Organization",
-          "name": "Stanford University"
-        }
-      }
-    ],
-    "datePublished": "2025-09-26",
-    "url": "https://realtimegym.saltlab.stanford.edu/",
-    "image": "https://realtimegym.saltlab.stanford.edu/static/images/social_preview.png",
-    "keywords": ["real-time reasoning", "language agents", "cognitive systems", "artificial intelligence", "system 1", "system 2"],
-    "abstract": "Agents in the real world need to make not only logical but also timely judgments, which demands continuous awareness of the dynamic environment where hazards emerge, opportunities arise, and other agents act - all while the agent's own reasoning is still unfolding. Despite significant advances in reasoning capabilities of language models, existing approaches fail to account for this dynamic nature. We introduce real-time reasoning as a new problem formulation for bringing reasoning capabilities to agents operating in evolving environments and build a Real-Time Reasoning Gym to demonstrate it.",
-    "isAccessibleForFree": true,
-    "license": "https://creativecommons.org/licenses/by/4.0/",
-    "mainEntity": {
-      "@type": "WebPage",
-      "@id": "https://realtimegym.saltlab.stanford.edu/"
-    },
-    "about": [
-      {
-        "@type": "Thing",
-        "name": "Real-Time Reasoning"
-      },
-      {
-        "@type": "Thing",
-        "name": "Language Agents"
-      }
-    ]
-  }
-  </script>
-
-  <!-- Website/Organization Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Stanford University",
-    "url": "https://stanford.edu",
-    "logo": "hhttps://realtimegym.saltlab.stanford.edu/static/images/favicon.ico",
-    "sameAs": [
-      "https://twitter.com/StanfordNLP",
-      "https://github.com/salt-nlp/realtimegym"
-    ]
-  }
-  </script>
-
-  <!-- Defer non-critical JavaScript -->
-  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
-  <script defer src="static/js/fontawesome.all.min.js"></script>
-
-  <!-- Markdown parsing for thinking content -->
-  <script defer src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
-
-  <!-- Comparison functionality -->
-  <script defer src="static/js/comparison.js"></script>
-</head>
-
-<body>
-
-  <!-- Header Navigation Bar -->
-  <header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <!-- Logo -->
-        <div class="flex-shrink-0">
-          <a href="#" style="font-family: 'Clash Display', sans-serif;" class="text-2xl font-bold text-gray-900 hover:text-primary transition-colors duration-300">
-            Real-Time Gym
-          </a>
-        </div>
-
-        <!-- Navigation Links -->
-        <nav class="flex items-center space-x-8">
-          <a href="#" class="text-sm font-semibold text-gray-700 hover:text-primary transition-colors duration-300">
-            Home
-          </a>
-          <a href="#about" class="text-sm font-semibold text-gray-700 hover:text-primary transition-colors duration-300">
-            About
-          </a>
-        </nav>
-      </div>
-    </div>
-  </header>
-
-  <!-- Scroll to Top Button -->
-  <button
-    class="fixed bottom-8 right-8 w-12 h-12 bg-primary text-white rounded-full opacity-0 invisible transition-all duration-300 z-50 flex items-center justify-center text-lg shadow-lg hover:bg-primary-hover hover:-translate-y-1 hover:shadow-xl scroll-to-top"
-    onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
-    <i class="fas fa-chevron-up"></i>
-  </button>
-
-
-
-  <main id="main-content" class="pt-16">
-    <section class="py-16 px-6 animate-fade-in-up">
-      <div class="max-w-4xl mx-auto">
-        <div class="flex justify-center">
-          <div class="text-center">
-            <h1 class="text-2xl md:text-3xl font-extrabold text-gray-900 mb-8 leading-tight font-sans">Real-Time
-              Reasoning Agents in Evolving Environments</h1>
-            <div class="text-gray-700 font-medium mb-6">
-              <span class="inline-block mr-2">
-                <a href="https://wenyl22.github.io/" target="_blank"
-                  class="author-link text-primary hover:text-primary-hover font-semibold transition-colors duration-300">Yule
-                  Wen</a><sup class="text-sm relative group cursor-pointer">1<span class="invisible group-hover:visible absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap z-10 pointer-events-none">Tsinghua University</span></sup><sup class="text-sm relative group cursor-pointer">*<span class="invisible group-hover:visible absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap z-10 pointer-events-none">Co-leading author</span></sup>,</span>
-              <span class="inline-block mr-2">
-                <a href="https://bleaves.github.io/" target="_blank"
-                  class="author-link text-primary hover:text-primary-hover font-semibold transition-colors duration-300">Yixin
-                  Ye</a><sup class="text-sm relative group cursor-pointer">2<span class="invisible group-hover:visible absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap z-10 pointer-events-none">Shanghai Jiao Tong University</span></sup><sup class="text-sm relative group cursor-pointer">*<span class="invisible group-hover:visible absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap z-10 pointer-events-none">Co-leading author</span></sup>,</span>
-              <span class="inline-block mr-2">
-                <a href="https://stevenyzzhang.github.io/website/" target="_blank"
-                  class="author-link text-primary hover:text-primary-hover font-semibold transition-colors duration-300">Yanzhe
-                  Zhang</a><sup class="text-sm relative group cursor-pointer">3<span class="invisible group-hover:visible absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap z-10 pointer-events-none">Georgia Institute of Technology</span></sup>,</span>
-              <span class="inline-block mr-2">
-                <a href="https://cs.stanford.edu/~diyiy/" target="_blank"
-                  class="author-link text-primary hover:text-primary-hover font-semibold transition-colors duration-300">Diyi
-                  Yang</a><sup class="text-sm relative group cursor-pointer">4<span class="invisible group-hover:visible absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap z-10 pointer-events-none">Stanford University</span></sup>,</span>
-              <span class="inline-block">
-                <a href="https://hao.computer/" target="_blank"
-                  class="author-link text-primary hover:text-primary-hover font-semibold transition-colors duration-300">Hao
-                  Zhu</a><sup class="text-sm relative group cursor-pointer">4<span class="invisible group-hover:visible absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap z-10 pointer-events-none">Stanford University</span></sup>
-              </span>
-            </div>
-
-            <div class="flex justify-center">
-              <div class="flex flex-wrap justify-center gap-3">
-                <a href="https://arxiv.org/pdf/COMING_SOON.pdf" target="_blank"
-                  class="inline-flex items-center px-4 py-2 bg-gray-900 text-white font-semibold rounded-lg hover:bg-primary hover:-translate-y-0.5 transition-all duration-300 shadow-md hover:shadow-lg">
-                  <i class="fas fa-file-pdf mr-2"></i>
-                  <span>Paper</span>
-                </a>
-
-                <a href="https://github.com/SALT-NLP/RealtimeGym" target="_blank"
-                  class="inline-flex items-center px-4 py-2 bg-gray-900 text-white font-semibold rounded-lg hover:bg-primary hover:-translate-y-0.5 transition-all duration-300 shadow-md hover:shadow-lg">
-                  <i class="fab fa-github mr-2"></i>
-                  <span>Code</span>
-                </a>
-
-                <a href="https://x.com/intent/tweet?text=Coming%20Soon%20%23RealtimeReasoning%20%23RealTimeAgents" target="_blank"
-                  class="inline-flex items-center px-4 py-2 bg-gray-900 text-white font-semibold rounded-lg hover:bg-primary hover:-translate-y-0.5 transition-all duration-300 shadow-md hover:shadow-lg">
-                  <i class="fab fa-twitter mr-2"></i>
-                  <span>Tweet</span>
-                </a>
-
-                <a href="https://huggingface.co/datasets/SALT-NLP/RealtimeGym" target="_blank"
-                  class="inline-flex items-center px-4 py-2 bg-gray-900 text-white font-semibold rounded-lg hover:bg-primary hover:-translate-y-0.5 transition-all duration-300 shadow-md hover:shadow-lg">
-                  <i class="fas fa-database mr-2"></i>
-                  <span>Dataset</span>
-                </a>
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      </div>
-    </section>
-
-    <!-- TL;DR Section -->
-    <section class="py-12 px-6 bg-gradient-to-r from-blue-50 to-purple-50 animate-fade-in-up">
-      <div class="max-w-4xl mx-auto text-left">
-          Can AI agents think and act in real time?
-          This sounds simple to humans, but is quite challenging for AI agents.
-          We build a platform to evaluate and advance the real-time reasoning
-            capabilities of language agents.
-      </div>
-    </section>
-    <!-- End TL;DR Section -->
-
-    <!-- Agent Reasoning Progress Comparison -->
-    <section class="py-16 px-6 bg-gray-50 animate-fade-in-up">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="text-2xl font-bold text-gray-900 text-center mb-4 relative inline-block">
-          Watch real-time games
-          <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
-          </div>
-        </h2>
-
-        <p class="prose mb-12">
-            Play with different cognitive loads and time pressures. Do you notice any difference in how the three agents think and act?
-            Under each settings which agent performs the best? Use the "Random" button to sample different settings quickly!
-        </p>
-
-        <!-- Settings Selection -->
-        <div class="rounded-xl py-4">
-          <div class="flex flex-wrap items-center gap-3 md:gap-4">
-            <div class="flex-1 min-w-[140px]">
-              <label class="block text-xs font-semibold text-gray-600 mb-1">Game</label>
-              <select id="game-select"
-                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900"
-                onchange="loadComparison()">
-                <option value="freeway">Freeway</option>
-                <option value="snake" selected>Snake</option>
-                <option value="overcooked">Overcooked</option>
-              </select>
-            </div>
-
-            <div class="flex-1 min-w-[120px]">
-              <label class="block text-xs font-semibold text-gray-600 mb-1">Task ID</label>
-              <select id="seed-select"
-                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900"
-                onchange="loadComparison()">
-                <option value="seed0">Task 0</option>
-                <option value="seed1">Task 1</option>
-                <option value="seed2" selected>Task 2</option>
-                <option value="seed3">Task 3</option>
-                <option value="seed4">Task 4</option>
-                <option value="seed5">Task 5</option>
-                <option value="seed6">Task 6</option>
-                <option value="seed7">Task 7</option>
-              </select>
-            </div>
-
-            <div class="flex-1 min-w-[140px]">
-              <label class="block text-xs font-semibold text-gray-600 mb-1">
-                Cognitive Load: <span id="cognitive-load-label" class="text-primary">Medium</span>
-              </label>
-              <input type="range" id="cognitive-load-select" min="0" max="2" value="1" step="1"
-                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
-                oninput="updateCognitiveLoadLabel(this.value)"
-                onchange="loadComparison()">
-              <div class="flex justify-between text-xs text-gray-500 mt-1">
-                <span>Easy</span>
-                <span>Hard</span>
-              </div>
-            </div>
-
-            <div class="flex-1 min-w-[140px]">
-              <label class="block text-xs font-semibold text-gray-600 mb-1">
-                Time Pressure: <span id="time-pressure-label" class="text-primary">High</span>
-              </label>
-              <input type="range" id="time-pressure-select" min="0" max="3" value="1" step="1"
-                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
-                oninput="updateTimePressureLabel(this.value)"
-                onchange="loadComparison(); updatePlaySpeed();">
-              <div class="flex justify-between text-xs text-gray-500 mt-1">
-                <span>Low</span>
-                <span>Extreme</span>
-              </div>
-            </div>
-
-            <div class="flex-shrink-0">
-              <label class="block text-xs font-semibold text-transparent mb-1">Action</label>
-              <button
-                class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white font-semibold text-sm rounded-xl shadow-lg hover:from-purple-600 hover:via-pink-600 hover:to-red-600 hover:scale-105 hover:-translate-y-0.5 transition-all duration-300 hover:shadow-2xl whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-400 animate-pulse"
-                onclick="randomizeSettings()">
-                <i class="fas fa-random mr-2"></i>
-                <span>Random</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Comparison Results -->
-        <div id="comparison-results" style="display: none;">
-          <!-- Step Navigation -->
-          <div class="rounded-2xl mb-6 md:mb-8">
-            <div class="flex items-center justify-between gap-2">
-              <button id="prev-step-btn"
-                class="inline-flex items-center px-3 md:px-6 py-2 md:py-3 font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
-                onclick="previousStep()" disabled>
-                <i class="fas fa-chevron-left mr-1 md:mr-2"></i>
-                <span class="hidden sm:inline">Previous</span>
-              </button>
-
-              <div class="text-center">
-                <div class="text-xs md:text-sm text-gray-600 mb-1">Current Step</div>
-                <div class="text-lg md:text-2xl font-bold text-gray-900">
-                  <span id="current-step">0</span> / <span id="total-steps">0</span>
-                </div>
-              </div>
-
-              <div class="flex items-center gap-2">
-                <button id="play-btn"
-                  class="inline-flex items-center px-3 md:px-4 py-2 md:py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-all duration-300 text-sm md:text-base"
-                  onclick="togglePlayPause()">
-                  <i class="fas fa-play mr-0 md:mr-2"></i>
-                  <span class="hidden md:inline">Play</span>
-                </button>
-                <button id="pause-btn"
-                  class="inline-flex items-center px-3 md:px-4 py-2 md:py-3 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition-all duration-300 text-sm md:text-base hidden"
-                  onclick="togglePlayPause()">
-                  <i class="fas fa-pause mr-0 md:mr-2"></i>
-                  <span class="hidden md:inline">Pause</span>
-                </button>
-                <button id="next-step-btn"
-                  class="inline-flex items-center px-3 md:px-6 py-2 md:py-3 font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
-                  onclick="nextStep()">
-                  <span class="hidden sm:inline">Next</span>
-                  <i class="fas fa-chevron-right ml-1 md:ml-2"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Three Model Comparison -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <!-- Reactive Agent -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-4 md:px-6 py-3 md:py-4">
-                <h3 class="text-lg md:text-xl font-bold text-white">Reactive Agent</h3>
-                <p class="text-blue-100 text-xs md:text-sm">Fast, Intuitive Reasoning</p>
-              </div>
-              <div class="p-4 md:p-6">
-                <div class="mb-4 bg-gray-100 rounded-lg overflow-hidden max-w-sm mx-auto" style="aspect-ratio: 1/1;">
-                  <canvas id="game-canvas-reactive" class="w-full h-full"></canvas>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-1 mb-4 p-3 bg-blue-50 rounded-lg">
-                        <div class="text-sm text-gray-600">Score</div>
-                        <div class="text-sm font-bold text-blue-600" id="score-reactive">0</div>
-                    </div>
-                    <div class="col-span-1 mb-4 p-3 bg-blue-50 rounded-lg">
-                        <div class="text-sm text-gray-600">Next Action</div>
-                        <div class="text-sm font-bold text-blue-600" id="thinking-result-reactive">Keep</div>
-                    </div>
-                </div>
-                <div class="border border-gray-200 rounded-lg">
-                  <button
-                    class="w-full px-4 py-3 flex items-center justify-between text-left font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
-                    onclick="toggleThinking('reactive')">
-                    <span>Agent Reasoning</span>
-                    <i class="fas fa-chevron-down transition-transform" id="thinking-icon-reactive"></i>
-                  </button>
-                  <div id="thinking-content-reactive" class="px-4 pb-4 text-sm text-gray-700 leading-relaxed"
-                    style="display: none;">
-                    <p class="italic text-gray-500">Loading Agent Reasoning...</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Planning Agent -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 px-4 md:px-6 py-3 md:py-4">
-                <h3 class="text-lg md:text-xl font-bold text-white">Planning Agent</h3>
-                <p class="text-yellow-100 text-xs md:text-sm">Slow, Deliberate Reasoning</p>
-              </div>
-              <div class="p-4 md:p-6">
-                <div class="mb-4 bg-gray-100 rounded-lg overflow-hidden max-w-sm mx-auto" style="aspect-ratio: 1/1;">
-                  <canvas id="game-canvas-planning" class="w-full h-full"></canvas>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="mb-4 p-3 bg-yellow-50 rounded-lg">
-                        <div class="text-sm text-gray-600">Score</div>
-                        <div class="text-sm font-bold text-yellow-600" id="score-planning">0</div>
-                    </div>
-                    <div class="mb-4 p-3 bg-yellow-50 rounded-lg">
-                        <div class="text-sm text-gray-600">Next Action</div>
-                        <div class="text-sm font-bold text-yellow-600" id="thinking-result-planning">Keep</div>
-                    </div>
-                </div>
-                <div class="border border-gray-200 rounded-lg">
-                  <button
-                    class="w-full px-4 py-3 flex items-center justify-between text-left font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
-                    onclick="toggleThinking('planning')">
-                    <span>Agent Reasoning</span>
-                    <i class="fas fa-chevron-down transition-transform" id="thinking-icon-planning"></i>
-                  </button>
-                  <div id="thinking-content-planning" class="px-4 pb-4 text-sm text-gray-700 leading-relaxed"
-                    style="display: none;">
-                    <p class="italic text-gray-500">Loading Agent Reasoning...</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- AgileThinker Model -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div class="bg-gradient-to-r from-blue-500 via-green-500 to-yellow-500 px-4 md:px-6 py-3 md:py-4">
-                <h3 class="text-lg md:text-xl font-bold text-white" style="font-family: 'Clash Display', sans-serif;">AgileThinker</h3>
-                <p class="text-green-100 text-xs md:text-sm">Parallel Reasoning System</p>
-              </div>
-              <div class="p-4 md:p-6">
-                <div class="mb-4 bg-gray-100 rounded-lg overflow-hidden max-w-sm mx-auto" style="aspect-ratio: 1/1;">
-                  <canvas id="game-canvas-agile" class="w-full h-full"></canvas>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="mb-4 p-3 bg-green-50 rounded-lg">
-                        <div class="text-sm text-gray-600">Score</div>
-                        <div class="text-sm font-bold text-green-600" id="score-agile">0</div>
-                    </div>
-                    <div class="mb-4 p-3 bg-green-50 rounded-lg">
-                        <div class="text-sm text-gray-600">Next Action</div>
-                        <div class="text-sm font-bold text-green-600" id="thinking-result-agile">Keep</div>
-                    </div>
-                </div>
-                <div class="border border-gray-200 rounded-lg">
-                  <button
-                    class="w-full px-4 py-3 flex items-center justify-between text-left font-semibold text-gray-text-gray-900 hover:bg-gray-50 transition-colors"
-                    onclick="toggleThinking('agile')">
-                    <span>Agent Reasoning</span>
-                    <i class="fas fa-chevron-down transition-transform" id="thinking-icon-agile"></i>
-                  </button>
-                  <div id="thinking-content-agile" class="px-4 pb-4 text-sm text-gray-700 leading-relaxed"
-                    style="display: none;">
-                    <p class="italic text-gray-500">Loading Agent Reasoning...</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- End Agent Reasoning Progress Comparison -->
-
-    <section class="py-2 px-6 animate-fade-in-up">
-      <div class="max-w-4xl mx-auto">
-        <div class="py-4">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center relative inline-block">
-                Why do we want agents to be real-time?
-              <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
-              </div>
-            </h2>
-          <h2 class="prose">
-            The time current LLM-based agents take to think is not negligible. When encountering real-world tasks,
-            an agent spending too long to think may miss critical opportunities or fail to respond to urgent situations.
-          </h2>
-          <details class="mt-6">
-            <summary class="cursor-pointer text-center text-sm text-gray-500 hover:text-gray-700">
-              View how current LLM-based agents thinking fails to solve real-world, dynamic tasks
-            </summary>
-            <div class="mt-4 flex justify-center">
-              <img
-                src="static/images/teaser.png"
-                alt="Why do we want agents to be real-time?"
-                class="w-full mx-auto"
-              />
-            </div>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <section class="py-2 px-6 animate-fade-in-up">
-      <div class="max-w-4xl mx-auto">
-        <div class="py-4">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center relative inline-block">
-                Why games, why these games?
-              <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
-              </div>
-            </h2>
-          <h2 class="prose">
-              Games provide an awesome testbed for us to control the difficulty and the time flow speed of the environment.
-                We choose Freeway, Snake and Overcooked as they represent different types of real-time challenges: Freeway tests
-                reaction to emergent hazards, Snake tests taking emergent opportunities, and Overcooked tests collaboration with
-                dynamic partners.
-          </h2>
-        </div>
-      </div>
-    </section>
-    <section class="py-2 px-6 animate-fade-in-up">
-      <div class="max-w-4xl mx-auto">
-        <div class="py-4">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center relative inline-block">
-                What is <span style="font-family: 'Clash Display', sans-serif;">AgileThinker</span>, why we need it?
-              <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
-              </div>
-            </h2>
-          <h2 class="prose">
-            The <strong>reactive agent</strong>, which uses bounded computation, ensures timeliness but sacrifices decision quality when cognitive load is high. The <strong>planning agent</strong>, which uses unbounded computation, improves decision quality but struggles under time pressure.
-            <br />
-            <br />
-            <strong style="font-family: 'Clash Display', sans-serif;">AgileThinker</strong> avoids this decision efficiency-quality trade-off by engaging both reactive and planning thinking systems. The two systems work <strong>in parallel</strong>, and the streaming output from planning system will be immediately used to enhance the reactive system's fast decisions. Therefore, it achieves robust performance across different levels of cognitive load and time pressure.
-          </h2>
-          <details class="mt-6">
-            <summary class="cursor-pointer text-center text-sm text-gray-500 hover:text-gray-700">
-              View how our AgileThinker works in practice
-            </summary>
-            <div class="mt-4 flex justify-center">
-              <img
-                src="static/images/flow.png"
-                alt="What is AgileThinker, why we need it?"
-                class="w-full mx-auto"
-              />
-            </div>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <!-- Teaser figure-->
-    <section class="py-8 px-6 animate-fade-in-up">
-      <div class="max-w-4xl mx-auto">
-        <div class="py-8">
-            <h2 class="text-2xl font-bold text-gray-900 text-center mb-12 relative inline-block">
-                What did we find?
-              <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
-              </div>
-            </h2>
-          <img src="static/images/fig1.png" alt="Figure 1 showing the overview of AgileThinker architecture" style="font-family: 'Clash Display', sans-serif;"
-            class="w-full max-w-2xl mx-auto rounded-2xl transition-shadow duration-300" />
-          <h2 class="text-gray-700 mt-6 leading-relaxed">
-            We now have three real-time games on our platform, Freeway, Snake and Overcooked, to study the
-            challenge of real-time reasoning. In these games, agents need to deal with dynamic environments smartly and
-            timely to achieve high rewards. Experiments show that under <em>cognitive load</em> and <em>time
-              pressure</em>, <strong style="font-family: 'Clash Display', sans-serif;">AgileThinker</strong> (Ours), which engages two LLMs with both System 1 and 2
-            reasoning, greatly outperforms agents engaging only one LLM. Here scores are normalized to [0, 1] for each
-            game and then taken an average.
-          </h2>
-        </div>
-      </div>
-    </section>
-    <!-- End teaser figure -->
-
-    <!-- Paper abstract -->
-    <section class="py-16 px-6 bg-gray-50 border-t border-b border-gray-200 animate-fade-in-up">
-      <div class="max-w-4xl mx-auto">
-        <div class="flex justify-center">
-          <div class="w-full max-w-4xl text-center">
-            <button onclick="toggleAbstract()" class="w-full flex items-center justify-center gap-3 mb-6 group">
-              <h2 class="text-2xl md:text-3xl font-bold text-gray-900 relative inline-block group-hover:text-primary transition-colors">
-                Abstract
-                <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
-                </div>
-              </h2>
-              <i class="fas fa-chevron-down text-gray-600 transition-transform duration-300 group-hover:text-primary" id="abstract-icon"></i>
-            </button>
-            <div id="abstract-content" class="leading-relaxed text-gray-700 text-justify overflow-hidden transition-all duration-500" style="max-height: 0;">
-              <p class="mb-4">
-                Agents in the real world need to make not only logical but also <em>timely judgments</em>, which demands
-                continuous awareness of the dynamic environment where hazards emerge, opportunities arise, and other
-                agents act - all while the agent's own reasoning is still unfolding. Despite significant advances in
-                reasoning capabilities of language models, existing approaches fail to account for this dynamic nature.
-                We introduce <em>real-time reasoning</em> as a new problem formulation for bringing reasoning
-                capabilities to agents operating in evolving environments and build a <strong>Real-Time Reasoning
-                  Gym</strong> to demonstrate it. We study two paradigms for deploying reasoning language models in
-                agents: System 1 Agent, which employs reasoning models with <em>bounded computation for rapid
-                  responses</em>, and System 2 Agent, which allows <em>extended computation for complex problems</em>.
-                Our experiments reveal that even state-of-the-art language models struggle with making logical and
-                timely judgment via either of the two paradigms. To address this limitation, we propose
-                <strong style="font-family: 'Clash Display', sans-serif;">AgileThinker</strong>, a parallel architecture that simultaneously engages <em>both reasoning
-                  systems</em>. This approach demonstrates superior performance as task difficulty and time pressure
-                increase, managing the trade-off between reasoning depth and response latency. Our work establishes
-                real-time reasoning as a critical frontier for developing practical reasoning agents and provides a
-                foundation for future research in temporally-constrained artificial intelligence systems, highlighting a
-                path toward real-time capable language agents.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- End paper abstract -->
-
-    <script>
-      function toggleAbstract() {
-        const content = document.getElementById('abstract-content');
-        const icon = document.getElementById('abstract-icon');
-
-        if (content.style.maxHeight === '0px' || content.style.maxHeight === '') {
-          content.style.maxHeight = content.scrollHeight + 'px';
-          icon.style.transform = 'rotate(180deg)';
-        } else {
-          content.style.maxHeight = '0px';
-          icon.style.transform = 'rotate(0deg)';
-        }
-      }
-
-      // Convert slider values to actual values
-      function getCognitiveLoadValue(sliderValue) {
-        const values = ['easy', 'medium', 'hard'];
-        return values[sliderValue] || 'medium';
-      }
-
-      function getTimePressureValue(sliderValue) {
-        const values = ['32k', '16k', '8k', '4k'];
-        return values[sliderValue] || '8k';
-      }
-
-      function updateCognitiveLoadLabel(sliderValue) {
-        const labels = ['Easy', 'Medium', 'Hard'];
-        document.getElementById('cognitive-load-label').textContent = labels[sliderValue] || 'Medium';
-      }
-
-      function updateTimePressureLabel(sliderValue) {
-        const labels = ['Low', 'Moderate', 'High', 'Extreme'];
-        document.getElementById('time-pressure-label').textContent = labels[sliderValue] || 'High';
-      }
-
-      function randomizeSettings() {
-        // Randomize game
-        const games = ['freeway', 'snake', 'overcooked'];
-        const randomGame = games[Math.floor(Math.random() * games.length)];
-        document.getElementById('game-select').value = randomGame;
-
-        // Randomize cognitive load (0-2)
-        const randomLoad = Math.floor(Math.random() * 3);
-        document.getElementById('cognitive-load-select').value = randomLoad;
-        updateCognitiveLoadLabel(randomLoad);
-
-        // Randomize time pressure (0-3)
-        const randomPressure = Math.floor(Math.random() * 4);
-        document.getElementById('time-pressure-select').value = randomPressure;
-        updateTimePressureLabel(randomPressure);
-
-        // Randomize seed
-        const seeds = ['seed0', 'seed1', 'seed2', 'seed3', 'seed4', 'seed5', 'seed6', 'seed7'];
-        const randomSeed = seeds[Math.floor(Math.random() * seeds.length)];
-        document.getElementById('seed-select').value = randomSeed;
-
-        // Trigger loading with new random settings
-        loadComparison();
-      }
-
-      // Play/Pause functionality
-      let playInterval = null;
-      let isPlaying = false;
-
-      function getPlaySpeed() {
-        const sliderValue = document.getElementById('time-pressure-select').value;
-        const timePressure = getTimePressureValue(sliderValue);
-        // Map time pressure to play speed (in milliseconds)
-        // Higher time pressure = faster playback
-        const speedMap = {
-          '4k': 250,    // Extreme: 4x speed (0.25 seconds)
-          '8k': 500,    // High: 2x speed (0.5 seconds)
-          '16k': 1000,  // Moderate: 1x speed (1 second)
-          '32k': 2000   // Low: 0.5x speed (2 seconds)
-        };
-        return speedMap[timePressure] || 1000;
-      }
-
-      function togglePlayPause() {
-        const playBtn = document.getElementById('play-btn');
-        const pauseBtn = document.getElementById('pause-btn');
-
-        if (isPlaying) {
-          // Pause
-          clearInterval(playInterval);
-          playInterval = null;
-          isPlaying = false;
-          playBtn.classList.remove('hidden');
-          pauseBtn.classList.add('hidden');
-        } else {
-          // Play
-          isPlaying = true;
-          playBtn.classList.add('hidden');
-          pauseBtn.classList.remove('hidden');
-
-          // Auto-advance based on time pressure setting
-          const speed = getPlaySpeed();
-          console.log('Playing at speed:', speed, 'ms per step');
-          playInterval = setInterval(function() {
-            if (typeof nextStep === 'function') {
-              nextStep();
-
-              // Stop at the end
-              const currentStep = parseInt(document.getElementById('current-step').textContent);
-              const totalSteps = parseInt(document.getElementById('total-steps').textContent);
-              if (currentStep >= totalSteps) {
-                togglePlayPause();
-              }
+        <!-- Structured Data for Academic Papers -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "ScholarlyArticle",
+                "headline": "Real-Time Reasoning Agents in Evolving Environments",
+                "description": "We introduce real-time reasoning as a new problem formulation for bringing reasoning capabilities to agents operating in evolving environments, featuring AgileThinker architecture that combines System 1 and System 2 reasoning paradigms.",
+                "author": [
+                    {
+                        "@type": "Person",
+                        "name": "Yule Wen",
+                        "affiliation": {
+                            "@type": "Organization",
+                            "name": "Tsinghua University"
+                        }
+                    },
+                    {
+                        "@type": "Person",
+                        "name": "Yixin Ye",
+                        "affiliation": {
+                            "@type": "Organization",
+                            "name": "Shanghai Jiao Tong University"
+                        }
+                    },
+                    {
+                        "@type": "Person",
+                        "name": "Yanzhe Zhang",
+                        "affiliation": {
+                            "@type": "Organization",
+                            "name": "Georgia Institute of Technology"
+                        }
+                    },
+                    {
+                        "@type": "Person",
+                        "name": "Diyi Yang",
+                        "affiliation": {
+                            "@type": "Organization",
+                            "name": "Stanford University"
+                        }
+                    },
+                    {
+                        "@type": "Person",
+                        "name": "Hao Zhu",
+                        "affiliation": {
+                            "@type": "Organization",
+                            "name": "Stanford University"
+                        }
+                    }
+                ],
+                "datePublished": "2025-09-26",
+                "url": "https://realtimegym.saltlab.stanford.edu/",
+                "image": "https://realtimegym.saltlab.stanford.edu/static/images/social_preview.png",
+                "keywords": [
+                    "real-time reasoning",
+                    "language agents",
+                    "cognitive systems",
+                    "artificial intelligence",
+                    "system 1",
+                    "system 2"
+                ],
+                "abstract": "Agents in the real world need to make not only logical but also timely judgments, which demands continuous awareness of the dynamic environment where hazards emerge, opportunities arise, and other agents act - all while the agent's own reasoning is still unfolding. Despite significant advances in reasoning capabilities of language models, existing approaches fail to account for this dynamic nature. We introduce real-time reasoning as a new problem formulation for bringing reasoning capabilities to agents operating in evolving environments and build a Real-Time Reasoning Gym to demonstrate it.",
+                "isAccessibleForFree": true,
+                "license": "https://creativecommons.org/licenses/by/4.0/",
+                "mainEntity": {
+                    "@type": "WebPage",
+                    "@id": "https://realtimegym.saltlab.stanford.edu/"
+                },
+                "about": [
+                    {
+                        "@type": "Thing",
+                        "name": "Real-Time Reasoning"
+                    },
+                    {
+                        "@type": "Thing",
+                        "name": "Language Agents"
+                    }
+                ]
             }
-          }, speed);
-        }
-      }
+        </script>
 
-      function updatePlaySpeed() {
-        // If currently playing, restart with new speed
-        if (isPlaying) {
-          clearInterval(playInterval);
-          const speed = getPlaySpeed();
-          console.log('Updating play speed to:', speed, 'ms per step');
-          playInterval = setInterval(function() {
-            if (typeof nextStep === 'function') {
-              nextStep();
-
-              // Stop at the end
-              const currentStep = parseInt(document.getElementById('current-step').textContent);
-              const totalSteps = parseInt(document.getElementById('total-steps').textContent);
-              if (currentStep >= totalSteps) {
-                togglePlayPause();
-              }
+        <!-- Website/Organization Structured Data -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "Stanford University",
+                "url": "https://stanford.edu",
+                "logo": "hhttps://realtimegym.saltlab.stanford.edu/static/images/favicon.ico",
+                "sameAs": [
+                    "https://twitter.com/StanfordNLP",
+                    "https://github.com/salt-nlp/realtimegym"
+                ]
             }
-          }, speed);
-        }
-      }
+        </script>
 
-      // Auto-load random settings on page load
-      // Use window.onload to ensure comparison.js is loaded
-      window.addEventListener('load', function() {
-        console.log('Page loaded, checking if loadComparison exists:', typeof loadComparison);
-        if (typeof loadComparison === 'function') {
-          // Wait a bit for the page to fully render, then randomize
-          setTimeout(function() {
-            randomizeSettings();
-          }, 100);
-        } else {
-          console.error('loadComparison is not defined yet, retrying...');
-          setTimeout(randomizeSettings, 500);
-        }
-      });
-    </script>
+        <!-- Defer non-critical JavaScript -->
+        <script
+            defer
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+        ></script>
+        <script
+            defer
+            src="https://documentcloud.adobe.com/view-sdk/main.js"
+        ></script>
+        <script defer src="static/js/fontawesome.all.min.js"></script>
 
-    <!-- Real-Time Reasoning Demos -->
-    <!-- <section class="py-16 px-6 animate-fade-in-up">
+        <!-- Markdown parsing for thinking content -->
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"
+        ></script>
+
+        <!-- Prism.js for code syntax highlighting -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.min.css"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+        <style>
+            /* Line wrapping and smaller font for code blocks */
+            pre[class*="language-"] {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                font-size: 0.75rem;
+            }
+            code[class*="language-"] {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                font-size: 0.75rem;
+            }
+            /* Copy button styling */
+            div.code-toolbar > .toolbar {
+                opacity: 1;
+            }
+            div.code-toolbar > .toolbar > .toolbar-item > button {
+                background: #374151;
+                color: #d1d5db;
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+                font-size: 0.75rem;
+            }
+            div.code-toolbar > .toolbar > .toolbar-item > button:hover {
+                background: #4b5563;
+                color: #ffffff;
+            }
+        </style>
+
+        <!-- Comparison functionality -->
+        <script defer src="static/js/comparison.js"></script>
+
+        <!-- Engagement features -->
+        <script defer src="static/js/engagement.js"></script>
+        <!-- Prism.js (syntax highlighting) -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/prismjs/plugins/toolbar/prism-toolbar.css"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-python.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/toolbar/prism-toolbar.min.js"></script>
+    </head>
+
+    <body>
+        <div id="top"></div>
+        <!-- Header Navigation Bar -->
+        <header
+            class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50"
+        >
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                        <a
+                            href="#"
+                            class="text-2xl font-bold text-gray-900 hover:text-primary transition-colors duration-300 font-clash"
+                        >
+                            Real-Time Gym
+                        </a>
+                    </div>
+
+                    <!-- Navigation Links -->
+                    <nav class="flex items-center space-x-8">
+                        <a
+                            href="#top"
+                            class="text-sm font-semibold text-gray-700 hover:text-primary transition-colors duration-300"
+                        >
+                            Home
+                        </a>
+                        <a
+                            href="#authors"
+                            class="text-sm font-semibold text-gray-700 hover:text-primary transition-colors duration-300"
+                        >
+                            About
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Scroll to Top Button -->
+        <button
+            class="fixed bottom-8 right-8 w-12 h-12 bg-primary text-white rounded-full opacity-0 invisible transition-all duration-300 z-50 flex items-center justify-center text-lg shadow-lg hover:bg-primary-hover hover:-translate-y-1 hover:shadow-xl scroll-to-top"
+            onclick="scrollToTop()"
+            title="Scroll to top"
+            aria-label="Scroll to top"
+        >
+            <i class="fas fa-chevron-up"></i>
+        </button>
+
+        <main id="main-content" class="pt-16 bg-gray-50 min-w-xl">
+            <section class="py-20 px-6 bg-white">
+                <div class="max-w-3xl mx-auto">
+                    <h1
+                        class="text-3xl md:text-4xl font-semibold mb-8 leading-tight text-center"
+                        style="color: var(--primary)"
+                    >
+                        Real-Time Reasoning Agents in Evolving Environments
+                    </h1>
+
+                    <div class="flex justify-center mb-12">
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <a
+                                href="https://arxiv.org/pdf/COMING_SOON.pdf"
+                                target="_blank"
+                                class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded hover:border-gray-400 hover:bg-gray-50 transition-colors"
+                            >
+                                <i class="fas fa-file-pdf mr-2"></i>
+                                Paper
+                            </a>
+
+                            <a
+                                href="https://github.com/SALT-NLP/RealtimeGym"
+                                target="_blank"
+                                class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded hover:border-gray-400 hover:bg-gray-50 transition-colors"
+                            >
+                                <i class="fab fa-github mr-2"></i>
+                                Code
+                            </a>
+
+                            <a
+                                href="https://x.com/intent/tweet?text=Coming%20Soon%20%23RealtimeReasoning%20%23RealTimeAgents"
+                                target="_blank"
+                                class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded hover:border-gray-400 hover:bg-gray-50 transition-colors"
+                            >
+                                <i class="fab fa-twitter mr-2"></i>
+                                Tweet
+                            </a>
+
+                            <a
+                                href="https://huggingface.co/datasets/SALT-NLP/RealtimeGym"
+                                target="_blank"
+                                class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded hover:border-gray-400 hover:bg-gray-50 transition-colors"
+                            >
+                                <i class="fas fa-database mr-2"></i>
+                                Dataset
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Simple stats -->
+                    <div
+                        class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12 max-w-2xl mx-auto"
+                    >
+                        <a
+                            class="text-center border rounded-lg p-4 bg-gray-100 hover:bg-gray-200 transition-colors"
+                            href="#motivation"
+                        >
+                            <div
+                                class="text-xl text-left font-semibold text-gray-900 mb-4"
+                            >
+                                Real-Time Games
+                            </div>
+                            <div class="text-sm text-left text-gray-600">
+                                Non-turn-based environment allows AI agents to
+                                act at any time, while the environment keeps
+                                evolving.
+                            </div>
+                            <a
+                                class="text-center border rounded-lg p-4 bg-gray-100 hover:bg-gray-200 transition-colors"
+                                href="#results"
+                            >
+                                <div
+                                    class="text-xl text-left font-semibold text-gray-900 mb-4"
+                                >
+                                    Evaluate LLMs
+                                </div>
+                                <div class="text-sm text-left text-gray-600">
+                                    Comparing real-time reasoning capabilities
+                                    with tunable cognitive loads and time
+                                    pressures without interference from
+                                    hardware.
+                                </div>
+                            </a>
+                            <a
+                                class="text-center border rounded-lg p-4 bg-gray-100 hover:bg-gray-200 transition-colors"
+                                href="#agilethinker"
+                            >
+                                <div
+                                    class="text-xl text-left font-semibold text-gray-900 mb-4 font-clash"
+                                >
+                                    AgileThinker
+                                </div>
+                                <div class="text-sm text-left text-gray-600">
+                                    Our agent architecture that achieves the
+                                    robust real-time reasoning performance by
+                                    combining fast reaction and deliberate
+                                    planning.
+                                </div>
+                            </a>
+                        </a>
+                    </div>
+
+                    <!-- Simple CTA -->
+                    <div class="text-center mx-auto">
+                        <div class="mb-4">
+                            <a
+                                href="#interactive-demo"
+                                class="inline-flex items-center px-6 py-3 bg-gray-800 text-white text-sm font-medium rounded hover:bg-gray-700 transition-colors"
+                            >
+                                <span>Try Interactive Demo</span>
+                                <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TL;DR Section -->
+            <section class="py-16 px-6">
+                <div class="max-w-3xl mx-auto">
+                    <p class="text-lg text-gray-700 leading-relaxed">
+                        Can AI agents think and act in real time? This sounds
+                        simple to humans, but is quite challenging for AI
+                        agents. We build a platform to evaluate and advance the
+                        real-time reasoning capabilities of language agents.
+                    </p>
+                </div>
+            </section>
+            <!-- End TL;DR Section -->
+
+            <!-- Agent Reasoning Progress Comparison -->
+            <section
+                id="interactive-demo"
+                class="py-16 px-6 bg-white scroll-mt-16"
+            >
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+                        Interactive Demo
+                    </h2>
+
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Play with different cognitive loads and time pressures.
+                        Notice how the three agents think and act differently.
+                        Use the "Random" button to sample different settings
+                        quickly.
+                    </p>
+
+                    <!-- Challenge Section -->
+                    <div
+                        class="border border-gray-200 rounded-lg p-6 mb-8 bg-gray-100"
+                    >
+                        <p class="text-gray-700 text-sm mb-2">
+                            <strong>Challenge:</strong> Can you find a scenario
+                            where the Planning Agent outperforms AgileThinker?
+                        </p>
+                        <p class="text-gray-600 text-sm">
+                            Try different combinations of cognitive load and
+                            time pressure to discover edge cases.
+                        </p>
+                    </div>
+
+                    <!-- Settings Selection -->
+                    <div class="rounded-xl py-4">
+                        <div class="flex flex-wrap items-center gap-3 md:gap-4">
+                            <div class="flex-1 min-w-[140px]">
+                                <label
+                                    class="block text-xs font-semibold text-gray-600 mb-1"
+                                    >Game</label
+                                >
+                                <select
+                                    id="game-select"
+                                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900"
+                                    onchange="loadComparison()"
+                                >
+                                    <option value="freeway">Freeway</option>
+                                    <option value="snake" selected>
+                                        Snake
+                                    </option>
+                                    <option value="overcooked">
+                                        Overcooked
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="flex-1 min-w-[120px]">
+                                <label
+                                    class="block text-xs font-semibold text-gray-600 mb-1"
+                                    >Task ID</label
+                                >
+                                <select
+                                    id="seed-select"
+                                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900"
+                                    onchange="loadComparison()"
+                                >
+                                    <option value="seed0">Task 0</option>
+                                    <option value="seed1">Task 1</option>
+                                    <option value="seed2" selected>
+                                        Task 2
+                                    </option>
+                                    <option value="seed3">Task 3</option>
+                                    <option value="seed4">Task 4</option>
+                                    <option value="seed5">Task 5</option>
+                                    <option value="seed6">Task 6</option>
+                                    <option value="seed7">Task 7</option>
+                                </select>
+                            </div>
+
+                            <div class="flex-1 min-w-[140px]">
+                                <label
+                                    class="block text-xs font-semibold text-gray-600 mb-1"
+                                >
+                                    Cognitive Load:
+                                    <span
+                                        id="cognitive-load-label"
+                                        class="text-primary"
+                                        >Medium</span
+                                    >
+                                </label>
+                                <input
+                                    type="range"
+                                    id="cognitive-load-select"
+                                    min="0"
+                                    max="2"
+                                    value="1"
+                                    step="1"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
+                                    oninput="updateCognitiveLoadLabel(this.value)"
+                                    onchange="loadComparison()"
+                                />
+                                <div
+                                    class="flex justify-between text-xs text-gray-500 mt-1"
+                                >
+                                    <span>Easy</span>
+                                    <span>Hard</span>
+                                </div>
+                            </div>
+
+                            <div class="flex-1 min-w-[140px]">
+                                <label
+                                    class="block text-xs font-semibold text-gray-600 mb-1"
+                                >
+                                    Time Pressure:
+                                    <span
+                                        id="time-pressure-label"
+                                        class="text-primary"
+                                        >High</span
+                                    >
+                                </label>
+                                <input
+                                    type="range"
+                                    id="time-pressure-select"
+                                    min="0"
+                                    max="3"
+                                    value="1"
+                                    step="1"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
+                                    oninput="updateTimePressureLabel(this.value)"
+                                    onchange="loadComparison(); updatePlaySpeed();"
+                                />
+                                <div
+                                    class="flex justify-between text-xs text-gray-500 mt-1"
+                                >
+                                    <span>Low</span>
+                                    <span>Extreme</span>
+                                </div>
+                            </div>
+
+                            <div class="flex-shrink-0">
+                                <label
+                                    class="block text-xs font-semibold text-transparent mb-1"
+                                    >Action</label
+                                >
+                                <button
+                                    class="inline-flex items-center px-4 py-2 bg-gray-700 text-white text-sm font-medium rounded hover:bg-gray-600 transition-colors whitespace-nowrap"
+                                    onclick="randomizeSettings()"
+                                >
+                                    <i class="fas fa-random mr-2"></i>
+                                    <span>Random</span>
+                                </button>
+                            </div>
+
+                            <div class="flex-shrink-0">
+                                <label
+                                    class="block text-xs font-semibold text-transparent mb-1"
+                                    >Share</label
+                                >
+                                <button
+                                    class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded hover:border-gray-400 hover:bg-gray-50 transition-colors whitespace-nowrap"
+                                    onclick="shareConfiguration()"
+                                    title="Share this configuration"
+                                >
+                                    <i class="fas fa-share-alt mr-2"></i>
+                                    <span>Share</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comparison Results -->
+                    <div id="comparison-results" style="display: none">
+                        <!-- Step Navigation -->
+                        <div class="rounded-2xl mb-6 md:mb-8">
+                            <div
+                                class="flex items-center justify-between gap-2"
+                            >
+                                <button
+                                    id="prev-step-btn"
+                                    class="inline-flex items-center px-3 md:px-6 py-2 md:py-3 font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
+                                    onclick="previousStep()"
+                                    disabled
+                                >
+                                    <i
+                                        class="fas fa-chevron-left mr-1 md:mr-2"
+                                    ></i>
+                                    <span class="hidden sm:inline"
+                                        >Previous</span
+                                    >
+                                </button>
+
+                                <div class="text-center">
+                                    <div
+                                        class="text-xs md:text-sm text-gray-600 mb-1"
+                                    >
+                                        Current Step
+                                    </div>
+                                    <div
+                                        class="text-lg md:text-2xl font-bold text-gray-900"
+                                    >
+                                        <span id="current-step">0</span> /
+                                        <span id="total-steps">0</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    <button
+                                        id="play-btn"
+                                        class="inline-flex items-center px-3 md:px-4 py-2 md:py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-all duration-300 text-sm md:text-base"
+                                        onclick="togglePlayPause()"
+                                    >
+                                        <i class="fas fa-play mr-0 md:mr-2"></i>
+                                        <span class="hidden md:inline"
+                                            >Play</span
+                                        >
+                                    </button>
+                                    <button
+                                        id="pause-btn"
+                                        class="inline-flex items-center px-3 md:px-4 py-2 md:py-3 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition-all duration-300 text-sm md:text-base hidden"
+                                        onclick="togglePlayPause()"
+                                    >
+                                        <i
+                                            class="fas fa-pause mr-0 md:mr-2"
+                                        ></i>
+                                        <span class="hidden md:inline"
+                                            >Pause</span
+                                        >
+                                    </button>
+                                    <button
+                                        id="next-step-btn"
+                                        class="inline-flex items-center px-3 md:px-6 py-2 md:py-3 font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
+                                        onclick="nextStep()"
+                                    >
+                                        <span class="hidden sm:inline"
+                                            >Next</span
+                                        >
+                                        <i
+                                            class="fas fa-chevron-right ml-1 md:ml-2"
+                                        ></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Three Model Comparison -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <!-- Reactive Agent -->
+                            <div
+                                class="bg-white rounded-2xl shadow-lg overflow-hidden"
+                            >
+                                <div
+                                    class="bg-gradient-to-r from-blue-500 to-blue-600 px-4 md:px-6 py-3 md:py-4"
+                                >
+                                    <h3
+                                        class="text-lg md:text-xl font-bold text-white"
+                                    >
+                                        Reactive Agent
+                                    </h3>
+                                    <p class="text-blue-100 text-xs md:text-sm">
+                                        Fast, Intuitive Reasoning
+                                    </p>
+                                </div>
+                                <div class="p-4 md:p-6">
+                                    <div
+                                        class="mb-4 bg-gray-100 rounded-lg overflow-hidden max-w-sm mx-auto"
+                                        style="aspect-ratio: 1/1"
+                                    >
+                                        <canvas
+                                            id="game-canvas-reactive"
+                                            class="w-full h-full"
+                                        ></canvas>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div
+                                            class="col-span-1 mb-4 p-3 bg-blue-50 rounded-lg"
+                                        >
+                                            <div class="text-sm text-gray-600">
+                                                Score
+                                            </div>
+                                            <div
+                                                class="text-sm font-bold text-blue-600"
+                                                id="score-reactive"
+                                            >
+                                                0
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-span-1 mb-4 p-3 bg-blue-50 rounded-lg"
+                                        >
+                                            <div class="text-sm text-gray-600">
+                                                Next Action
+                                            </div>
+                                            <div
+                                                class="text-sm font-bold text-blue-600"
+                                                id="thinking-result-reactive"
+                                            >
+                                                Keep
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="border border-gray-200 rounded-lg"
+                                    >
+                                        <button
+                                            class="w-full px-4 py-3 flex items-center justify-between text-left font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
+                                            onclick="toggleThinking('reactive')"
+                                        >
+                                            <span>Agent Reasoning</span>
+                                            <i
+                                                class="fas fa-chevron-down transition-transform"
+                                                id="thinking-icon-reactive"
+                                            ></i>
+                                        </button>
+                                        <div
+                                            id="thinking-content-reactive"
+                                            class="px-4 pb-4 text-sm text-gray-700 leading-relaxed"
+                                            style="display: none"
+                                        >
+                                            <p class="italic text-gray-500">
+                                                Loading Agent Reasoning...
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Planning Agent -->
+                            <div
+                                class="bg-white rounded-2xl shadow-lg overflow-hidden"
+                            >
+                                <div
+                                    class="bg-gradient-to-r from-yellow-500 to-yellow-600 px-4 md:px-6 py-3 md:py-4"
+                                >
+                                    <h3
+                                        class="text-lg md:text-xl font-bold text-white"
+                                    >
+                                        Planning Agent
+                                    </h3>
+                                    <p
+                                        class="text-yellow-100 text-xs md:text-sm"
+                                    >
+                                        Slow, Deliberate Reasoning
+                                    </p>
+                                </div>
+                                <div class="p-4 md:p-6">
+                                    <div
+                                        class="mb-4 bg-gray-100 rounded-lg overflow-hidden max-w-sm mx-auto"
+                                        style="aspect-ratio: 1/1"
+                                    >
+                                        <canvas
+                                            id="game-canvas-planning"
+                                            class="w-full h-full"
+                                        ></canvas>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div
+                                            class="mb-4 p-3 bg-yellow-50 rounded-lg"
+                                        >
+                                            <div class="text-sm text-gray-600">
+                                                Score
+                                            </div>
+                                            <div
+                                                class="text-sm font-bold text-yellow-600"
+                                                id="score-planning"
+                                            >
+                                                0
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="mb-4 p-3 bg-yellow-50 rounded-lg"
+                                        >
+                                            <div class="text-sm text-gray-600">
+                                                Next Action
+                                            </div>
+                                            <div
+                                                class="text-sm font-bold text-yellow-600"
+                                                id="thinking-result-planning"
+                                            >
+                                                Keep
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="border border-gray-200 rounded-lg"
+                                    >
+                                        <button
+                                            class="w-full px-4 py-3 flex items-center justify-between text-left font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
+                                            onclick="toggleThinking('planning')"
+                                        >
+                                            <span>Agent Reasoning</span>
+                                            <i
+                                                class="fas fa-chevron-down transition-transform"
+                                                id="thinking-icon-planning"
+                                            ></i>
+                                        </button>
+                                        <div
+                                            id="thinking-content-planning"
+                                            class="px-4 pb-4 text-sm text-gray-700 leading-relaxed"
+                                            style="display: none"
+                                        >
+                                            <p class="italic text-gray-500">
+                                                Loading Agent Reasoning...
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AgileThinker Model -->
+                            <div
+                                class="bg-white rounded-2xl shadow-lg overflow-hidden"
+                            >
+                                <div
+                                    class="bg-gradient-to-r from-blue-500 via-green-500 to-yellow-500 px-4 md:px-6 py-3 md:py-4"
+                                >
+                                    <h3
+                                        class="text-lg md:text-xl font-bold text-white font-clash"
+                                    >
+                                        AgileThinker
+                                    </h3>
+                                    <p
+                                        class="text-green-100 text-xs md:text-sm"
+                                    >
+                                        Parallel Reasoning System
+                                    </p>
+                                </div>
+                                <div class="p-4 md:p-6">
+                                    <div
+                                        class="mb-4 bg-gray-100 rounded-lg overflow-hidden max-w-sm mx-auto"
+                                        style="aspect-ratio: 1/1"
+                                    >
+                                        <canvas
+                                            id="game-canvas-agile"
+                                            class="w-full h-full"
+                                        ></canvas>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div
+                                            class="mb-4 p-3 bg-green-50 rounded-lg"
+                                        >
+                                            <div class="text-sm text-gray-600">
+                                                Score
+                                            </div>
+                                            <div
+                                                class="text-sm font-bold text-green-600"
+                                                id="score-agile"
+                                            >
+                                                0
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="mb-4 p-3 bg-green-50 rounded-lg"
+                                        >
+                                            <div class="text-sm text-gray-600">
+                                                Next Action
+                                            </div>
+                                            <div
+                                                class="text-sm font-bold text-green-600"
+                                                id="thinking-result-agile"
+                                            >
+                                                Keep
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="border border-gray-200 rounded-lg"
+                                    >
+                                        <button
+                                            class="w-full px-4 py-3 flex items-center justify-between text-left font-semibold text-gray-text-gray-900 hover:bg-gray-50 transition-colors"
+                                            onclick="toggleThinking('agile')"
+                                        >
+                                            <span>Agent Reasoning</span>
+                                            <i
+                                                class="fas fa-chevron-down transition-transform"
+                                                id="thinking-icon-agile"
+                                            ></i>
+                                        </button>
+                                        <div
+                                            id="thinking-content-agile"
+                                            class="px-4 pb-4 text-sm text-gray-700 leading-relaxed"
+                                            style="display: none"
+                                        >
+                                            <p class="italic text-gray-500">
+                                                Loading Agent Reasoning...
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- End Agent Reasoning Progress Comparison -->
+
+            <section class="py-16 px-6" id="motivation">
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+                        Why do we want agents to be real-time?
+                    </h2>
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        The time current LLM-based agents take to think is not
+                        negligible. When encountering real-world tasks, an agent
+                        spending too long to think may miss critical
+                        opportunities or fail to respond to urgent situations.
+                    </p>
+                    <details
+                        class="border border-gray-200 rounded-lg overflow-hidden bg-white"
+                    >
+                        <summary
+                            class="cursor-pointer text-sm text-gray-700 p-4 hover:bg-gray-50 transition-colors"
+                        >
+                            View how current LLM-based agents fail to solve
+                            real-world, dynamic tasks
+                        </summary>
+                        <div class="p-6 border-t border-gray-200">
+                            <object
+                                data="static/images/teaser.svg"
+                                type="image/svg+xml"
+                                class="w-full mx-auto rounded-lg block"
+                                style="
+                                    width: 100%;
+                                    aspect-ratio: attr(width) / attr(height);
+                                "
+                                aria-label="Why do we want agents to be real-time?"
+                            ></object>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+            <section class="py-16 px-6 bg-white">
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+                        Why games?
+                    </h2>
+                    <p class="text-gray-700 leading-relaxed mb-8">
+                        Games provide a testbed to control the difficulty and
+                        time flow speed of the environment.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <h3 class="font-medium text-gray-900 mb-2">
+                                Freeway
+                            </h3>
+                            <p class="text-sm text-gray-600">
+                                Tests reaction to emergent hazards
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-900 mb-2">
+                                Snake
+                            </h3>
+                            <p class="text-sm text-gray-600">
+                                Tests taking emergent opportunities
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-900 mb-2">
+                                Overcooked
+                            </h3>
+                            <p class="text-sm text-gray-600">
+                                Tests collaboration with dynamic partners
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="py-16 px-6" id="agilethinker">
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+                        What is AgileThinker?
+                    </h2>
+
+                    <!-- Two Existing Approaches -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div
+                            class="border border-gray-200 rounded-lg p-5 bg-white"
+                        >
+                            <h3 class="font-medium text-gray-900 mb-2">
+                                Reactive Agent
+                            </h3>
+                            <p class="text-sm text-gray-600">
+                                Bounded computation ensures timeliness but
+                                sacrifices decision quality when cognitive load
+                                is high.
+                            </p>
+                        </div>
+                        <div
+                            class="border border-gray-200 rounded-lg p-5 bg-white"
+                        >
+                            <h3 class="font-medium text-gray-900 mb-2">
+                                Planning Agent
+                            </h3>
+                            <p class="text-sm text-gray-600">
+                                Unbounded computation improves decision quality
+                                but struggles under time pressure.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- AgileThinker Solution -->
+                    <div
+                        class="border border-gray-200 rounded-lg p-6 bg-white mb-6"
+                    >
+                        <h3 class="font-medium text-gray-900 mb-4">
+                            AgileThinker
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            AgileThinker avoids this trade-off by engaging both
+                            reactive and planning thinking systems. The two
+                            systems work in parallel, and the streaming output
+                            from the planning system is immediately used to
+                            enhance the reactive system's fast decisions.
+                        </p>
+                        <p class="text-sm text-gray-600">
+                            Result: Robust performance across different levels
+                            of cognitive load and time pressure.
+                        </p>
+                    </div>
+
+                    <details
+                        class="border border-gray-200 rounded-lg overflow-hidden bg-white"
+                    >
+                        <summary
+                            class="cursor-pointer text-sm text-gray-700 p-4 hover:bg-gray-50 transition-colors"
+                        >
+                            View how AgileThinker works in practice
+                        </summary>
+                        <div class="p-6 border-t border-gray-200">
+                            <object
+                                data="static/images/flow.svg"
+                                type="image/svg+xml"
+                                class="w-full mx-auto rounded-lg block"
+                                style="
+                                    width: 100%;
+                                    aspect-ratio: attr(width) / attr(height);
+                                "
+                                aria-label="What is AgileThinker, why we need it?"
+                            ></object>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+            <!-- Results -->
+            <section class="py-16 px-6 bg-white" id="results">
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+                        What did we find?
+                    </h2>
+                    <object
+                        data="static/images/fig1.svg"
+                        type="image/svg+xml"
+                        class="w-full max-w-2xl mx-auto rounded-lg mb-6 block"
+                        style="
+                            width: 100%;
+                            aspect-ratio: attr(width) / attr(height);
+                        "
+                        aria-label="Figure 1 showing the overview of AgileThinker architecture"
+                    ></object>
+                    <p class="text-gray-700 leading-relaxed">
+                        Experiments show that under cognitive load and time
+                        pressure, AgileThinker, which engages two LLMs with both
+                        System 1 and 2 reasoning, greatly outperforms agents
+                        engaging only one LLM. Scores are normalized to [0, 1]
+                        for each game and then averaged.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Paper abstract -->
+
+            <!-- End paper abstract -->
+
+            <script>
+                function toggleAbstract() {
+                    const content = document.getElementById("abstract-content");
+                    const icon = document.getElementById("abstract-icon");
+
+                    if (
+                        content.style.maxHeight === "0px" ||
+                        content.style.maxHeight === ""
+                    ) {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        icon.style.transform = "rotate(180deg)";
+                    } else {
+                        content.style.maxHeight = "0px";
+                        icon.style.transform = "rotate(0deg)";
+                    }
+                }
+
+                // Convert slider values to actual values
+                function getCognitiveLoadValue(sliderValue) {
+                    const values = ["easy", "medium", "hard"];
+                    return values[sliderValue] || "medium";
+                }
+
+                function getTimePressureValue(sliderValue) {
+                    const values = ["32k", "16k", "8k", "4k"];
+                    return values[sliderValue] || "8k";
+                }
+
+                function updateCognitiveLoadLabel(sliderValue) {
+                    const labels = ["Easy", "Medium", "Hard"];
+                    document.getElementById(
+                        "cognitive-load-label",
+                    ).textContent = labels[sliderValue] || "Medium";
+                }
+
+                function updateTimePressureLabel(sliderValue) {
+                    const labels = ["Low", "Moderate", "High", "Extreme"];
+                    document.getElementById("time-pressure-label").textContent =
+                        labels[sliderValue] || "High";
+                }
+
+                function randomizeSettings() {
+                    // Randomize game
+                    const games = ["freeway", "snake", "overcooked"];
+                    const randomGame =
+                        games[Math.floor(Math.random() * games.length)];
+                    document.getElementById("game-select").value = randomGame;
+
+                    // Randomize cognitive load (0-2)
+                    const randomLoad = Math.floor(Math.random() * 3);
+                    document.getElementById("cognitive-load-select").value =
+                        randomLoad;
+                    updateCognitiveLoadLabel(randomLoad);
+
+                    // Randomize time pressure (0-3)
+                    const randomPressure = Math.floor(Math.random() * 4);
+                    document.getElementById("time-pressure-select").value =
+                        randomPressure;
+                    updateTimePressureLabel(randomPressure);
+
+                    // Randomize seed
+                    const seeds = [
+                        "seed0",
+                        "seed1",
+                        "seed2",
+                        "seed3",
+                        "seed4",
+                        "seed5",
+                        "seed6",
+                        "seed7",
+                    ];
+                    const randomSeed =
+                        seeds[Math.floor(Math.random() * seeds.length)];
+                    document.getElementById("seed-select").value = randomSeed;
+
+                    // Trigger loading with new random settings
+                    loadComparison();
+                }
+
+                // Play/Pause functionality
+                let playInterval = null;
+                let isPlaying = false;
+
+                function getPlaySpeed() {
+                    const sliderValue = document.getElementById(
+                        "time-pressure-select",
+                    ).value;
+                    const timePressure = getTimePressureValue(sliderValue);
+                    // Map time pressure to play speed (in milliseconds)
+                    // Higher time pressure = faster playback
+                    const speedMap = {
+                        "4k": 250, // Extreme: 4x speed (0.25 seconds)
+                        "8k": 500, // High: 2x speed (0.5 seconds)
+                        "16k": 1000, // Moderate: 1x speed (1 second)
+                        "32k": 2000, // Low: 0.5x speed (2 seconds)
+                    };
+                    return speedMap[timePressure] || 1000;
+                }
+
+                function togglePlayPause() {
+                    const playBtn = document.getElementById("play-btn");
+                    const pauseBtn = document.getElementById("pause-btn");
+
+                    if (isPlaying) {
+                        // Pause
+                        clearInterval(playInterval);
+                        playInterval = null;
+                        isPlaying = false;
+                        playBtn.classList.remove("hidden");
+                        pauseBtn.classList.add("hidden");
+                    } else {
+                        // Play
+                        isPlaying = true;
+                        playBtn.classList.add("hidden");
+                        pauseBtn.classList.remove("hidden");
+
+                        // Auto-advance based on time pressure setting
+                        const speed = getPlaySpeed();
+                        console.log("Playing at speed:", speed, "ms per step");
+                        playInterval = setInterval(function () {
+                            if (typeof nextStep === "function") {
+                                nextStep();
+
+                                // Stop at the end
+                                const currentStep = parseInt(
+                                    document.getElementById("current-step")
+                                        .textContent,
+                                );
+                                const totalSteps = parseInt(
+                                    document.getElementById("total-steps")
+                                        .textContent,
+                                );
+                                if (currentStep >= totalSteps) {
+                                    togglePlayPause();
+                                }
+                            }
+                        }, speed);
+                    }
+                }
+
+                function updatePlaySpeed() {
+                    // If currently playing, restart with new speed
+                    if (isPlaying) {
+                        clearInterval(playInterval);
+                        const speed = getPlaySpeed();
+                        console.log(
+                            "Updating play speed to:",
+                            speed,
+                            "ms per step",
+                        );
+                        playInterval = setInterval(function () {
+                            if (typeof nextStep === "function") {
+                                nextStep();
+
+                                // Stop at the end
+                                const currentStep = parseInt(
+                                    document.getElementById("current-step")
+                                        .textContent,
+                                );
+                                const totalSteps = parseInt(
+                                    document.getElementById("total-steps")
+                                        .textContent,
+                                );
+                                if (currentStep >= totalSteps) {
+                                    togglePlayPause();
+                                }
+                            }
+                        }, speed);
+                    }
+                }
+
+                // Auto-load random settings on page load
+                // Use window.onload to ensure comparison.js is loaded
+                window.addEventListener("load", function () {
+                    console.log(
+                        "Page loaded, checking if loadComparison exists:",
+                        typeof loadComparison,
+                    );
+                    if (typeof loadComparison === "function") {
+                        // Wait a bit for the page to fully render, then randomize
+                        setTimeout(function () {
+                            randomizeSettings();
+                        }, 100);
+                    } else {
+                        console.error(
+                            "loadComparison is not defined yet, retrying...",
+                        );
+                        setTimeout(randomizeSettings, 500);
+                    }
+                });
+            </script>
+
+            <!-- Real-Time Reasoning Demos -->
+            <!-- <section class="py-16 px-6 animate-fade-in-up">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-4xl font-bold text-gray-900 text-center mb-12 relative inline-block">
           Real-Time Reasoning Demos
@@ -939,373 +1489,603 @@
       </div>
       </div>
     </section> -->
-    <!-- End Real-Time Reasoning Demos -->
+            <!-- End Real-Time Reasoning Demos -->
 
+            <!-- Using rlr-gym Python Package -->
+            <section class="py-16 px-6 bg-white">
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+                        Using the realtimegym Python Package
+                    </h2>
 
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        <!-- Installation -->
+                        <div
+                            class="border border-gray-200 rounded-lg p-6 bg-gray-50"
+                        >
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-medium text-gray-900">
+                                    Installation
+                                </h3>
+                                <button
+                                    class="text-gray-500 hover:text-gray-700 text-sm"
+                                    onclick="copyCode('install-code')"
+                                    title="Copy code"
+                                >
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">
+                                Install the Real-Time Reasoning Gym package:
+                            </p>
+                            <div
+                                class="bg-gray-900 rounded-lg p-4 overflow-x-auto relative"
+                            >
+                                <pre
+                                    class="line-numbers"
+                                    id="install-code"
+                                ><code class="language-bash">git clone git@github.com:SALT-NLP/RealtimeGym.git
+cd RealtimeGym
+pip install -e .</code></pre>
+                            </div>
+                        </div>
 
+                        <!-- Quick Start -->
+                        <div
+                            class="border border-gray-200 rounded-lg p-6 bg-gray-50"
+                        >
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-medium text-gray-900">
+                                    Quick Start
+                                </h3>
+                                <button
+                                    class="text-gray-500 hover:text-gray-700 text-sm"
+                                    onclick="copyCode('quickstart-code')"
+                                    title="Copy code"
+                                >
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">
+                                Get started with a simple example:
+                            </p>
+                            <div
+                                class="bg-gray-900 rounded-lg p-4 overflow-x-auto relative"
+                            >
+                                <pre
+                                    class="line-numbers"
+                                    id="quickstart-code"
+                                ><code class="language-python">import realtimegym
 
-    <!-- Using rlr-gym Python Package -->
-    <section class="py-16 px-6 bg-gray-50 animate-fade-in-up">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="text-4xl font-bold text-gray-900 text-center mb-12 relative inline-block">
-          Using the realtimegym Python Package
-          <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
-          </div>
-        </h2>
+# Create environment
+env, seed, renderer = realtimegym.make('Freeway-v0')
+obs, done = env.reset()</code></pre>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <!-- Installation -->
-          <div class="bg-white rounded-2xl shadow-lg p-8">
-            <div class="flex items-center mb-6">
-              <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-4">
-                <i class="fas fa-download text-green-600 text-lg"></i>
-              </div>
-              <h3 class="text-2xl font-bold text-gray-900">Installation</h3>
-            </div>
-            <p class="text-gray-600 mb-4">Install the Real-Time Reasoning Gym package using pip:</p>
-            <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                <code class="text-green-400 font-mono text-sm">
-                    git clone git@github.com:SALT-NLP/RealtimeGym.git<br>
-                    cd RealtimeGym<br>
-                    pip install -e .
-                </code>
-            </div>
-          </div>
+                    <!-- Available Environments -->
+                    <div class="mb-8">
+                        <h3 class="font-medium text-gray-900 mb-4">
+                            Available Environments
+                        </h3>
 
-          <!-- Quick Start -->
-          <div class="bg-white rounded-2xl shadow-lg p-8">
-            <div class="flex items-center mb-6">
-              <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                <i class="fas fa-rocket text-blue-600 text-lg"></i>
-              </div>
-              <h3 class="text-2xl font-bold text-gray-900">Quick Start</h3>
-            </div>
-            <p class="text-gray-600 mb-4">Get started with a simple example:</p>
-            <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-              <code class="text-gray-300 font-mono text-sm">
-<span class="text-purple-400">import</span> <span class="text-blue-400">realtimegym</span><br>
-<br>
-<span class="text-gray-500"># Create environment</span><br>
-<span class="text-yellow-400">env</span>, <span class="text-yellow-400">seed</span>, <span class="text-yellow-400">renderer</span> = <span class="text-blue-400">realtimegym</span>.<span class="text-green-400">make</span>(<span class="text-orange-400">'Freeway-v0'</span>)<br>
-<span class="text-yellow-400">obs</span>, <span class="text-yellow-400">done</span> = <span class="text-yellow-400">env</span>.<span class="text-green-400">reset</span>()
-              </code>
-            </div>
-          </div>
-        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Freeway -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                            >
+                                <h4 class="font-medium text-gray-900 mb-2">
+                                    Freeway
+                                </h4>
+                                <p class="text-sm text-gray-600 mb-3">
+                                    Navigate through dynamic traffic with
+                                    real-time decision making.
+                                </p>
+                                <div
+                                    class="bg-gray-100 border border-gray-300 rounded p-2"
+                                >
+                                    <code
+                                        class="text-xs text-gray-700 font-mono"
+                                        >realtimegym.make('Freeway-v0')</code
+                                    >
+                                </div>
+                            </div>
 
-        <!-- Available Environments -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-          <div class="flex items-center mb-6">
-            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-4">
-              <i class="fas fa-cubes text-purple-600 text-lg"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900">Available Environments</h3>
-          </div>
+                            <!-- Snake -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                            >
+                                <h4 class="font-medium text-gray-900 mb-2">
+                                    Snake
+                                </h4>
+                                <p class="text-sm text-gray-600 mb-3">
+                                    Strategic planning for food collection while
+                                    avoiding obstacles.
+                                </p>
+                                <div
+                                    class="bg-gray-100 border border-gray-300 rounded p-2"
+                                >
+                                    <code
+                                        class="text-xs text-gray-700 font-mono"
+                                        >realtimegym.make('Snake-v0')</code
+                                    >
+                                </div>
+                            </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Freeway -->
-            <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
-              <div class="flex items-center mb-4">
-                <i class="fas fa-car text-blue-500 text-xl mr-3"></i>
-                <h4 class="text-lg font-semibold text-gray-900">Freeway</h4>
-              </div>
-              <p class="text-gray-600 text-sm mb-3">Navigate through dynamic traffic with real-time decision making.</p>
-              <div class="bg-gray-50 rounded-lg p-3">
-                <code class="text-sm text-gray-700 font-mono">realtimegym.make('Freeway-v0')</code>
-              </div>
-            </div>
+                            <!-- Overcooked -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                            >
+                                <h4 class="font-medium text-gray-900 mb-2">
+                                    Overcooked
+                                </h4>
+                                <p class="text-sm text-gray-600 mb-3">
+                                    Cooperative cooking with coordination and
+                                    task prioritization.
+                                </p>
+                                <div
+                                    class="bg-gray-100 border border-gray-300 rounded p-2"
+                                >
+                                    <code
+                                        class="text-xs text-gray-700 font-mono"
+                                        >realtimegym.make('Overcooked-v0')</code
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Snake -->
-            <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
-              <div class="flex items-center mb-4">
-                <i class="fas fa-gamepad text-green-500 text-xl mr-3"></i>
-                <h4 class="text-lg font-semibold text-gray-900">Snake</h4>
-              </div>
-              <p class="text-gray-600 text-sm mb-3">Strategic planning for food collection while avoiding obstacles.</p>
-              <div class="bg-gray-50 rounded-lg p-3">
-                <code class="text-sm text-gray-700 font-mono">realtimegym.make('Snake-v0')</code>
-              </div>
-            </div>
+                    <!-- Agent Implementations (Pseudocode) -->
+                    <div class="mb-8">
+                        <h3 class="font-medium text-gray-900 mb-4">
+                            Agent Implementations
+                        </h3>
 
-            <!-- Overcooked -->
-            <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
-              <div class="flex items-center mb-4">
-                <i class="fas fa-utensils text-orange-500 text-xl mr-3"></i>
-                <h4 class="text-lg font-semibold text-gray-900">Overcooked</h4>
-              </div>
-              <p class="text-gray-600 text-sm mb-3">Cooperative cooking with coordination and task prioritization.</p>
-              <div class="bg-gray-50 rounded-lg p-3">
-                <code class="text-sm text-gray-700 font-mono">realtimegym.make('Overcooked-v0')</code>
-              </div>
-            </div>
-          </div>
-        </div>
+                        <div
+                            class="grid grid-cols-1 3xl:grid-cols-2 gap-6 items-start"
+                        >
+                            <!-- Reactive Agent -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                            >
+                                <h4 class="font-medium text-gray-900 mb-2">
+                                    Reactive Agent
+                                </h4>
+                                <p class="text-sm text-gray-600 mb-3">
+                                    Fast, intuitive System 1 - Always react
+                                    quickly with bounded compute; no planning
+                                    thread.
+                                </p>
+                                <div
+                                    class="bg-gray-900 rounded-lg p-3 overflow-x-auto"
+                                >
+                                    <pre
+                                        class="line-numbers"
+                                    ><code class="language-python">class ReactiveAgent:
+  def think(timeout):
+    start_reactive_thread(current_observation, "")
+    run_reactive_thread(internal_budget)
+    if reactive_thread_is_alive():
+      s1_budget_forcing()
+    action = get_reactive_thread_response()</code></pre>
+                                </div>
+                            </div>
 
-        <!-- Agent Implementations (Pseudocode) -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-          <div class="flex items-center mb-6">
-            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-              <i class="fas fa-brain text-blue-600 text-lg"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900">Agent Implementations</h3>
-          </div>
+                            <!-- Planning Agent -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                            >
+                                <h4 class="font-medium text-gray-900 mb-2">
+                                    Planning Agent
+                                </h4>
+                                <p class="text-sm text-gray-600 mb-3">
+                                    Slow, deliberate System 2 - Plan first
+                                    within the full timeout, then execute the
+                                    first action.
+                                </p>
+                                <div
+                                    class="bg-gray-900 rounded-lg p-3 overflow-x-auto"
+                                >
+                                    <pre
+                                        class="line-numbers"
+                                    ><code class="language-python">class PlanningAgent:
+  def think(timeout):
+    if not planning_thread_is_alive():
+      start_planning_thread(current_observation)
+    run_planning_thread(timeout)
+    if not planning_thread_is_alive():
+      plan = get_planning_thread_response()
+    action = plan[0]; plan = plan[1:]</code></pre>
+                                </div>
+                            </div>
 
-          <div class="grid [grid-template-columns:repeat(auto-fit,minmax(360px,1fr))] gap-6 items-stretch grid-flow-dense">
-            <!-- Reactive Agent -->
-            <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
-              <div class="flex items-center mb-4">
-                <i class="fas fa-bolt text-blue-500 text-xl mr-3"></i>
-                <div class="flex-1">
-                  <h4 class="text-lg font-semibold text-gray-900">Reactive Agent</h4>
-                  <p class="text-blue-600 text-xs">Fast, intuitive System 1</p>
-                </div>
-                <button onclick="toggleCodeBlock('reactive-code')" class="ml-2 text-gray-400 hover:text-gray-600 transition-colors" title="Toggle code">
-                  <i class="fas fa-chevron-down transition-transform" id="reactive-code-icon"></i>
-                </button>
-              </div>
-              <p class="text-gray-600 text-sm mb-3">Always react quickly with bounded compute; no planning thread.</p>
-              <div id="reactive-code" class="bg-gray-900 rounded-lg p-3 overflow-auto h-56 mt-auto transition-all duration-300" style="max-height: 224px;">
-                <code class="text-sm text-gray-300 font-mono leading-relaxed whitespace-nowrap">
-                  <br><span class="text-purple-400">class</span> <span class="text-yellow-400">ReactiveAgent</span>:<br>
-&nbsp;&nbsp;<span class="text-purple-400">def</span> <span class="text-green-400">think</span>(<span class="text-yellow-400">timeout</span>):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">start_reactive_thread</span>(<span class="text-yellow-400">current_observation</span>, <span class="text-orange-400">""</span>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">run_reactive_thread</span>(<span class="text-yellow-400">internal_budget</span>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-green-400">reactive_thread_is_alive</span>():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">s1_budget_forcing</span>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">action</span> = <span class="text-green-400">get_reactive_thread_response</span>()<br>
-                </code>
-              </div>
-            </div>
+                            <!-- AgileThinker -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 bg-gray-50 3xl:col-span-2"
+                            >
+                                <h4
+                                    class="font-medium text-gray-900 mb-2 font-clash"
+                                >
+                                    AgileThinker
+                                </h4>
+                                <p class="text-sm text-gray-600 mb-3">
+                                    Parallel: System 1 + System 2 - Plan in
+                                    parallel with a fast reactive thread; use
+                                    budget-aware forcing.
+                                </p>
+                                <div
+                                    class="bg-gray-900 rounded-lg p-3 overflow-x-auto"
+                                >
+                                    <pre
+                                        class="line-numbers"
+                                    ><code class="language-python">class AgileThinker:
+  def think(timeout):
+    if not planning_thread_is_alive():
+      start_planning_thread(current_observation)
+    run_planning_thread(timeout - internal_budget)
+    plan = get_planning_thread_response()
+    start_reactive_thread(current_observation, plan)
+    run_reactive_thread(internal_budget)
+    if reactive_thread_is_alive(): s1_budget_forcing()
+    action = get_reactive_thread_response()</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Planning Agent -->
-            <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
-              <div class="flex items-center mb-4">
-                <i class="fas fa-route text-yellow-500 text-xl mr-3"></i>
-                <div class="flex-1">
-                  <h4 class="text-lg font-semibold text-gray-900">Planning Agent</h4>
-                  <p class="text-yellow-600 text-xs">Slow, deliberate System 2</p>
-                </div>
-                <button onclick="toggleCodeBlock('planning-code')" class="ml-2 text-gray-400 hover:text-gray-600 transition-colors" title="Toggle code">
-                  <i class="fas fa-chevron-down transition-transform" id="planning-code-icon"></i>
-                </button>
-              </div>
-              <p class="text-gray-600 text-sm mb-3">Plan first within the full timeout, then execute the first action.</p>
-              <div id="planning-code" class="bg-gray-900 rounded-lg p-3 overflow-auto h-56 mt-auto transition-all duration-300" style="max-height: 224px;">
-                <code class="text-sm text-gray-300 font-mono leading-relaxed whitespace-nowrap">
-                  <br><span class="text-purple-400">class</span> <span class="text-yellow-400">PlanningAgent</span>:<br>
-&nbsp;&nbsp;<span class="text-purple-400">def</span> <span class="text-green-400">think</span>(<span class="text-yellow-400">timeout</span>):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-purple-400">not</span> <span class="text-green-400">planning_thread_is_alive</span>():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">start_planning_thread</span>(<span class="text-yellow-400">current_observation</span>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">run_planning_thread</span>(<span class="text-yellow-400">timeout</span>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-purple-400">not</span> <span class="text-green-400">planning_thread_is_alive</span>():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">plan</span> = <span class="text-green-400">get_planning_thread_response</span>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">action</span> = <span class="text-yellow-400">plan</span>[0]; <span class="text-yellow-400">plan</span> = <span class="text-yellow-400">plan</span>[1:]<br>
-                </code>
-              </div>
-            </div>
+                    <!-- Complete Example -->
+                    <div class="mb-8">
+                        <h3 class="font-medium text-gray-900 mb-4">
+                            Complete Example
+                        </h3>
 
-            <!-- AgileThinker -->
-            <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300 flex flex-col h-full md:col-span-2 xl:col-span-full">
-              <div class="flex items-center mb-4">
-                <i class="fas fa-sync-alt text-green-600 text-xl mr-3"></i>
-                <div class="flex-1">
-                  <h4 class="text-lg font-semibold text-gray-900" style="font-family: 'Clash Display', sans-serif;">AgileThinker</h4>
-                  <p class="text-green-600 text-xs">Parallel: System 1 + System 2</p>
-                </div>
-                <button onclick="toggleCodeBlock('agile-code')" class="ml-2 text-gray-400 hover:text-gray-600 transition-colors" title="Toggle code">
-                  <i class="fas fa-chevron-down transition-transform" id="agile-code-icon"></i>
-                </button>
-              </div>
-              <p class="text-gray-600 text-sm mb-3">Plan in parallel with a fast reactive thread; use budget-aware forcing.</p>
-              <div id="agile-code" class="bg-gray-900 rounded-lg p-3 overflow-auto h-56 mt-auto transition-all duration-300" style="max-height: 224px;">
-                <code class="text-sm text-gray-300 font-mono leading-relaxed whitespace-nowrap">
-                  <br><span class="text-purple-400">class</span> <span class="text-yellow-400">AgileThinker</span>:<br>
-&nbsp;&nbsp;<span class="text-purple-400">def</span> <span class="text-green-400">think</span>(<span class="text-yellow-400">timeout</span>):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-purple-400">not</span> <span class="text-green-400">planning_thread_is_alive</span>():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">start_planning_thread</span>(<span class="text-yellow-400">current_observation</span>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">run_planning_thread</span>(<span class="text-yellow-400">timeout</span> - <span class="text-yellow-400">internal_budget</span>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">plan</span> = <span class="text-green-400">get_planning_thread_response</span>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">start_reactive_thread</span>(<span class="text-yellow-400">current_observation</span>, <span class="text-yellow-400">plan</span>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">run_reactive_thread</span>(<span class="text-yellow-400">internal_budget</span>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> <span class="text-green-400">reactive_thread_is_alive</span>(): <span class="text-green-400">s1_budget_forcing</span>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">action</span> = <span class="text-green-400">get_reactive_thread_response</span>()<br>
-                </code>
-              </div>
-            </div>
-          </div>
-        </div>
+                        <details class="group">
+                            <summary
+                                class="cursor-pointer list-none flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300 mb-4"
+                            >
+                                <span class="text-gray-700 font-semibold"
+                                    >Show complete code example</span
+                                >
+                                <i
+                                    class="fas fa-chevron-down text-gray-500 group-open:rotate-180 transition-transform duration-300"
+                                ></i>
+                            </summary>
 
-        <!-- Complete Example -->
-        <div class="bg-white rounded-2xl shadow-lg p-8">
-          <div class="flex items-center mb-6">
-            <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
-              <i class="fas fa-code text-indigo-600 text-lg"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900">Complete Example</h3>
-          </div>
+                            <div
+                                class="bg-gray-900 rounded-lg p-6 overflow-x-auto"
+                            >
+                                <pre
+                                    class="line-numbers"
+                                ><code class="language-python">import realtimegym
+from realtimegym.agents.agile import AgileThinker
+from realtimegym.prompts import freeway as prompt
 
-          <details class="group">
-            <summary class="cursor-pointer list-none flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300 mb-4">
-              <span class="text-gray-700 font-semibold">Show complete code example</span>
-              <i class="fas fa-chevron-down text-gray-500 group-open:rotate-180 transition-transform duration-300"></i>
-            </summary>
+env, seed, _ = realtimegym.make_env("Freeway-v0")
+obs, done = env.reset()
 
-<div class="bg-gray-900 rounded-lg p-6 overflow-x-auto">
-  <code class="text-gray-300 font-mono text-sm leading-relaxed">
-<span class="text-purple-400">import</span> <span class="text-blue-400">realtimegym</span><br>
-<span class="text-purple-400">from</span> <span class="text-blue-400">realtimegym.agents.agile</span> <span class="text-purple-400">import</span> <span class="text-blue-400">AgileThinker</span><br>
-<span class="text-purple-400">from</span> <span class="text-blue-400">realtimegym.prompts</span> <span class="text-purple-400">import</span> <span class="text-blue-400">freeway</span> <span class="text-purple-500">as</span> <span class="text-blue-400">prompt</span><br>
-<br>
-<span class="text-yellow-400">env</span>, <span class="text-yellow-400">seed</span>, <span class="text-yellow-400">_</span> = <span class="text-blue-400">realtimegym</span>.<span class="text-green-400">make_env</span>(<span class="text-orange-400">"Freeway-v0"</span>)<br>
-<span class="text-yellow-400">obs</span>, <span class="text-yellow-400">done</span> = <span class="text-yellow-400">env</span>.<span class="text-green-400">reset</span>()<br>
-<br>
-<span class="text-yellow-400">log_file</span> = <span class="text-orange-400">"freeway_v0_agile.csv"</span><br>
-<span class="text-yellow-400">agent</span> = <span class="text-blue-400">AgileThinker</span>(<span class="text-blue-400">prompt</span>, <span class="text-yellow-400">log_file</span>, <span class="text-orange-400">'token'</span>)<br>
-<br>
-<span class="text-purple-400">while</span> <span class="text-purple-400">not</span> <span class="text-yellow-400">done</span>:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">agent</span>.<span class="text-green-400">observe</span>(<span class="text-yellow-400">obs</span>)&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-gray-500"># Fast observation</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">agent</span>.<span class="text-green-400">think</span>(<span class="text-yellow-400">timeout</span>=<span class="text-cyan-400">4096</span>)&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-gray-500"># Bounded thinking (token or seconds)</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">action</span> = <span class="text-yellow-400">agent</span>.<span class="text-green-400">act</span>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">obs</span>, <span class="text-yellow-400">done</span>, <span class="text-yellow-400">reward</span>, <span class="text-yellow-400">reset</span> = <span class="text-yellow-400">env</span>.<span class="text-green-400">step</span>(<span class="text-yellow-400">action</span>)<br>
-  </code>
-</div>
-          </details>
+log_file = "freeway_v0_agile.csv"
+agent = AgileThinker(prompt, log_file, 'token')
 
-          <div class="flex flex-wrap gap-4">
-            <a href="https://github.com/SALT-NLP/RealtimeGym" target="_blank"
-              class="inline-flex items-center px-4 py-2 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors duration-300">
-              <i class="fab fa-github mr-2"></i>
-              View Documentation
-            </a>
-            <!-- <a href="https://github.com/real-time-reasoning/AgileThinker/tree/main/examples" target="_blank"
+while not done:
+    agent.observe(obs)  # Fast observation
+    agent.think(timeout=4096)  # Bounded thinking (token or seconds)
+    action = agent.act()
+    obs, done, reward, reset = env.step(action)
+</code></pre>
+                            </div>
+                        </details>
+
+                        <div class="flex flex-wrap gap-4">
+                            <!-- <a href="https://github.com/real-time-reasoning/AgileThinker/tree/main/examples" target="_blank"
               class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors duration-300">
               <i class="fas fa-code mr-2"></i>
               More Examples
             </a> -->
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- End rlr-gym Python Package -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- End rlr-gym Python Package -->
 
-
-    <!--BibTex citation -->
-    <section class=" py-16 px-6 animate-fade-in-up" id="BibTeX">
-      <div class="max-w-4xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-4xl font-bold text-gray-900 relative inline-block">
-            BibTeX
-            <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full">
-            </div>
-          </h2>
-          <button
-            class="inline-flex items-center px-4 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover hover:-translate-y-0.5 transition-all duration-300 shadow-md hover:shadow-lg"
-            onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
-            <i class="fas fa-copy mr-2"></i>
-            <span class="copy-text">Copy</span>
-          </button>
-        </div>
-        <pre id="bibtex-code"
-          class="bg-gray-100 border border-gray-300 rounded-xl p-6 text-sm overflow-x-auto shadow-sm"><code class="text-gray-900 font-mono">@article{wen2024realtime,
+            <!--BibTex citation -->
+            <section class="py-16 px-6 bg-gray-50" id="BibTeX">
+                <div class="max-w-3xl mx-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-900">
+                            BibTeX
+                        </h2>
+                        <button
+                            class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded hover:border-gray-400 hover:bg-gray-50 transition-colors"
+                            onclick="copyBibTeX()"
+                            title="Copy BibTeX to clipboard"
+                        >
+                            <i class="fas fa-copy mr-2"></i>
+                            <span class="copy-text">Copy</span>
+                        </button>
+                    </div>
+                    <pre
+                        id="bibtex-code"
+                        class="bg-gray-100 border border-gray-300 rounded-lg p-6 text-sm overflow-x-auto"
+                    ><code class="text-gray-900 font-mono">@article{wen2024realtime,
   title={Real-Time Reasoning Agents in Evolving Environments},
   author={Wen, Yule and Ye, Yixin and Zhang, Yanzhe and Yang, Diyi and Zhu, Hao},
   journal={International Conference on Learning Representations},
   year={2025},
   url={https://bleaves.github.io/real-time-reasoning/}
 }</code></pre>
-      </div>
-    </section>
-    <!--End BibTex citation -->
+                </div>
+            </section>
+            <!--End BibTex citation -->
 
-    <footer class="bg-gray-50 border-t border-gray-200 py-12 px-6">
-      <div class="max-w-7xl mx-auto">
-        <div class="flex justify-center">
-          <div class="w-full max-w-4xl">
-            <div class="text-gray-600 leading-relaxed">
-              <p>
-                This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template"
-                  target="_blank" class="text-primary hover:text-primary-hover transition-colors duration-300">Academic
-                  Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io"
-                  target="_blank"
-                  class="text-primary hover:text-primary-hover transition-colors duration-300">Nerfies</a> project page.
-                You are free to borrow the source code of this website, we just ask that you link back to this page in
-                the footer. <br> This website is licensed under a <a rel="license"
-                  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank"
-                  class="text-primary hover:text-primary-hover transition-colors duration-300">Creative
-                  Commons Attribution-ShareAlike 4.0 International License</a>.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
+            <!-- Authors Section -->
+            <section class="py-16 px-6 bg-white" id="authors">
+                <div class="max-w-6xl mx-auto">
+                    <h2
+                        class="text-2xl font-semibold text-gray-900 mb-8 text-center"
+                    >
+                        Authors
+                    </h2>
 
-    <!-- Statcounter tracking code -->
-    <!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
-    <!-- End of Statcounter Code -->
+                    <div
+                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8"
+                    >
+                        <!-- Yule Wen -->
+                        <div class="flex flex-col items-center text-center">
+                            <a
+                                href="https://wenyl22.github.io/"
+                                target="_blank"
+                                class="group"
+                            >
+                                <div
+                                    class="w-32 h-32 rounded-full mb-4 border-4 border-border hover:border-primary transition-colors bg-muted flex items-center justify-center"
+                                >
+                                    <span
+                                        class="text-4xl font-bold text-gray-600"
+                                        >YW</span
+                                    >
+                                </div>
+                                <h3
+                                    class="font-semibold text-gray-900 group-hover:text-primary transition-colors"
+                                >
+                                    Yule Wen<sup class="text-xs">1,*</sup>
+                                </h3>
+                            </a>
+                            <p class="text-sm text-gray-600 mt-1">
+                                Tsinghua University
+                            </p>
+                        </div>
 
-  </main>
+                        <!-- Yixin Ye -->
+                        <div class="flex flex-col items-center text-center">
+                            <a
+                                href="https://bleaves.github.io/"
+                                target="_blank"
+                                class="group"
+                            >
+                                <div
+                                    class="w-32 h-32 rounded-full mb-4 border-4 border-border hover:border-primary transition-colors bg-muted flex items-center justify-center"
+                                >
+                                    <span
+                                        class="text-4xl font-bold text-gray-600"
+                                        >YY</span
+                                    >
+                                </div>
+                                <h3
+                                    class="font-semibold text-gray-900 group-hover:text-primary transition-colors"
+                                >
+                                    Yixin Ye<sup class="text-xs">2,*</sup>
+                                </h3>
+                            </a>
+                            <p class="text-sm text-gray-600 mt-1">
+                                Shanghai Jiao Tong University
+                            </p>
+                        </div>
 
-  <script>
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+                        <!-- Yanzhe Zhang -->
+                        <div class="flex flex-col items-center text-center">
+                            <a
+                                href="https://stevenyzzhang.github.io/website/"
+                                target="_blank"
+                                class="group"
+                            >
+                                <div
+                                    class="w-32 h-32 rounded-full mb-4 border-4 border-border hover:border-primary transition-colors bg-muted flex items-center justify-center"
+                                >
+                                    <span
+                                        class="text-4xl font-bold text-gray-600"
+                                        >YZ</span
+                                    >
+                                </div>
+                                <h3
+                                    class="font-semibold text-gray-900 group-hover:text-primary transition-colors"
+                                >
+                                    Yanzhe Zhang<sup class="text-xs">3</sup>
+                                </h3>
+                            </a>
+                            <p class="text-sm text-gray-600 mt-1">
+                                Georgia Institute of Technology
+                            </p>
+                        </div>
 
-    function toggleCodeBlock(blockId) {
-      const block = document.getElementById(blockId);
-      const icon = document.getElementById(blockId + '-icon');
+                        <!-- Diyi Yang -->
+                        <div class="flex flex-col items-center text-center">
+                            <a
+                                href="https://cs.stanford.edu/~diyiy/"
+                                target="_blank"
+                                class="group"
+                            >
+                                <div
+                                    class="w-32 h-32 rounded-full mb-4 border-4 border-border hover:border-primary transition-colors bg-muted flex items-center justify-center"
+                                >
+                                    <span
+                                        class="text-4xl font-bold text-gray-600"
+                                        >DY</span
+                                    >
+                                </div>
+                                <h3
+                                    class="font-semibold text-gray-900 group-hover:text-primary transition-colors"
+                                >
+                                    Diyi Yang<sup class="text-xs">4</sup>
+                                </h3>
+                            </a>
+                            <p class="text-sm text-gray-600 mt-1">
+                                Stanford University
+                            </p>
+                        </div>
 
-      if (block && icon) {
-        // Check if collapsed by checking if max-height is set to 0 or if class contains collapsed
-        const isCollapsed = block.classList.contains('collapsed') || block.style.maxHeight === '0px';
+                        <!-- Hao Zhu -->
+                        <div class="flex flex-col items-center text-center">
+                            <a
+                                href="https://hao.computer/"
+                                target="_blank"
+                                class="group"
+                            >
+                                <div
+                                    class="w-32 h-32 rounded-full mb-4 border-4 border-border hover:border-primary transition-colors bg-muted flex items-center justify-center"
+                                >
+                                    <span
+                                        class="text-4xl font-bold text-gray-600"
+                                        >HZ</span
+                                    >
+                                </div>
+                                <h3
+                                    class="font-semibold text-gray-900 group-hover:text-primary transition-colors"
+                                >
+                                    Hao Zhu<sup class="text-xs">4</sup>
+                                </h3>
+                            </a>
+                            <p class="text-sm text-gray-600 mt-1">
+                                Stanford University
+                            </p>
+                        </div>
+                    </div>
 
-        if (isCollapsed) {
-          // Expand
-          block.classList.remove('collapsed');
-          block.style.maxHeight = '224px'; // h-56 = 14rem = 224px
-          block.style.overflow = 'auto';
-          icon.classList.remove('fa-chevron-up');
-          icon.classList.add('fa-chevron-down');
-          icon.style.transform = 'rotate(0deg)';
-        } else {
-          // Collapse
-          block.classList.add('collapsed');
-          block.style.maxHeight = '0px';
-          block.style.overflow = 'hidden';
-          block.style.marginTop = '0';
-          icon.classList.remove('fa-chevron-down');
-          icon.classList.add('fa-chevron-up');
-          icon.style.transform = 'rotate(180deg)';
-        }
-      }
-    }
+                    <!-- Affiliations -->
+                    <div
+                        class="mt-12 text-center text-sm text-gray-600 space-y-2"
+                    >
+                        <p>
+                            <sup>1</sup>Tsinghua University,
+                            <sup>2</sup>Shanghai Jiao Tong University,
+                            <sup>3</sup>Georgia Institute of Technology,
+                            <sup>4</sup>Stanford University
+                        </p>
+                        <p class="text-xs italic">
+                            <sup>*</sup>Co-leading authors
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <!-- End Authors Section -->
 
-    function copyBibTeX() {
-      const bibtexCode = document.getElementById('bibtex-code').textContent;
-      navigator.clipboard.writeText(bibtexCode).then(function () {
-        const copyBtn = document.querySelector('.copy-bibtex-btn .copy-text');
-        const originalText = copyBtn.textContent;
-        copyBtn.textContent = 'Copied!';
-        setTimeout(() => {
-          copyBtn.textContent = originalText;
-        }, 2000);
-      });
-    }
+            <footer class="bg-gray-50 border-t border-gray-200 py-12 px-6">
+                <div class="max-w-7xl mx-auto">
+                    <div class="flex justify-center">
+                        <div class="w-full max-w-4xl">
+                            <div class="text-gray-600 leading-relaxed">
+                                <p>
+                                    This page was built using the
+                                    <a
+                                        href="https://github.com/eliahuhorwitz/Academic-project-page-template"
+                                        target="_blank"
+                                        class="text-primary hover:text-primary-hover transition-colors duration-300"
+                                        >Academic Project Page Template</a
+                                    >
+                                    which was adopted from the
+                                    <a
+                                        href="https://nerfies.github.io"
+                                        target="_blank"
+                                        class="text-primary hover:text-primary-hover transition-colors duration-300"
+                                        >Nerfies</a
+                                    >
+                                    project page. You are free to borrow the
+                                    source code of this website, we just ask
+                                    that you link back to this page in the
+                                    footer. <br />
+                                    This website is licensed under a
+                                    <a
+                                        rel="license"
+                                        href="http://creativecommons.org/licenses/by-sa/4.0/"
+                                        target="_blank"
+                                        class="text-primary hover:text-primary-hover transition-colors duration-300"
+                                        >Creative Commons Attribution-ShareAlike
+                                        4.0 International License</a
+                                    >.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
 
-    // Show scroll to top button when scrolling
-    window.addEventListener('scroll', function () {
-      const scrollBtn = document.querySelector('.scroll-to-top');
-      if (window.pageYOffset > 300) {
-        scrollBtn.classList.remove('opacity-0', 'invisible');
-        scrollBtn.classList.add('opacity-100', 'visible');
-      } else {
-        scrollBtn.classList.remove('opacity-100', 'visible');
-        scrollBtn.classList.add('opacity-0', 'invisible');
-      }
-    });
+            <!-- Statcounter tracking code -->
+            <!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
+            <!-- End of Statcounter Code -->
+        </main>
 
+        <script>
+            function scrollToTop() {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
 
-  </script>
-</body>
+            function toggleCodeBlock(blockId) {
+                const block = document.getElementById(blockId);
+                const icon = document.getElementById(blockId + "-icon");
 
+                if (block && icon) {
+                    // Check if collapsed by checking if max-height is set to 0 or if class contains collapsed
+                    const isCollapsed =
+                        block.classList.contains("collapsed") ||
+                        block.style.maxHeight === "0px";
+
+                    if (isCollapsed) {
+                        // Expand
+                        block.classList.remove("collapsed");
+                        block.style.maxHeight = "224px"; // h-56 = 14rem = 224px
+                        block.style.overflow = "auto";
+                        icon.classList.remove("fa-chevron-up");
+                        icon.classList.add("fa-chevron-down");
+                        icon.style.transform = "rotate(0deg)";
+                    } else {
+                        // Collapse
+                        block.classList.add("collapsed");
+                        block.style.maxHeight = "0px";
+                        block.style.overflow = "hidden";
+                        block.style.marginTop = "0";
+                        icon.classList.remove("fa-chevron-down");
+                        icon.classList.add("fa-chevron-up");
+                        icon.style.transform = "rotate(180deg)";
+                    }
+                }
+            }
+
+            function copyBibTeX() {
+                const bibtexCode =
+                    document.getElementById("bibtex-code").textContent;
+                navigator.clipboard.writeText(bibtexCode).then(function () {
+                    const copyBtn = document.querySelector(
+                        ".copy-bibtex-btn .copy-text",
+                    );
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = "Copied!";
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                    }, 2000);
+                });
+            }
+
+            // Show scroll to top button when scrolling
+            window.addEventListener("scroll", function () {
+                const scrollBtn = document.querySelector(".scroll-to-top");
+                if (window.pageYOffset > 300) {
+                    scrollBtn.classList.remove("opacity-0", "invisible");
+                    scrollBtn.classList.add("opacity-100", "visible");
+                } else {
+                    scrollBtn.classList.remove("opacity-100", "visible");
+                    scrollBtn.classList.add("opacity-0", "invisible");
+                }
+            });
+        </script>
+    </body>
 </html>
