@@ -1,132 +1,209 @@
 /* Custom styles to complement Tailwind CSS */
 
+/* CSS Variables for Design System */
+:root {
+    --radius: 0.625rem;
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.129 0.042 264.695);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.129 0.042 264.695);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.129 0.042 264.695);
+    --primary: oklch(0.208 0.042 265.755);
+    --primary-foreground: oklch(0.984 0.003 247.858);
+    --secondary: oklch(0.968 0.007 247.896);
+    --secondary-foreground: oklch(0.208 0.042 265.755);
+    --muted: oklch(0.968 0.007 247.896);
+    --muted-foreground: oklch(0.554 0.046 257.417);
+    --accent: oklch(0.968 0.007 247.896);
+    --accent-foreground: oklch(0.208 0.042 265.755);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.929 0.013 255.508);
+    --input: oklch(0.929 0.013 255.508);
+    --ring: oklch(0.704 0.04 256.788);
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+    --sidebar: oklch(0.984 0.003 247.858);
+    --sidebar-foreground: oklch(0.129 0.042 264.695);
+    --sidebar-primary: oklch(0.208 0.042 265.755);
+    --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+    --sidebar-accent: oklch(0.968 0.007 247.896);
+    --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
+    --sidebar-border: oklch(0.929 0.013 255.508);
+    --sidebar-ring: oklch(0.704 0.04 256.788);
+}
+
+.dark {
+    --background: oklch(0.129 0.042 264.695);
+    --foreground: oklch(0.984 0.003 247.858);
+    --card: oklch(0.208 0.042 265.755);
+    --card-foreground: oklch(0.984 0.003 247.858);
+    --popover: oklch(0.208 0.042 265.755);
+    --popover-foreground: oklch(0.984 0.003 247.858);
+    --primary: oklch(0.929 0.013 255.508);
+    --primary-foreground: oklch(0.208 0.042 265.755);
+    --secondary: oklch(0.279 0.041 260.031);
+    --secondary-foreground: oklch(0.984 0.003 247.858);
+    --muted: oklch(0.279 0.041 260.031);
+    --muted-foreground: oklch(0.704 0.04 256.788);
+    --accent: oklch(0.279 0.041 260.031);
+    --accent-foreground: oklch(0.984 0.003 247.858);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.551 0.027 264.364);
+    --chart-1: oklch(0.488 0.243 264.376);
+    --chart-2: oklch(0.696 0.17 162.48);
+    --chart-3: oklch(0.769 0.188 70.08);
+    --chart-4: oklch(0.627 0.265 303.9);
+    --chart-5: oklch(0.645 0.246 16.439);
+    --sidebar: oklch(0.208 0.042 265.755);
+    --sidebar-foreground: oklch(0.984 0.003 247.858);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+    --sidebar-accent: oklch(0.279 0.041 260.031);
+    --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.551 0.027 264.364);
+}
+
 /* Ensure smooth scrolling */
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
+}
+
+/* Ensure SVG objects fill their containers */
+object[type="image/svg+xml"] {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 /* Colorful gradient underlines for author links */
 .author-link {
-  position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .author-link::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -2px;
-  left: 0;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .author-link:hover::after {
-  width: 100%;
+    width: 100%;
 }
 
 /* Custom animations for enhanced UX */
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Custom focus styles for better accessibility */
 button:focus,
 select:focus,
 a:focus {
-  outline: 2px solid #2563eb;
-  outline-offset: 2px;
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
 }
 
 /* Video styling for proper aspect ratio and responsiveness */
 video {
-  max-width: 100%;
-  height: auto;
+    max-width: 100%;
+    height: auto;
 }
 
 /* Ensure proper text rendering */
 body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* Custom scrollbar for better aesthetics (webkit browsers) */
 ::-webkit-scrollbar {
-  width: 8px;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+    background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #94a3b8;
-  border-radius: 4px;
+    background: #94a3b8;
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+    background: #64748b;
 }
 
 /* Print styles */
 @media print {
-  .scroll-to-top {
-    display: none !important;
-  }
-  
-  * {
-    animation: none !important;
-    transition: none !important;
-  }
+    .scroll-to-top {
+        display: none !important;
+    }
+
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
 }
 
 /* Markdown rendering styles for thinking content */
 #thinking-content-reactive,
 #thinking-content-planning,
 #thinking-content-agile {
-  /* Override default list styles */
+    /* Override default list styles */
 }
 
 #thinking-content-reactive h1,
 #thinking-content-planning h1,
 #thinking-content-agile h1 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 #thinking-content-reactive h2,
 #thinking-content-planning h2,
 #thinking-content-agile h2 {
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-top: 0.875rem;
-  margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 0.875rem;
+    margin-bottom: 0.5rem;
 }
 
 #thinking-content-reactive h3,
 #thinking-content-planning h3,
 #thinking-content-agile h3 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-top: 0.75rem;
-  margin-bottom: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
 }
 
 #thinking-content-reactive p,
 #thinking-content-planning p,
 #thinking-content-agile p {
-  margin-bottom: 0.5rem;
-  line-height: 1.6;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
 }
 
 #thinking-content-reactive ul,
@@ -135,47 +212,47 @@ body {
 #thinking-content-planning ol,
 #thinking-content-agile ul,
 #thinking-content-agile ol {
-  margin-left: 1.5rem;
-  margin-bottom: 0.75rem;
-  padding-left: 1rem;
+    margin-left: 1.5rem;
+    margin-bottom: 0.75rem;
+    padding-left: 1rem;
 }
 
 #thinking-content-reactive li,
 #thinking-content-planning li,
 #thinking-content-agile li {
-  margin-bottom: 0.25rem;
-  line-height: 1.5;
+    margin-bottom: 0.25rem;
+    line-height: 1.5;
 }
 
 #thinking-content-reactive strong,
 #thinking-content-planning strong,
 #thinking-content-agile strong {
-  font-weight: 600;
+    font-weight: 600;
 }
 
 #thinking-content-reactive code,
 #thinking-content-planning code,
 #thinking-content-agile code {
-  background-color: rgba(0, 0, 0, 0.05);
-  padding: 0.125rem 0.25rem;
-  border-radius: 0.25rem;
-  font-family: 'Courier New', monospace;
-  font-size: 0.875rem;
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-family: "Courier New", monospace;
+    font-size: 0.875rem;
 }
 
 #thinking-content-reactive hr,
 #thinking-content-planning hr,
 #thinking-content-agile hr {
-  border: none;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  margin: 1rem 0;
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 1rem 0;
 }
 
 /* Styling for boxed content */
 .boxed-multi-line {
-  overflow: visible;
+    overflow: visible;
 }
 
 .boxed-multi-line div {
-  font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
 }

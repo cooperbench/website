@@ -2,18 +2,18 @@
 
 // Social Sharing
 function shareConfiguration() {
-  const game = document.getElementById('game-select').value;
-  const seed = document.getElementById('seed-select').value;
-  const cognitiveLoad = document.getElementById('cognitive-load-select').value;
-  const timePressure = document.getElementById('time-pressure-select').value;
+  const game = document.getElementById("game-select").value;
+  const seed = document.getElementById("seed-select").value;
+  const cognitiveLoad = document.getElementById("cognitive-load-select").value;
+  const timePressure = document.getElementById("time-pressure-select").value;
 
-  const cognitiveLoadLabels = ['Easy', 'Medium', 'Hard'];
-  const timePressureLabels = ['Low', 'Moderate', 'High', 'Extreme'];
+  const cognitiveLoadLabels = ["Easy", "Medium", "Hard"];
+  const timePressureLabels = ["Low", "Moderate", "High", "Extreme"];
 
   const gameNames = {
-    'freeway': 'Freeway',
-    'snake': 'Snake',
-    'overcooked': 'Overcooked'
+    freeway: "Freeway",
+    snake: "Snake",
+    overcooked: "Overcooked",
   };
 
   const shareText = `Check out this Real-Time Reasoning challenge: ${gameNames[game]} with ${cognitiveLoadLabels[cognitiveLoad]} cognitive load and ${timePressureLabels[timePressure]} time pressure! Can AgileThinker handle it?`;
@@ -21,17 +21,20 @@ function shareConfiguration() {
 
   // Try to use native Web Share API first (mobile)
   if (navigator.share) {
-    navigator.share({
-      title: 'Real-Time Reasoning Challenge',
-      text: shareText,
-      url: url
-    }).then(() => {
-      showToast('Configuration shared successfully!', 'success');
-    }).catch((error) => {
-      if (error.name !== 'AbortError') {
-        fallbackShare(shareText, url);
-      }
-    });
+    navigator
+      .share({
+        title: "Real-Time Reasoning Challenge",
+        text: shareText,
+        url: url,
+      })
+      .then(() => {
+        showToast("Configuration shared successfully!", "success");
+      })
+      .catch((error) => {
+        if (error.name !== "AbortError") {
+          fallbackShare(shareText, url);
+        }
+      });
   } else {
     fallbackShare(shareText, url);
   }
@@ -39,8 +42,9 @@ function shareConfiguration() {
 
 function fallbackShare(text, url) {
   // Create a modal with sharing options
-  const modal = document.createElement('div');
-  modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+  const modal = document.createElement("div");
+  modal.className =
+    "fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4";
   modal.innerHTML = `
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all">
       <div class="flex justify-between items-center mb-4">
@@ -63,7 +67,7 @@ function fallbackShare(text, url) {
   document.body.appendChild(modal);
 
   // Close on background click
-  modal.addEventListener('click', (e) => {
+  modal.addEventListener("click", (e) => {
     if (e.target === modal) {
       modal.remove();
     }
@@ -78,24 +82,24 @@ function copyToClipboard(text) {
 function initScrollAnimations() {
   const observerOptions = {
     threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
+    rootMargin: "0px 0px -100px 0px",
   };
 
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
+        entry.target.classList.add("visible");
+        entry.target.style.opacity = "1";
+        entry.target.style.transform = "translateY(0)";
       }
     });
   }, observerOptions);
 
   // Observe all sections with reveal-on-scroll class
-  document.querySelectorAll('.reveal-on-scroll').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+  document.querySelectorAll(".reveal-on-scroll").forEach((el) => {
+    el.style.opacity = "0";
+    el.style.transform = "translateY(30px)";
+    el.style.transition = "opacity 0.6s ease-out, transform 0.6s ease-out";
     observer.observe(el);
   });
 }
@@ -104,7 +108,7 @@ function initScrollAnimations() {
 let explorationProgress = {
   gamesViewed: new Set(),
   settingsChanged: 0,
-  sectionsViewed: new Set()
+  sectionsViewed: new Set(),
 };
 
 function trackGameChange(game) {
@@ -112,7 +116,10 @@ function trackGameChange(game) {
   explorationProgress.settingsChanged++;
 
   // Show thinking prompt every 5 setting changes
-  if (explorationProgress.settingsChanged % 5 === 0 && explorationProgress.settingsChanged > 0) {
+  if (
+    explorationProgress.settingsChanged % 5 === 0 &&
+    explorationProgress.settingsChanged > 0
+  ) {
     showThinkingPrompt();
   }
 }
@@ -123,13 +130,14 @@ function showThinkingPrompt() {
     "Do you notice how the agents adapt to different time pressures?",
     "Can you spot the moment when AgileThinker switches strategies?",
     "What happens when cognitive load increases? Watch the reasoning patterns!",
-    "Compare the agent scores - does the winner surprise you?"
+    "Compare the agent scores - does the winner surprise you?",
   ];
 
   const prompt = prompts[Math.floor(Math.random() * prompts.length)];
 
-  const promptBox = document.createElement('div');
-  promptBox.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl z-50 max-w-md w-full p-6 border border-gray-200';
+  const promptBox = document.createElement("div");
+  promptBox.className =
+    "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl z-50 max-w-md w-full p-6 border border-gray-200";
   promptBox.innerHTML = `
     <h3 class="text-lg font-medium text-gray-900 mb-3">Think About It</h3>
     <p class="text-gray-700 mb-6">${prompt}</p>
@@ -139,8 +147,8 @@ function showThinkingPrompt() {
   `;
 
   // Add backdrop
-  const backdrop = document.createElement('div');
-  backdrop.className = 'fixed inset-0 bg-black bg-opacity-30 z-40';
+  const backdrop = document.createElement("div");
+  backdrop.className = "fixed inset-0 bg-black bg-opacity-30 z-40";
   backdrop.onclick = () => {
     promptBox.remove();
     backdrop.remove();
@@ -156,14 +164,15 @@ function trackSectionView(sectionId) {
 }
 
 function updateProgressIndicator() {
-  let progressBar = document.getElementById('exploration-progress');
+  let progressBar = document.getElementById("exploration-progress");
 
   if (!progressBar) {
     // Create progress indicator
-    progressBar = document.createElement('div');
-    progressBar.id = 'exploration-progress';
-    progressBar.className = 'fixed top-16 left-0 right-0 h-1 bg-gray-200 z-50';
-    progressBar.innerHTML = '<div class="h-full bg-gray-600 transition-all duration-300" style="width: 0%"></div>';
+    progressBar = document.createElement("div");
+    progressBar.id = "exploration-progress";
+    progressBar.className = "fixed top-16 left-0 right-0 h-1 bg-gray-200 z-50";
+    progressBar.innerHTML =
+      '<div class="h-full bg-gray-600 transition-all duration-300" style="width: 0%"></div>';
     document.body.appendChild(progressBar);
   }
 
@@ -172,43 +181,47 @@ function updateProgressIndicator() {
   const documentHeight = document.documentElement.scrollHeight;
   const scrollTop = window.scrollY;
   const scrollableDistance = documentHeight - windowHeight;
-  const scrollPercentage = scrollableDistance > 0 ? (scrollTop / scrollableDistance) * 100 : 0;
+  const scrollPercentage =
+    scrollableDistance > 0 ? (scrollTop / scrollableDistance) * 100 : 0;
 
-  progressBar.querySelector('div').style.width = `${scrollPercentage}%`;
-
+  progressBar.querySelector("div").style.width = `${scrollPercentage}%`;
 }
 
 // Section observer for tracking
 function initSectionTracking() {
-  const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const sectionId = entry.target.id || entry.target.querySelector('h2')?.textContent;
-        if (sectionId) {
-          trackSectionView(sectionId);
+  const sectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const sectionId =
+            entry.target.id || entry.target.querySelector("h2")?.textContent;
+          if (sectionId) {
+            trackSectionView(sectionId);
+          }
         }
-      }
-    });
-  }, { threshold: 0.5 });
+      });
+    },
+    { threshold: 0.5 },
+  );
 
-  const sections = document.querySelectorAll('section');
-  sections.forEach(section => {
+  const sections = document.querySelectorAll("section");
+  sections.forEach((section) => {
     sectionObserver.observe(section);
   });
 }
 
 // Enhanced game selector tracking
 function initGameTracking() {
-  const gameSelect = document.getElementById('game-select');
+  const gameSelect = document.getElementById("game-select");
   if (gameSelect) {
-    gameSelect.addEventListener('change', (e) => {
+    gameSelect.addEventListener("change", (e) => {
       trackGameChange(e.target.value);
     });
   }
 }
 
 // Initialize all engagement features
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   initScrollAnimations();
   initSectionTracking();
   initGameTracking();
@@ -220,15 +233,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Update progress bar on scroll
   let scrollTimeout;
-  window.addEventListener('scroll', () => {
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      updateProgressIndicator();
-    }, 10); // Smooth throttling
-  }, { passive: true });
+  window.addEventListener(
+    "scroll",
+    () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        updateProgressIndicator();
+      }, 10); // Smooth throttling
+    },
+    { passive: true },
+  );
 
   // Track initial game
-  const initialGame = document.getElementById('game-select')?.value;
+  const initialGame = document.getElementById("game-select")?.value;
   if (initialGame) {
     trackGameChange(initialGame);
   }
@@ -236,20 +253,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Mobile touch support for game canvas
 function initMobileTouchSupport() {
-  const comparisonResults = document.getElementById('comparison-results');
+  const comparisonResults = document.getElementById("comparison-results");
   if (!comparisonResults) return;
 
   let touchStartX = 0;
   let touchEndX = 0;
 
-  comparisonResults.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-  }, { passive: true });
+  comparisonResults.addEventListener(
+    "touchstart",
+    (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    },
+    { passive: true },
+  );
 
-  comparisonResults.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-  }, { passive: true });
+  comparisonResults.addEventListener(
+    "touchend",
+    (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    },
+    { passive: true },
+  );
 
   function handleSwipe() {
     const swipeThreshold = 50;
@@ -258,12 +283,12 @@ function initMobileTouchSupport() {
     if (Math.abs(diff) > swipeThreshold) {
       if (diff > 0) {
         // Swipe left - next step
-        if (typeof nextStep === 'function') {
+        if (typeof nextStep === "function") {
           nextStep();
         }
       } else {
         // Swipe right - previous step
-        if (typeof previousStep === 'function') {
+        if (typeof previousStep === "function") {
           previousStep();
         }
       }
@@ -275,18 +300,44 @@ function initMobileTouchSupport() {
 function initResponsiveAdjustments() {
   // Add mobile class to body if on mobile
   if (window.innerWidth <= 768) {
-    document.body.classList.add('mobile-view');
+    document.body.classList.add("mobile-view");
   }
 
   // Update on resize
-  window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     if (window.innerWidth <= 768) {
-      document.body.classList.add('mobile-view');
+      document.body.classList.add("mobile-view");
     } else {
-      document.body.classList.remove('mobile-view');
+      document.body.classList.remove("mobile-view");
     }
   });
 }
 
+// Copy code to clipboard
+function copyCode(elementId) {
+  const codeElement = document.getElementById(elementId);
+  if (!codeElement) return;
+
+  const text = codeElement.textContent;
+
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      // Find the button that was clicked
+      const button = event.target.closest("button");
+      if (button) {
+        const originalHTML = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check"></i>';
+        setTimeout(() => {
+          button.innerHTML = originalHTML;
+        }, 2000);
+      }
+    })
+    .catch((err) => {
+      console.error("Failed to copy:", err);
+    });
+}
+
 // Make functions globally available
 window.shareConfiguration = shareConfiguration;
+window.copyCode = copyCode;
