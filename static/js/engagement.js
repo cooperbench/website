@@ -338,6 +338,41 @@ function copyCode(elementId) {
     });
 }
 
+// Update game introduction display
+function updateGameIntroduction(game) {
+  const gameInfo = {
+    freeway: {
+      title: "Freeway",
+      description:
+        "Tests an agents's ability to cross a busy highway safely. Have you noticed how reactive agents often get trapped between cars, while planning agents get hit by fast-approaching vehicles due to slower reactions?",
+    },
+    snake: {
+      title: "Snake",
+      description:
+        "Tests an agent's ability to navigate a growing snake to catch food which has a time-limited appearance. Do you notice reactive agents often get trapped into cul-de-sacs while planning agents miss new food due to slower reactions?",
+    },
+    overcooked: {
+      title: "Overcooked",
+      description:
+        "The agent is controlling the blue chef, while the green chef puts onion everywhere. Can reactive agents finish the recipe, or do planning agents struggle to adapt quickly enough?",
+    },
+  };
+
+  const info = gameInfo[game];
+  if (info) {
+    const introSection = document.getElementById("game-introduction");
+    const titleElement = document.getElementById("game-title");
+    const descElement = document.getElementById("game-description");
+
+    if (introSection && titleElement && descElement) {
+      titleElement.textContent = info.title;
+      descElement.textContent = info.description;
+      introSection.style.display = "block";
+    }
+  }
+}
+
 // Make functions globally available
 window.shareConfiguration = shareConfiguration;
 window.copyCode = copyCode;
+window.updateGameIntroduction = updateGameIntroduction;

@@ -1937,6 +1937,11 @@ async function loadComparison() {
   // Store game type in global state
   comparisonData.game = game;
 
+  // Update game introduction display
+  if (typeof window.updateGameIntroduction === "function") {
+    window.updateGameIntroduction(game);
+  }
+
   // Show loading state (if load button exists)
   const loadBtn = document.getElementById("load-btn");
   if (loadBtn) {

@@ -378,7 +378,7 @@
         <div id="top"></div>
         <!-- Header Navigation Bar -->
         <header
-            class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50"
+            class="fixed top-0 left-0 right-0 bg-gray-100 border-b border-gray-200 z-50"
         >
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
@@ -422,7 +422,7 @@
         </button>
 
         <main id="main-content" class="pt-16 bg-gray-50 min-w-xl">
-            <section class="py-20 px-6 bg-white">
+            <section class="py-20 px-6">
                 <div class="max-w-3xl mx-auto">
                     <h1
                         class="text-3xl md:text-4xl font-semibold mb-8 leading-tight text-center"
@@ -541,7 +541,7 @@
 
             <!-- TL;DR Section -->
             <section class="py-16 px-6">
-                <div class="max-w-3xl mx-auto">
+                <div class="max-w-3xl mx-auto rounded-lg p-8 bg-gray-100">
                     <p class="text-lg text-gray-700 leading-relaxed">
                         Can AI agents think and act in real time? This sounds
                         simple to humans, but is quite challenging for AI
@@ -568,20 +568,6 @@
                         Use the "Random" button to sample different settings
                         quickly.
                     </p>
-
-                    <!-- Challenge Section -->
-                    <div
-                        class="border border-gray-200 rounded-lg p-6 mb-8 bg-gray-100"
-                    >
-                        <p class="text-gray-700 text-sm mb-2">
-                            <strong>Challenge:</strong> Can you find a scenario
-                            where the Planning Agent outperforms AgileThinker?
-                        </p>
-                        <p class="text-gray-600 text-sm">
-                            Try different combinations of cognitive load and
-                            time pressure to discover edge cases.
-                        </p>
-                    </div>
 
                     <!-- Settings Selection -->
                     <div class="rounded-xl py-4">
@@ -720,6 +706,28 @@
                         </div>
                     </div>
 
+                    <div
+                        id="game-introduction"
+                        class="border border-gray-200 rounded-lg p-6 mb-8 bg-gray-100"
+                    >
+                        <span
+                            class="text-gray-700 text-sm mb-2 font-bold"
+                            id="game-title"
+                        >
+                            Snake
+                        </span>
+                        <span
+                            class="text-sm text-gray-600"
+                            id="game-description"
+                        >
+                            Tests an agent's ability to navigate a growing snake
+                            to catch food which has a time-limited appearance.
+                            Do you notice reactive agents often get trapped into
+                            cul-de-sacs while planning agents miss new food due
+                            to slower reactions?
+                        </span>
+                    </div>
+
                     <!-- Comparison Results -->
                     <div id="comparison-results" style="display: none">
                         <!-- Step Navigation -->
@@ -742,11 +750,6 @@
                                 </button>
 
                                 <div class="text-center">
-                                    <div
-                                        class="text-xs md:text-sm text-gray-600 mb-1"
-                                    >
-                                        Current Step
-                                    </div>
                                     <div
                                         class="text-lg md:text-2xl font-bold text-gray-900"
                                     >
@@ -1088,7 +1091,7 @@
                     </h2>
                     <p class="text-gray-700 leading-relaxed mb-8">
                         Games provide a testbed to control the difficulty and
-                        time flow speed of the environment.
+                        time flow speed of the environment.benchmark
                     </p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
