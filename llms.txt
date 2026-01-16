@@ -1,94 +1,72 @@
-# Real-Time Reasoning Agents in Evolving Environments
+# The Curse of Coordination: Why Agents Cannot be Your Teammates Yet
 
-> Project URL: https://realtimegym.saltlab.stanford.edu/
+> Project URL: https://cotomata.com/
 > Research Paper: https://arxiv.org/pdf/COMING_SOON.pdf
-> GitHub Repository: https://github.com/SALT-NLP/RealtimeGym
-> Dataset: https://huggingface.co/datasets/SALT-NLP/RealtimeGym
+> GitHub Repository: https://github.com/SALT-NLP/CooperBench
+> Dataset: https://huggingface.co/datasets/SALT-NLP/CooperBench
 
 ## Overview
 
-This is an academic research project from Stanford University (SALT-NLP) that introduces real-time reasoning as a new problem formulation for bringing reasoning capabilities to agents operating in evolving environments.
+This is an academic research project from Stanford University (SALT-NLP) and SAP that introduces CooperBench, the first benchmark designed to measure how well AI agents can cooperate when handling individual tasks with potential conflicts.
 
 ## Key Concepts
 
-- **Real-Time Reasoning**: Making logical AND timely judgments in dynamic environments where hazards emerge, opportunities arise, and other agents act - all while the agent's own reasoning is still unfolding.
+- **CooperBench**: A benchmark comprising 652 tasks constructed from 12 popular open-source libraries across Python, TypeScript, Go, and Rust.
 
-- **Real-Time Reasoning Gym**: A platform with three game environments (Freeway, Snake, Overcooked) to evaluate and advance real-time reasoning capabilities of language agents.
+- **The Curse of Coordination**: GPT-5 and Claude Sonnet 4.5 based agents achieve only 25% success with two-agent cooperation, around 50% lower than a "Solo" baseline using one agent to implement both features.
 
-- **AgileThinker**: A parallel architecture that simultaneously engages both System 1 (fast, intuitive) and System 2 (slow, deliberate) reasoning paradigms. Demonstrates superior performance as task difficulty and time pressure increase.
+- **Coordination Failures**: Communication channels become jammed with vague, ill-timed, and inaccurate messages. Agents deviate from commitments and hold incorrect expectations about their partner's plans.
 
 ## Research Team
 
-- Yule Wen (Tsinghua University) - Co-leading author
-- Yixin Ye (Shanghai Jiao Tong University) - Co-leading author
-- Yanzhe Zhang (Georgia Institute of Technology)
+- Arpandeep Khatua (Stanford University) - Co-leading author
+- Hao Zhu (Stanford University) - Co-leading author
+- Peter Tran (SAP, Inc.)
+- Arya Prabhudesai (SAP, Inc.)
+- Frederic Sadrieh (SAP, Inc.)
+- Johann K. Lieberwirth (SAP, Inc.)
+- Xinkai Yu (Stanford University)
+- Yicheng Fu (Stanford University)
+- Michael J. Ryan (Stanford University)
+- Jiaxin Pei (Stanford University)
 - Diyi Yang (Stanford University)
-- Hao Zhu (Stanford University)
 
-## Agent Architectures
+## Research Questions
 
-### Reactive Agent (System 1)
-Fast, intuitive reasoning with bounded computation. Ensures timeliness but sacrifices decision quality under high cognitive load.
-
-### Planning Agent (System 2)
-Slow, deliberate reasoning with unbounded computation. Improves decision quality but struggles under time pressure.
-
-### AgileThinker (Parallel System 1 + System 2)
-Runs both reactive and planning systems in parallel. Streaming output from planning system immediately enhances reactive system's fast decisions. Achieves robust performance across different levels of cognitive load and time pressure.
-
-## Game Environments
-
-1. **Freeway**: Tests reaction to emergent hazards (traffic navigation)
-2. **Snake**: Tests taking emergent opportunities (food collection while avoiding obstacles)
-3. **Overcooked**: Tests collaboration with dynamic partners (cooperative cooking)
-
-## Installation & Usage
-
-```bash
-git clone git@github.com:SALT-NLP/RealtimeGym.git
-cd RealtimeGym
-pip install -e .
-```
-
-```python
-import realtimegym
-from realtimegym.agents.agile import AgileThinker
-from realtimegym.prompts import freeway as prompt
-
-env, seed, _ = realtimegym.make_env("Freeway-v0")
-obs, done = env.reset()
-
-agent = AgileThinker(prompt, "freeway_v0_agile.csv", 'token')
-
-while not done:
-    agent.observe(obs)      # Fast observation
-    agent.think(timeout=4096)  # Bounded thinking (token or seconds)
-    action = agent.act()
-    obs, done, reward, reset = env.step(action)
-```
+1. **RQ1**: How well can agents cooperate with each other?
+2. **RQ2**: What role does communication play in agent-agent cooperation?
+3. **RQ3**: What coordination failures do agents exhibit?
 
 ## Key Findings
 
-Experiments show that under cognitive load and time pressure, AgileThinker greatly outperforms agents engaging only one LLM with either System 1 or System 2 reasoning. The parallel architecture manages the trade-off between reasoning depth and response latency.
+- Communication channels become jammed with vague, ill-timed, and inaccurate messages
+- Agents fail to respond to direct questions, send messages that arrive too late
+- Even with effective communication, agents deviate from their commitments
+- Agents hold incorrect expectations about their partner's plans
+
+## Emergent Coordination Behaviors
+
+Through large-scale simulation, we uncover three major categories of successful coordination:
+1. Role division
+2. Resource division
+3. Negotiations
 
 ## Citation
 
 ```bibtex
-@article{wen2024realtime,
-  title={Real-Time Reasoning Agents in Evolving Environments},
-  author={Wen, Yule and Ye, Yixin and Zhang, Yanzhe and Yang, Diyi and Zhu, Hao},
-  journal={International Conference on Learning Representations},
+@article{khatua2025coordination,
+  title={The Curse of Coordination: Why Agents Cannot be Your Teammates Yet},
+  author={Khatua, Arpandeep and Zhu, Hao and Tran, Peter and Prabhudesai, Arya and Sadrieh, Frederic and Lieberwirth, Johann K. and Yu, Xinkai and Fu, Yicheng and Ryan, Michael J. and Pei, Jiaxin and Yang, Diyi},
+  journal={arXiv preprint},
   year={2025},
-  url={https://bleaves.github.io/real-time-reasoning/}
+  url={https://cotomata.com/}
 }
 ```
 
 ## Technical Details
 
-- **Languages**: Python, JavaScript, HTML/CSS
-- **Framework**: Static website with interactive game visualizations
-- **Features**: Real-time game comparisons between three agent architectures
-- **Meta**: Academic project page template with SEO optimization, responsive design, structured data
+- **Languages**: Python, TypeScript, Go, Rust (benchmark tasks)
+- **Framework**: Static website with research results visualization
 - **Styling**: Tailwind CSS with custom Clash Display font
 
 ## License
