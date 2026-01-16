@@ -2,7 +2,7 @@
 
 > Project URL: https://cotomata.com/
 > Research Paper: https://arxiv.org/pdf/COMING_SOON.pdf
-> GitHub Repository: https://github.com/SALT-NLP/CooperBench
+> GitHub Repository: https://github.com/akhatua2/CodeConflictBenchmark
 > Dataset: https://huggingface.co/datasets/SALT-NLP/CooperBench
 
 ## Overview

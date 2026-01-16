@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trajectory Viewer - CooperBench</title>
+    <meta name="description" content="View and analyze multi-agent execution trajectories from CooperBench experiments" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    
+    <style>
+        .step-card { transition: all 0.15s ease; }
+        .step-card:hover { transform: translateX(2px); }
+        .timeline-block { transition: opacity 0.15s ease; }
+        .timeline-block:hover { opacity: 0.8; }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+        .highlight-ring { animation: pulse-ring 1.5s ease-out; }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 font-sans">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-12">
+                <div class="flex items-center gap-2 text-sm">
+                    <a href="index.html" class="font-semibold text-gray-900 hover:text-blue-600">CooperBench</a>
+                    <span class="text-gray-300">/</span>
+                    <span class="text-gray-500">Trajectories</span>
+                </div>
+                <a href="index.html" class="text-xs text-gray-400 hover:text-gray-600">Back</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-4">
+        <!-- Cause Browser Section -->
+        <section class="mb-6">
+            <div class="flex items-center gap-3 flex-wrap">
+                <span class="text-sm text-gray-500">Load random example:</span>
+                <button onclick="loadRandomExample('expectation')" 
+                    class="px-3 py-1.5 text-sm font-medium rounded bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors">
+                    Expectation <span id="count-expectation" class="text-xs opacity-70">(0)</span>
+                </button>
+                <button onclick="loadRandomExample('communication')" 
+                    class="px-3 py-1.5 text-sm font-medium rounded bg-orange-100 text-orange-700 hover:bg-orange-200 transition-colors">
+                    Communication <span id="count-communication" class="text-xs opacity-70">(0)</span>
+                </button>
+                <button onclick="loadRandomExample('commitment')" 
+                    class="px-3 py-1.5 text-sm font-medium rounded bg-purple-100 text-purple-700 hover:bg-purple-200 transition-colors">
+                    Commitment <span id="count-commitment" class="text-xs opacity-70">(0)</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Hidden file inputs -->
+        <input type="file" id="file-agent-a" accept=".json" class="hidden" />
+        <input type="file" id="file-agent-b" accept=".json" class="hidden" />
+        <textarea id="json-input" class="hidden"></textarea>
+
+        <!-- Status -->
+        <div id="load-status" class="mb-3 text-xs hidden"></div>
+
+        <!-- Viewer Section -->
+        <section id="viewer-section" class="hidden">
+            <!-- Stats & Legend -->
+            <div class="flex flex-wrap items-center gap-4 text-[11px] text-gray-500 mb-3">
+                <span class="text-red-600 font-medium">A: <span id="stats-agent-a">0</span></span>
+                <span class="text-blue-600 font-medium">B: <span id="stats-agent-b">0</span></span>
+                <span id="stats-duration">0s</span>
+                <span class="text-gray-300">|</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-yellow-400 rounded-sm"></span>Bash</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-sky-300 rounded-sm"></span>Find</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-blue-600 rounded-sm"></span>View</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-green-500 rounded-sm"></span>Edit</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-orange-400 rounded-sm"></span>Comm</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-red-500 rounded-sm"></span>Submit</span>
+                <button onclick="clearViewer()" class="ml-auto text-gray-400 hover:text-gray-600">clear</button>
+            </div>
+
+            <!-- Timeline -->
+            <div class="bg-white rounded-lg border border-gray-200 p-3 mb-4">
+                <div class="space-y-1.5">
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] text-red-500 w-4">A</span>
+                        <div id="timeline-a" class="relative h-3 bg-gray-100 rounded flex-1 overflow-hidden"></div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] text-blue-500 w-4">B</span>
+                        <div id="timeline-b" class="relative h-3 bg-gray-100 rounded flex-1 overflow-hidden"></div>
+                    </div>
+                </div>
+                <div id="time-markers" class="flex justify-between mt-1.5 pl-6 text-[9px] text-gray-400"></div>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="flex flex-wrap items-center gap-3 mb-4 text-[11px]">
+                <span class="text-gray-400">Filter:</span>
+                <label class="flex items-center gap-1 cursor-pointer text-gray-600">
+                    <input type="checkbox" id="filter-comm" checked class="w-3 h-3 rounded" onchange="applyFilters()">
+                    <span>Comm</span>
+                </label>
+                <label class="flex items-center gap-1 cursor-pointer text-gray-600">
+                    <input type="checkbox" id="filter-edit" checked class="w-3 h-3 rounded" onchange="applyFilters()">
+                    <span>Edit</span>
+                </label>
+                <label class="flex items-center gap-1 cursor-pointer text-gray-600">
+                    <input type="checkbox" id="filter-view" checked class="w-3 h-3 rounded" onchange="applyFilters()">
+                    <span>View</span>
+                </label>
+                <label class="flex items-center gap-1 cursor-pointer text-gray-600">
+                    <input type="checkbox" id="filter-bash" checked class="w-3 h-3 rounded" onchange="applyFilters()">
+                    <span>Bash</span>
+                </label>
+                <label class="flex items-center gap-1 cursor-pointer text-gray-600">
+                    <input type="checkbox" id="filter-other" checked class="w-3 h-3 rounded" onchange="applyFilters()">
+                    <span>Other</span>
+                </label>
+            </div>
+
+            <!-- Steps List -->
+            <div class="bg-white rounded-lg border border-gray-200">
+                <div class="px-3 py-2 border-b border-gray-100 flex items-center justify-between">
+                    <span class="text-xs font-medium text-gray-600">Steps</span>
+                    <span id="step-count" class="text-xs text-gray-400">0</span>
+                </div>
+                <div id="steps-container" class="space-y-2 p-3">
+                    <div class="text-gray-400 text-center py-8 text-xs">Load trajectory to view steps</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Empty State -->
+        <section id="empty-state" class="text-center py-12">
+            <p class="text-sm text-gray-400">Click a cause button above to load a trajectory</p>
+        </section>
+    </main>
+
+    <script>
+        let stepsA = [];
+        let stepsB = [];
+        let allSteps = [];
+        let timeRange = { start: 0, end: 0, duration: 0 };
+        let causeIndex = null;
+
+        // Load cause index on page load
+        async function initCauseIndex() {
+            try {
+                const response = await fetch('static/data/causes/index.json');
+                causeIndex = await response.json();
+                
+                // Update counts
+                document.getElementById('count-expectation').textContent = `(${causeIndex.expectation?.length || 0})`;
+                document.getElementById('count-communication').textContent = `(${causeIndex.communication?.length || 0})`;
+                document.getElementById('count-commitment').textContent = `(${causeIndex.commitment?.length || 0})`;
+            } catch (e) {
+                console.error('Error loading cause index:', e);
+            }
+        }
+
+        async function loadRandomExample(cause) {
+            const examples = causeIndex?.[cause] || [];
+            if (examples.length === 0) {
+                showStatus('No examples available for this cause', 'error');
+                return;
+            }
+
+            // Pick random example
+            const example = examples[Math.floor(Math.random() * examples.length)];
+            if (!example.trajectory_url) {
+                showStatus('Trajectory file not found', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(example.trajectory_url);
+                const data = await response.json();
+                
+                // Data is array of steps with agentId field
+                stepsA = [];
+                stepsB = [];
+                
+                data.forEach((step, idx) => {
+                    if (step.agentId === 'agent_1') {
+                        stepsA.push({ ...step, originalIndex: stepsA.length });
+                    } else {
+                        stepsB.push({ ...step, originalIndex: stepsB.length });
+                    }
+                });
+
+                // Show info with cause type
+                const causeLabel = cause.charAt(0).toUpperCase() + cause.slice(1);
+                showStatus(`${causeLabel}: ${example.project.replace(/_/g, ' ')} (${stepsA.length + stepsB.length} steps)`, 'success');
+                
+                processAndRender();
+                
+                // Scroll to viewer
+                document.getElementById('viewer-section').scrollIntoView({ behavior: 'smooth' });
+            } catch (e) {
+                console.error('Error loading trajectory:', e);
+                showStatus('Error loading trajectory: ' + e.message, 'error');
+            }
+        }
+
+        window.addEventListener('load', initCauseIndex);
+
+        // Tool type classification
+        function getToolType(step) {
+            const toolName = step.tool_call_metadata?.function_name || step.toolName || '';
+            const action = step.action || '';
+            const args = step.args || {};
+
+            if (toolName === 'finish') return 'submit';
+            if (toolName === 'openhands_comm_send' || toolName === 'openhands_comm_get') return 'communication';
+            if (toolName === 'task_tracker') return 'task_tracking';
+            if (toolName === 'think') return 'think';
+            
+            if (toolName === 'execute_bash') {
+                const cmd = (args.command || '').toLowerCase();
+                if (cmd.includes('grep') || cmd.includes('find ') || cmd.includes('locate')) {
+                    return 'find_grep';
+                }
+                return 'bash';
+            }
+            
+            if (toolName === 'str_replace_editor') {
+                const cmd = args.command;
+                if (cmd === 'view') return 'view';
+                if (cmd === 'create') return 'create';
+                return 'edit';
+            }
+
+            return 'other';
+        }
+
+        function getToolColor(toolType) {
+            const colors = {
+                bash: 'bg-yellow-400',
+                find_grep: 'bg-sky-300',
+                view: 'bg-blue-600',
+                edit: 'bg-green-500',
+                create: 'bg-green-700',
+                communication: 'bg-orange-400',
+                task_tracking: 'bg-purple-400',
+                submit: 'bg-red-500',
+                think: 'bg-gray-400',
+                recall: 'bg-indigo-400',
+                condensation: 'bg-pink-400',
+                message: 'bg-teal-400',
+                other: 'bg-gray-300'
+            };
+            return colors[toolType] || 'bg-gray-300';
+        }
+
+        function getToolLabel(toolType) {
+            const labels = {
+                bash: 'Bash',
+                find_grep: 'Find',
+                view: 'View',
+                edit: 'Edit',
+                create: 'Create',
+                communication: 'Comm',
+                task_tracking: 'Task',
+                submit: 'Submit',
+                think: 'Think',
+                recall: 'Recall',
+                condensation: 'Condense',
+                message: 'Msg',
+                other: 'Other'
+            };
+            return labels[toolType] || 'Unknown';
+        }
+
+        function formatTimestamp(ts) {
+            try {
+                const d = new Date(ts);
+                return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+            } catch {
+                return ts;
+            }
+        }
+
+        function formatDuration(ms) {
+            if (ms < 1000) return ms + 'ms';
+            if (ms < 60000) return (ms / 1000).toFixed(1) + 's';
+            return (ms / 60000).toFixed(1) + 'm';
+        }
+
+        function shouldShowStep(step) {
+            if (step.action === 'system' || step.source === 'user') return false;
+            return true;
+        }
+
+        async function loadFromFiles() {
+            const fileA = document.getElementById('file-agent-a').files[0];
+            const fileB = document.getElementById('file-agent-b').files[0];
+            
+            if (!fileA && !fileB) {
+                showStatus('Please select at least one file', 'error');
+                return;
+            }
+
+            try {
+                if (fileA) {
+                    const textA = await fileA.text();
+                    stepsA = JSON.parse(textA).filter(shouldShowStep);
+                } else {
+                    stepsA = [];
+                }
+                
+                if (fileB) {
+                    const textB = await fileB.text();
+                    stepsB = JSON.parse(textB).filter(shouldShowStep);
+                } else {
+                    stepsB = [];
+                }
+
+                processAndRender();
+                showStatus(`Loaded ${stepsA.length} + ${stepsB.length} steps`, 'success');
+            } catch (e) {
+                showStatus('Error parsing JSON: ' + e.message, 'error');
+            }
+        }
+
+        function loadFromPaste() {
+            const input = document.getElementById('json-input').value.trim();
+            if (!input) {
+                showStatus('Please paste JSON data', 'error');
+                return;
+            }
+
+            try {
+                const data = JSON.parse(input);
+                
+                if (data.stepsA && data.stepsB) {
+                    stepsA = data.stepsA.filter(shouldShowStep);
+                    stepsB = data.stepsB.filter(shouldShowStep);
+                } else if (Array.isArray(data)) {
+                    // Single array - try to split by agentId
+                    const agents = {};
+                    data.forEach(step => {
+                        const id = step.agentId || 'A';
+                        if (!agents[id]) agents[id] = [];
+                        agents[id].push(step);
+                    });
+                    const keys = Object.keys(agents).sort();
+                    stepsA = (agents[keys[0]] || []).filter(shouldShowStep);
+                    stepsB = (agents[keys[1]] || []).filter(shouldShowStep);
+                } else {
+                    throw new Error('Invalid format. Expected {stepsA, stepsB} or array with agentId');
+                }
+
+                processAndRender();
+                showStatus(`Loaded ${stepsA.length} + ${stepsB.length} steps`, 'success');
+            } catch (e) {
+                showStatus('Error parsing JSON: ' + e.message, 'error');
+            }
+        }
+
+        function processAndRender() {
+            // Combine and sort steps
+            allSteps = [
+                ...stepsA.map((s, i) => ({ ...s, agent: 'A', originalIndex: i })),
+                ...stepsB.map((s, i) => ({ ...s, agent: 'B', originalIndex: i }))
+            ];
+
+            // Sort by timestamp
+            allSteps.sort((a, b) => {
+                const tA = new Date(a.timestamp || a.timestampMs).getTime();
+                const tB = new Date(b.timestamp || b.timestampMs).getTime();
+                return tA - tB;
+            });
+
+            // Calculate time range
+            if (allSteps.length > 0) {
+                const times = allSteps.map(s => new Date(s.timestamp || s.timestampMs).getTime()).filter(t => !isNaN(t));
+                timeRange.start = Math.min(...times);
+                timeRange.end = Math.max(...times);
+                timeRange.duration = timeRange.end - timeRange.start || 1;
+            }
+
+            // Update stats
+            document.getElementById('stats-agent-a').textContent = stepsA.length;
+            document.getElementById('stats-agent-b').textContent = stepsB.length;
+            document.getElementById('stats-duration').textContent = formatDuration(timeRange.duration);
+
+            // Show viewer
+            document.getElementById('viewer-section').classList.remove('hidden');
+            document.getElementById('empty-state').classList.add('hidden');
+
+            renderTimeline();
+            renderSteps();
+        }
+
+        function renderTimeline() {
+            const timelineA = document.getElementById('timeline-a');
+            const timelineB = document.getElementById('timeline-b');
+            timelineA.innerHTML = '';
+            timelineB.innerHTML = '';
+
+            function renderAgent(steps, container, agent) {
+                steps.forEach((step, idx) => {
+                    const ts = new Date(step.timestamp || step.timestampMs).getTime();
+                    if (isNaN(ts)) return;
+                    
+                    const left = ((ts - timeRange.start) / timeRange.duration) * 100;
+                    const toolType = step.toolType || getToolType(step);
+                    
+                    const block = document.createElement('div');
+                    block.className = `absolute top-0 h-full ${getToolColor(toolType)} timeline-block cursor-pointer rounded-sm`;
+                    block.style.left = `${Math.min(left, 98)}%`;
+                    block.style.width = '2%';
+                    block.style.minWidth = '6px';
+                    block.title = `${formatTimestamp(step.timestamp || step.timestampMs)}: ${getToolLabel(toolType)}`;
+                    
+                    const globalIdx = allSteps.findIndex(s => s.agent === agent && s.originalIndex === idx);
+                    block.onclick = () => scrollToStep(globalIdx);
+                    
+                    container.appendChild(block);
+                });
+            }
+
+            renderAgent(stepsA, timelineA, 'A');
+            renderAgent(stepsB, timelineB, 'B');
+
+            // Time markers
+            const markers = document.getElementById('time-markers');
+            markers.innerHTML = '';
+            if (timeRange.duration > 0) {
+                [0, 25, 50, 75, 100].forEach(pct => {
+                    const t = timeRange.start + (timeRange.duration * pct / 100);
+                    const span = document.createElement('span');
+                    span.textContent = formatTimestamp(new Date(t).toISOString());
+                    markers.appendChild(span);
+                });
+            }
+        }
+
+        function renderSteps() {
+            const container = document.getElementById('steps-container');
+            container.innerHTML = '';
+
+            const filters = {
+                comm: document.getElementById('filter-comm').checked,
+                edit: document.getElementById('filter-edit').checked,
+                view: document.getElementById('filter-view').checked,
+                bash: document.getElementById('filter-bash').checked,
+                other: document.getElementById('filter-other').checked
+            };
+
+            let visibleCount = 0;
+
+            allSteps.forEach((step, idx) => {
+                const toolType = step.toolType || getToolType(step);
+                
+                // Apply filters
+                if (toolType === 'communication' && !filters.comm) return;
+                if ((toolType === 'edit' || toolType === 'create') && !filters.edit) return;
+                if (toolType === 'view' && !filters.view) return;
+                if ((toolType === 'bash' || toolType === 'find_grep') && !filters.bash) return;
+                if (['submit', 'task_tracking', 'think', 'ipython', 'other', 'recall', 'condensation', 'message'].includes(toolType) && !filters.other) return;
+
+                visibleCount++;
+                const isA = step.agent === 'A';
+                
+                const div = document.createElement('div');
+                div.id = `step-${idx}`;
+                div.className = `flex ${isA ? 'justify-start' : 'justify-end'} scroll-mt-32`;
+                
+                // Build content - always show expanded, no interior scrolling
+                let contentHtml = '';
+                
+                // For communication, show the message details
+                if (toolType === 'communication' && step.details) {
+                    let formatted = escapeHtml(step.details);
+                    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    formatted = formatted.replace(/`([^`]+)`/g, '<code class="bg-gray-200 px-1 rounded text-xs">$1</code>');
+                    formatted = formatted.replace(/\n/g, '<br>');
+                    contentHtml = `<div class="text-xs text-gray-600 leading-relaxed mt-1.5">${formatted}</div>`;
+                }
+                
+                // For bash, show command
+                if (toolType === 'bash' && step.args?.command) {
+                    contentHtml = `<div class="mt-1.5 text-xs font-mono bg-gray-900 text-green-400 p-2 rounded whitespace-pre-wrap break-all">${escapeHtml(step.args.command)}</div>`;
+                }
+                
+                // For view, show file path
+                if (toolType === 'view' && step.args?.path) {
+                    contentHtml = `<div class="mt-1.5 text-xs text-gray-600"><span class="text-gray-400">file:</span> ${escapeHtml(step.args.path)}</div>`;
+                }
+                
+                // For edit, show file path and changes
+                if (toolType === 'edit' && step.args) {
+                    let editContent = '';
+                    if (step.args.path) {
+                        editContent += `<div class="text-gray-600"><span class="text-gray-400">file:</span> ${escapeHtml(step.args.path)}</div>`;
+                    }
+                    if (step.args.old_str || step.args.new_str) {
+                        if (step.args.old_str) {
+                            editContent += `<div class="mt-1"><span class="text-red-500 text-[10px]">- old:</span><pre class="mt-0.5 text-[10px] bg-red-50 text-red-700 p-1.5 rounded whitespace-pre-wrap break-all">${escapeHtml(step.args.old_str.slice(0, 500))}${step.args.old_str.length > 500 ? '...' : ''}</pre></div>`;
+                        }
+                        if (step.args.new_str) {
+                            editContent += `<div class="mt-1"><span class="text-green-600 text-[10px]">+ new:</span><pre class="mt-0.5 text-[10px] bg-green-50 text-green-700 p-1.5 rounded whitespace-pre-wrap break-all">${escapeHtml(step.args.new_str.slice(0, 500))}${step.args.new_str.length > 500 ? '...' : ''}</pre></div>`;
+                        }
+                    }
+                    if (editContent) {
+                        contentHtml = `<div class="mt-1.5 text-xs">${editContent}</div>`;
+                    }
+                }
+                
+                // For think, show the thought
+                if (toolType === 'think' && step.args?.thought) {
+                    contentHtml = `<div class="mt-1.5 text-xs text-gray-600 italic">${escapeHtml(step.args.thought.slice(0, 300))}${step.args.thought.length > 300 ? '...' : ''}</div>`;
+                }
+                
+                // For submit/finish, show message
+                if (toolType === 'submit' && step.args?.message) {
+                    contentHtml = `<div class="mt-1.5 text-xs text-gray-600">${escapeHtml(step.args.message.slice(0, 300))}${step.args.message.length > 300 ? '...' : ''}</div>`;
+                }
+                
+                // For recall, show query
+                if (toolType === 'recall' && step.args?.query) {
+                    contentHtml = `<div class="mt-1.5 text-xs text-gray-500 italic">Recalling: ${escapeHtml(step.args.query.slice(0, 200))}...</div>`;
+                }
+
+                const bgColor = isA ? 'bg-red-50 border-red-100' : 'bg-blue-50 border-blue-100';
+                const labelColor = isA ? 'text-red-600' : 'text-blue-600';
+
+                div.innerHTML = `
+                    <div class="max-w-[85%]">
+                        <div class="step-card px-3 py-2 ${bgColor} rounded border">
+                            <div class="flex items-center gap-2 text-[11px]">
+                                <span class="font-medium ${labelColor}">${isA ? 'A' : 'B'}</span>
+                                <span class="px-1.5 py-0.5 rounded text-white text-[10px] ${getToolColor(toolType)}">${getToolLabel(toolType)}</span>
+                                <span class="text-gray-400 ml-auto">${formatTimestamp(step.timestampMs)}</span>
+                            </div>
+                            ${contentHtml}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+
+            document.getElementById('step-count').textContent = `${visibleCount} of ${allSteps.length}`;
+
+            if (visibleCount === 0) {
+                container.innerHTML = '<div class="text-gray-400 text-center py-8 text-sm">No steps match filters</div>';
+            }
+        }
+
+        function applyFilters() {
+            renderSteps();
+        }
+
+        function scrollToStep(idx) {
+            const el = document.getElementById(`step-${idx}`);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('highlight-ring', 'bg-yellow-50');
+                setTimeout(() => {
+                    el.classList.remove('highlight-ring', 'bg-yellow-50');
+                }, 1500);
+            }
+        }
+
+        function clearViewer() {
+            stepsA = [];
+            stepsB = [];
+            allSteps = [];
+            document.getElementById('viewer-section').classList.add('hidden');
+            document.getElementById('empty-state').classList.remove('hidden');
+            document.getElementById('file-agent-a').value = '';
+            document.getElementById('file-agent-b').value = '';
+            document.getElementById('json-input').value = '';
+            document.getElementById('load-status').classList.add('hidden');
+        }
+
+        function showStatus(msg, type) {
+            const el = document.getElementById('load-status');
+            el.textContent = msg;
+            el.className = `mt-4 text-sm ${type === 'error' ? 'text-red-600' : 'text-green-600'}`;
+            el.classList.remove('hidden');
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+    </script>
+</body>
+</html>
