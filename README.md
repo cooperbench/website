@@ -4,7 +4,7 @@ Project website for "The Curse of Coordination: Why Agents Cannot be Your Teamma
 
 <!-- Force rebuild -->
 
-**Website URL**: https://cotomata.com
+**Website URL**: https://cooperbench.com
 
 ## About
 
