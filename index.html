@@ -84,7 +84,7 @@
                     <h1 class="text-3xl md:text-4xl font-semibold text-gray-900 leading-tight mb-6">
                         CooperBench:<br>Why Coding Agents Cannot be Your Teammates Yet
                     </h1>
-                    
+
                     <p class="text-sm text-gray-500 mb-8">
                         Arpandeep Khatua*, Hao Zhu*, Peter Tran, Arya Prabhudesai, Frederic Sadrieh,<br>
                         Johann K. Lieberwirth, Xinkai Yu, Yicheng Fu, Michael J. Ryan, Jiaxin Pei, Diyi Yang<br>
@@ -112,7 +112,7 @@
             <section class="pb-12 px-6">
                 <div class="max-w-3xl mx-auto">
                     <div class="bg-gray-50 rounded-xl p-6 border border-gray-100">
-                        <p class="text-lg text-gray-700 leading-relaxed">
+                    <p class="text-lg text-gray-700 leading-relaxed">
                             Can AI agents work together as teammates? We find that <strong>coordinating agents perform much worse than a single agent</strong> given the same total workload. This coordination deficit presents a fundamental barrier to deploying AI systems that can work alongside humans or other agents.
                         </p>
                     </div>
@@ -149,8 +149,8 @@
                             </h3>
                             <p class="text-gray-600 leading-relaxed">
                                 GPT-5 and Claude Sonnet 4.5 achieve only 25% success with two-agent cooperation, roughly 50% lower than when a single agent handles both tasks. This gap persists across all models and task difficulties.
-                            </p>
-                        </div>
+                        </p>
+                    </div>
 
                         <!-- Finding 2 -->
                         <div>
@@ -160,7 +160,7 @@
                             <p class="text-gray-600 leading-relaxed">
                                 Agents spend up to 20% of their budget on communication. This reduces merge conflicts but does not improve overall success. The channel is jammed with repetition, unresponsiveness, and hallucination.
                             </p>
-                        </div>
+                    </div>
 
                         <!-- Finding 3 -->
                         <div>
@@ -180,36 +180,90 @@
                 </div>
             </section>
 
-            <!-- Emergent Behaviors (Collapsible) -->
+            <!-- Emergent Coordination Patterns with Trajectory Viewer -->
             <section class="py-12 px-6 bg-gray-50" id="emergent">
-                <div class="max-w-3xl mx-auto">
-                    <button 
-                        onclick="toggleSection('emergent-content')" 
-                        class="w-full flex items-center justify-between text-left"
-                    >
-                        <h2 class="text-xl font-semibold text-gray-900">Emergent Coordination Patterns</h2>
-                        <i id="emergent-icon" class="fas fa-chevron-down text-gray-400 text-sm transition-transform"></i>
-                    </button>
-                    <p class="text-gray-600 mt-2 mb-4">
-                        Among successful runs, we observe coordination patterns largely absent from failures.
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-2">Emergent Coordination Patterns</h2>
+                    <p class="text-gray-600 mb-6">
+                        Among successful runs, we observe coordination patterns largely absent from failures. These patterns are not prompted or scaffolded.
                     </p>
-                    
-                    <div id="emergent-content" class="space-y-4">
-                        <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                            <h4 class="font-medium text-blue-900 mb-1">Role Division</h4>
-                            <p class="text-sm text-blue-700">"I'll add header + octal_str; you add binary_str between them."</p>
-                        </div>
-                        <div class="bg-green-50 rounded-lg p-4 border border-green-200">
-                            <h4 class="font-medium text-green-900 mb-1">Resource Division</h4>
-                            <p class="text-sm text-green-700">"I will modify ONLY lines 68-84. I will NOT touch anything else."</p>
-                        </div>
-                        <div class="bg-amber-50 rounded-lg p-4 border border-amber-200">
-                            <h4 class="font-medium text-amber-900 mb-1">Negotiation</h4>
-                            <p class="text-sm text-amber-700">"Option 1 vs Option 2. Which do you prefer? I'll wait for your response."</p>
-                        </div>
-                        <p class="text-sm text-gray-500 pt-2">
-                            <a href="viewer.html" class="text-gray-700 hover:underline">View full trajectories →</a>
+
+                    <!-- Example Selector -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <button onclick="loadExample('role_division')" id="btn-role_division" 
+                            class="px-4 py-2 text-sm font-medium transition-colors bg-blue-600 text-white rounded-lg">
+                            Role Division
+                        </button>
+                        <button onclick="loadExample('resource_division')" id="btn-resource_division"
+                            class="px-4 py-2 text-sm font-medium transition-colors bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                            Resource Division
+                        </button>
+                        <button onclick="loadExample('negotiation')" id="btn-negotiation"
+                            class="px-4 py-2 text-sm font-medium transition-colors bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                            Negotiation
+                        </button>
+                    </div>
+
+                    <!-- Example Description -->
+                    <div id="example-description" class="mb-4 p-4 bg-white rounded-lg border border-gray-200">
+                        <p class="text-sm text-gray-700" id="example-text">
+                            <span class="font-semibold text-blue-700">Role Division</span> — Agents agree on who handles which part of the task. One agent delegates: "I'll add header + octal_str; you add binary_str between them."
                         </p>
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="flex flex-wrap items-center gap-4 text-xs text-gray-500 mb-3">
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-2.5 h-2.5 bg-orange-400 rounded-sm"></div>
+                            <span>Message</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-2.5 h-2.5 bg-blue-600 rounded-sm"></div>
+                            <span>View</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-2.5 h-2.5 bg-green-500 rounded-sm"></div>
+                            <span>Edit</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-2.5 h-2.5 bg-yellow-400 rounded-sm"></div>
+                            <span>Bash</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-2.5 h-2.5 bg-sky-400 rounded-sm"></div>
+                            <span>Search</span>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Visualization -->
+                    <div class="mb-4 rounded-lg border border-gray-200 bg-white p-4">
+                        <div id="timeline-container">
+                            <!-- Agent A Timeline -->
+                            <div class="mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-medium text-red-600 w-14">Agent A</span>
+                                    <div id="timeline-a" class="relative h-3 bg-gray-100 rounded-full flex-1"></div>
+                                </div>
+                            </div>
+                            <!-- Agent B Timeline -->
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-medium text-blue-600 w-14">Agent B</span>
+                                    <div id="timeline-b" class="relative h-3 bg-gray-100 rounded-full flex-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Messages List -->
+                    <div class="rounded-lg border border-gray-200 bg-white">
+                        <div class="px-4 py-2 border-b border-gray-100 flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-700">Interaction Log</span>
+                            <a href="viewer.html" class="text-xs text-gray-500 hover:text-gray-700">Full viewer →</a>
+                        </div>
+                        <div id="messages-container" class="max-h-64 overflow-y-auto">
+                            <div class="text-gray-400 text-center py-6 text-sm">Loading...</div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -234,20 +288,20 @@
                             <div>
                                 <div class="text-2xl font-semibold text-gray-900">652</div>
                                 <div class="text-sm text-gray-500">Tasks</div>
-                            </div>
+                        </div>
                             <div>
                                 <div class="text-2xl font-semibold text-gray-900">12</div>
                                 <div class="text-sm text-gray-500">Repositories</div>
-                            </div>
-                            <div>
+                    </div>
+                    <div>
                                 <div class="text-2xl font-semibold text-gray-900">4</div>
                                 <div class="text-sm text-gray-500">Languages</div>
-                            </div>
+                        </div>
                             <div>
                                 <div class="text-2xl font-semibold text-gray-900">8</div>
                                 <div class="text-sm text-gray-500">Annotators</div>
-                            </div>
-                        </div>
+                    </div>
+                </div>
 
                         <p class="text-gray-600 leading-relaxed">
                             Each task assigns two agents different features that can be implemented independently but may conflict without proper coordination. Eight co-authors with real-world software engineering backgrounds created new features, unit tests, and ground-truth code.
@@ -262,10 +316,10 @@
                     <h2 class="text-xl font-semibold text-gray-900 mb-6">Getting Started</h2>
                     
                     <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-6">
-                        <pre class="text-green-400 text-sm"><code>git clone https://github.com/akhatua2/CodeConflictBenchmark.git
+                                <pre class="text-green-400 text-sm"><code>git clone https://github.com/akhatua2/CodeConflictBenchmark.git
 cd CodeConflictBenchmark
 pip install -r requirements.txt</code></pre>
-                    </div>
+                        </div>
 
                     <div class="flex flex-wrap gap-3">
                         <a href="https://github.com/akhatua2/CodeConflictBenchmark" target="_blank" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">
@@ -274,8 +328,8 @@ pip install -r requirements.txt</code></pre>
                         <a href="https://huggingface.co/datasets/SALT-NLP/CooperBench" target="_blank" class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-white">
                             <i class="fas fa-database mr-2"></i>HuggingFace
                         </a>
-                    </div>
-                </div>
+                        </div>
+                        </div>
             </section>
 
             <!-- BibTeX -->
@@ -286,7 +340,7 @@ pip install -r requirements.txt</code></pre>
                         <button onclick="copyBibTeX()" class="text-sm text-gray-500 hover:text-gray-700">
                             <i class="fas fa-copy mr-1"></i>Copy
                         </button>
-                    </div>
+                        </div>
                     <pre id="bibtex-code" class="bg-gray-50 rounded-lg p-4 text-xs text-gray-600 overflow-x-auto border border-gray-200"><code>@article{khatua2025coordination,
   title={The Curse of Coordination: Why Agents Cannot be Your Teammates Yet},
   author={Khatua, Arpandeep and Zhu, Hao and Tran, Peter and Prabhudesai, Arya 
@@ -296,7 +350,7 @@ pip install -r requirements.txt</code></pre>
   year={2025},
   url={https://cotomata.com/}
 }</code></pre>
-                </div>
+                    </div>
             </section>
 
             <!-- Authors -->
@@ -332,7 +386,7 @@ pip install -r requirements.txt</code></pre>
                         <div class="text-center">
                             <div class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium">XY</div>
                             <div class="text-sm font-medium text-gray-900">Xinkai Yu</div>
-                        </div>
+                                </div>
                         <div class="text-center">
                             <div class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium">YF</div>
                             <div class="text-sm font-medium text-gray-900">Yicheng Fu</div>
@@ -348,9 +402,9 @@ pip install -r requirements.txt</code></pre>
                         <a href="https://cs.stanford.edu/~diyiy/" target="_blank" class="text-center group">
                             <img src="static/images/diyi_yang.png" alt="Diyi Yang" class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition" />
                             <div class="text-sm font-medium text-gray-900">Diyi Yang</div>
-                        </a>
+                            </a>
                     </div>
-                    
+
                     <p class="text-center text-sm text-gray-500 mt-6">
                         Stanford University & SAP Labs · *Equal contribution
                     </p>
@@ -363,10 +417,10 @@ pip install -r requirements.txt</code></pre>
         <footer class="py-8 px-6 border-t border-gray-100">
             <div class="max-w-4xl mx-auto text-center text-sm text-gray-400">
                 <p>CooperBench · Stanford University</p>
-            </div>
-        </footer>
+                </div>
+            </footer>
 
-        <script>
+            <script>
             function toggleSection(id) {
                 const content = document.getElementById(id);
                 const iconId = id.replace('-content', '-icon');
@@ -385,7 +439,178 @@ pip install -r requirements.txt</code></pre>
                 const bibtex = document.getElementById('bibtex-code').textContent;
                 navigator.clipboard.writeText(bibtex);
             }
-        </script>
+
+            // Trajectory Viewer - Emergent Behaviors
+                const exampleFiles = {
+                    role_division: 'delegation_claude_dottxt_ai_outlines_task_task1655_feature2_feature3_k1.json',
+                    resource_division: 'agency_gpt5_llama_index_task_task17244_feature1_feature5_k1.json',
+                    negotiation: 'negotiation_claude_samuelcolvin_dirty_equals_task_task43_feature7_feature8_k1.json'
+                };
+
+                const exampleDescriptions = {
+                role_division: '<span class="font-semibold text-blue-700">Role Division</span> — Agents agree on who handles which part of the task. One agent delegates: "I\'ll add header + octal_str; you add binary_str between them."',
+                resource_division: '<span class="font-semibold text-green-700">Resource Division</span> — Agents avoid collisions by partitioning shared resources. One declares: "I will modify ONLY lines 68-84" and the other confirms: "I will NOT edit lines 68-84."',
+                negotiation: '<span class="font-semibold text-amber-700">Negotiation</span> — Agents resolve conflicting approaches by proposing alternatives. They present options ("Option 1 vs Option 2") and reach explicit agreement before acting.'
+                };
+
+                const exampleData = {};
+                let currentExample = 'role_division';
+
+                function getToolColor(toolType) {
+                    const colors = {
+                        communication: 'bg-orange-400',
+                        view: 'bg-blue-600',
+                        edit: 'bg-green-500',
+                        bash: 'bg-yellow-400',
+                        submit: 'bg-red-500',
+                        find_grep: 'bg-sky-400',
+                        search: 'bg-sky-400'
+                    };
+                    return colors[toolType] || 'bg-gray-400';
+                }
+
+                async function loadExample(type) {
+                    currentExample = type;
+                    
+                    // Update button styles
+                const buttonColors = { role_division: 'blue', resource_division: 'green', negotiation: 'amber' };
+                    ['role_division', 'resource_division', 'negotiation'].forEach(btn => {
+                        const el = document.getElementById(`btn-${btn}`);
+                        if (el) {
+                            if (btn === type) {
+                            const color = buttonColors[btn];
+                            el.className = `px-4 py-2 text-sm font-medium transition-colors bg-${color}-600 text-white rounded-lg`;
+                            } else {
+                            el.className = 'px-4 py-2 text-sm font-medium transition-colors bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200';
+                            }
+                        }
+                    });
+
+                    // Update description
+                    document.getElementById('example-text').innerHTML = exampleDescriptions[type];
+
+                    try {
+                        if (!exampleData[type]) {
+                            const response = await fetch(`static/data/${exampleFiles[type]}`);
+                            exampleData[type] = await response.json();
+                        }
+                        renderTimeline(exampleData[type]);
+                        renderMessages(exampleData[type]);
+                    } catch (error) {
+                        console.error('Error loading example:', error);
+                        document.getElementById('messages-container').innerHTML = 
+                        '<div class="text-gray-400 text-center py-6 text-sm">Error loading trajectory data.</div>';
+                    }
+                }
+
+                function renderTimeline(data) {
+                    const agents = {};
+                    data.forEach(step => {
+                        if (!agents[step.agentId]) agents[step.agentId] = [];
+                        agents[step.agentId].push(step);
+                    });
+
+                    const agentIds = Object.keys(agents).sort();
+                    const agentA = agentIds[0] || 'agent_1';
+                    const agentB = agentIds[1] || 'agent_2';
+
+                    const allTimes = data.map(s => s.timestampMs);
+                    const minTime = Math.min(...allTimes);
+                    const maxTime = Math.max(...allTimes);
+                    const duration = maxTime - minTime || 1;
+
+                    // Render timeline A
+                    const timelineA = document.getElementById('timeline-a');
+                    timelineA.innerHTML = '';
+                    (agents[agentA] || []).forEach(step => {
+                        const left = ((step.timestampMs - minTime) / duration) * 98;
+                        const block = document.createElement('div');
+                        block.className = `absolute top-0 h-full ${getToolColor(step.toolType)} cursor-pointer hover:opacity-80 transition-opacity rounded-full`;
+                        block.style.left = `${left}%`;
+                        block.style.width = '2%';
+                    block.style.minWidth = '4px';
+                        block.onclick = () => scrollToMessage(step.id);
+                        timelineA.appendChild(block);
+                    });
+
+                    // Render timeline B
+                    const timelineB = document.getElementById('timeline-b');
+                    timelineB.innerHTML = '';
+                    (agents[agentB] || []).forEach(step => {
+                        const left = ((step.timestampMs - minTime) / duration) * 98;
+                        const block = document.createElement('div');
+                        block.className = `absolute top-0 h-full ${getToolColor(step.toolType)} cursor-pointer hover:opacity-80 transition-opacity rounded-full`;
+                        block.style.left = `${left}%`;
+                        block.style.width = '2%';
+                    block.style.minWidth = '4px';
+                        block.onclick = () => scrollToMessage(step.id);
+                        timelineB.appendChild(block);
+                    });
+                }
+
+                function renderMessages(data) {
+                    const container = document.getElementById('messages-container');
+                    container.innerHTML = '';
+
+                    const agentIds = [...new Set(data.map(s => s.agentId))].sort();
+                    const isAgentA = id => id === agentIds[0];
+
+                    data.forEach(step => {
+                        const isA = isAgentA(step.agentId);
+                        
+                        const msgEl = document.createElement('div');
+                        msgEl.id = `msg-${step.id}`;
+                    msgEl.className = `px-4 py-3 border-b border-gray-50 transition-colors ${isA ? 'bg-white' : 'bg-gray-50/50'}`;
+
+                        const toolLabel = getToolLabel(step.toolType);
+                        
+                        let details = step.details || '';
+                    details = details.replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 rounded text-xs">$1</code>');
+                        details = details.replace(/\n/g, '<br>');
+
+                        msgEl.innerHTML = `
+                            <div class="flex items-start gap-3">
+                                <div class="flex-shrink-0 w-14 text-xs font-medium ${isA ? 'text-red-600' : 'text-blue-600'}">
+                                    ${isA ? 'Agent A' : 'Agent B'}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-xs px-1.5 py-0.5 rounded ${toolLabel.bg} ${toolLabel.text}">${toolLabel.label}</span>
+                                    </div>
+                                ${details ? `<div class="text-sm text-gray-600 leading-relaxed">${details}</div>` : '<div class="text-sm text-gray-400 italic">No details</div>'}
+                                </div>
+                            </div>
+                        `;
+
+                        container.appendChild(msgEl);
+                    });
+                }
+
+                function getToolLabel(toolType) {
+                    const labels = {
+                        communication: { label: 'Message', bg: 'bg-orange-100', text: 'text-orange-700' },
+                        view: { label: 'View', bg: 'bg-blue-100', text: 'text-blue-700' },
+                        edit: { label: 'Edit', bg: 'bg-green-100', text: 'text-green-700' },
+                        bash: { label: 'Bash', bg: 'bg-yellow-100', text: 'text-yellow-700' },
+                        submit: { label: 'Submit', bg: 'bg-red-100', text: 'text-red-700' },
+                        find_grep: { label: 'Search', bg: 'bg-sky-100', text: 'text-sky-700' },
+                        search: { label: 'Search', bg: 'bg-sky-100', text: 'text-sky-700' }
+                    };
+                    return labels[toolType] || { label: toolType, bg: 'bg-gray-100', text: 'text-gray-600' };
+                }
+
+                function scrollToMessage(id) {
+                    const el = document.getElementById(`msg-${id}`);
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        el.classList.add('bg-yellow-50');
+                        setTimeout(() => el.classList.remove('bg-yellow-50'), 1500);
+                    }
+                }
+
+            // Load default example on page load
+            window.addEventListener('load', () => setTimeout(() => loadExample('role_division'), 300));
+            </script>
         <script src="static/js/animated-grid.js"></script>
     </body>
 </html>
