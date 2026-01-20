@@ -191,10 +191,15 @@
         >
             <div class="max-w-4xl mx-auto px-6">
                 <div class="flex items-center justify-between h-14">
-                    <a href="#" class="text-lg font-semibold text-gray-900"
+                    <a href="index.html" class="text-lg font-semibold text-gray-900"
                         >CooperBench</a
                     >
                     <nav class="flex items-center gap-6">
+                        <a
+                            href="#leaderboard"
+                            class="text-sm text-gray-600 hover:text-gray-900"
+                            >Leaderboard</a
+                        >
                         <a
                             href="blog.html"
                             class="text-sm text-gray-600 hover:text-gray-900"
@@ -314,6 +319,29 @@
                             largest for medium-difficulty tasks.
                         </p>
                     </div>
+                </div>
+            </section>
+
+            <!-- Leaderboard Section -->
+            <section class="py-12 px-6 bg-gray-50" id="leaderboard">
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold text-gray-900">CooperBench Leaderboard</h2>
+                        <div class="flex items-center gap-1.5 text-xs">
+                            <div class="w-2.5 h-2.5 bg-gray-700 rounded-sm"></div>
+                            <span class="text-gray-500">Cooperative Success Rate</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                        <div id="leaderboard-container" class="divide-y divide-gray-100">
+                            <!-- Leaderboard rows will be rendered here -->
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-gray-400 mt-4 text-center">
+                        Success rate on CooperBench across 652 tasks · Error bars show 95% confidence intervals
+                    </p>
                 </div>
             </section>
 
@@ -703,7 +731,7 @@ pip install -r requirements.txt</code></pre>
                             <img
                                 src="static/images/arpan.jpg"
                                 alt="Arpandeep Khatua"
-                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
                             />
                             <div class="text-sm font-medium text-gray-900">
                                 Arpandeep Khatua*
@@ -717,7 +745,7 @@ pip install -r requirements.txt</code></pre>
                             <img
                                 src="static/images/hao_zhu.png"
                                 alt="Hao Zhu"
-                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
                             />
                             <div class="text-sm font-medium text-gray-900">
                                 Hao Zhu*
@@ -731,7 +759,7 @@ pip install -r requirements.txt</code></pre>
                             <img
                                 src="static/images/peter.jpeg"
                                 alt="Peter Tran"
-                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
                             />
                             <div class="text-sm font-medium text-gray-900">
                                 Peter Tran†
@@ -745,7 +773,7 @@ pip install -r requirements.txt</code></pre>
                             <img
                                 src="static/images/arya.png"
                                 alt="Arya Prabhudesai"
-                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
                             />
                             <div class="text-sm font-medium text-gray-900">
                                 Arya Prabhudesai†
@@ -759,7 +787,7 @@ pip install -r requirements.txt</code></pre>
                             <img
                                 src="static/images/frederic.jpg"
                                 alt="Frederic Sadrieh"
-                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
                             />
                             <div class="text-sm font-medium text-gray-900">
                                 Frederic Sadrieh†
@@ -803,7 +831,7 @@ pip install -r requirements.txt</code></pre>
                             <img
                                 src="static/images/michaelryan.jpg"
                                 alt="Michael J. Ryan"
-                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
                             />
                             <div class="text-sm font-medium text-gray-900">
                                 Michael J. Ryan
@@ -827,7 +855,7 @@ pip install -r requirements.txt</code></pre>
                             <img
                                 src="static/images/diyi_yang.png"
                                 alt="Diyi Yang"
-                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
                             />
                             <div class="text-sm font-medium text-gray-900">
                                 Diyi Yang
@@ -1098,6 +1126,72 @@ pip install -r requirements.txt</code></pre>
             window.addEventListener("load", () =>
                 setTimeout(() => loadExample("role_division"), 300),
             );
+
+            // Leaderboard Data - Real results from CooperBench evaluation
+            const leaderboardData = [
+                { 
+                    agent: 'GPT-5', 
+                    fullName: null,
+                    coop: 27.8, coopCI: [24.5, 31.3]
+                },
+                { 
+                    agent: 'Claude Sonnet 4.5',
+                    fullName: null,
+                    coop: 25.9, coopCI: [22.7, 29.4]
+                },
+                { 
+                    agent: 'MiniMax M2',
+                    fullName: null,
+                    coop: 14.0, coopCI: [11.5, 16.8]
+                },
+                { 
+                    agent: 'Qwen3-Coder-30B',
+                    fullName: 'Qwen3-Coder-30B-A3B-Instruct',
+                    coop: 13.3, coopCI: [10.9, 16.2]
+                },
+                { 
+                    agent: 'Qwen3-30B',
+                    fullName: 'Qwen3-30B-A3B-Instruct-2507',
+                    coop: 4.6, coopCI: [3.2, 6.5]
+                },
+            ];
+
+            function renderLeaderboard() {
+                const container = document.getElementById('leaderboard-container');
+                const maxScore = 100;
+                
+                container.innerHTML = leaderboardData.map((item, index) => {
+                    const coopWidth = (item.coop / maxScore) * 100;
+                    const coopCILowPos = (item.coopCI[0] / maxScore) * 100;
+                    const coopCIHighPos = (item.coopCI[1] / maxScore) * 100;
+                    
+                    return `
+                        <div class="flex items-center gap-4 px-5 py-3 hover:bg-gray-50 transition-colors">
+                            <div class="w-44 flex-shrink-0">
+                                <span class="text-sm font-medium text-gray-900">${item.agent}</span>
+                                ${item.fullName ? `<div class="text-[10px] font-mono text-gray-400 truncate">${item.fullName}</div>` : ''}
+                            </div>
+                            <div class="flex-1 h-5 bg-gray-100 rounded relative overflow-visible">
+                                <!-- Coop bar -->
+                                <div class="absolute inset-y-0 left-0 bg-gray-700 rounded" style="width: ${coopWidth}%"></div>
+                                <!-- Coop CI whisker -->
+                                <div class="absolute top-1/2 -translate-y-1/2 h-3 flex items-center"
+                                     style="left: ${coopCILowPos}%; width: ${coopCIHighPos - coopCILowPos}%;">
+                                    <div class="w-0.5 h-full bg-gray-900"></div>
+                                    <div class="flex-1 h-0.5 bg-gray-900"></div>
+                                    <div class="w-0.5 h-full bg-gray-900"></div>
+                                </div>
+                            </div>
+                            <div class="w-16 text-right flex-shrink-0">
+                                <span class="text-sm font-semibold text-gray-700 tabular-nums">${item.coop.toFixed(1)}%</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Initialize leaderboard on page load
+            window.addEventListener('load', () => setTimeout(renderLeaderboard, 100));
         </script>
         <script src="static/js/animated-grid.js"></script>
     </body>
