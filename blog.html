@@ -156,7 +156,7 @@
                 
                 <!-- Article Header -->
                 <header class="mb-12">
-                    <p class="text-sm text-gray-500 mb-4">January 2026 · Research</p>
+                    <p class="text-sm text-gray-500 mb-4">January 2026</p>
                     <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
                         The Curse of Coordination
                     </h1>
@@ -180,45 +180,47 @@
                 <!-- Article Body -->
                 <div class="prose prose-lg max-w-none">
                     
-                    <!-- Introduction -->
-                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
-                        Most achievements in modern civilization arise from individuals working cooperatively. From the construction of cathedrals to the development of open-source software, human teams consistently outperform individuals on complex tasks. As we deploy AI agents in collaborative settings, we naturally expect that strong individual capabilities will translate to effective coordination.
-                    </p>
-
-                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
-                        We tested this assumption.
-                    </p>
-
-                    <div class="rounded-xl p-8 bg-gray-50 border border-gray-200 mb-10 not-prose">
-                        <p class="text-xl text-gray-800 leading-relaxed font-medium">
-                            When we assigned two agents the same workload a single agent could handle, success rates dropped by half. Adding a teammate made agents worse, not better.
+                    <!-- TL;DR -->
+                    <div class="rounded-xl p-6 bg-blue-50 border border-blue-200 mb-10 not-prose">
+                        <p class="text-sm font-semibold text-blue-900 mb-2">TL;DR</p>
+                        <p class="text-blue-800 leading-relaxed">
+                            We built a benchmark to test whether AI coding agents can work together. They can't. When two agents split a workload that one agent handles fine alone, success rates drop by half. The problem isn't that they lack skill. It's that they lack the ability to coordinate.
                         </p>
                     </div>
 
-                    <!-- Section: The Question -->
-                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">The question we set out to answer</h2>
+                    <!-- Introduction -->
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                        Imagine you're pair programming with a colleague. Now imagine they can't see your screen, ignore half your questions, and sometimes just lie about what they've done. That's what it's like when AI agents try to work together.
+                    </p>
+
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                        Most achievements in modern civilization arise from individuals working cooperatively. From the construction of cathedrals to the development of open-source software, human teams consistently outperform individuals on complex tasks. As AI agents become more capable, we naturally expect these abilities to translate to effective teamwork.
+                    </p>
+
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                        We tested this assumption. We ran 652 tasks where two agents split the same workload that one agent handles fine. Success rates dropped by half.
+                    </p>
+
+                    <!-- Section: The Setup -->
+                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">The setup</h2>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        In human teams, we expect that adding teammates will improve productivity. A software engineer working alone might complete two features in a week. Two engineers working together should complete those same features faster, or with higher quality, or both. This is the bottom line for cooperation to be considered functional.
+                        In human teams, adding teammates should improve productivity. A software engineer working alone might complete two features in a week. Two engineers should complete those same features faster, or with higher quality, or both.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        But what about AI agents? When you deploy two coding agents to work on related features, do they coordinate effectively? Or do they step on each other's toes, duplicate work, and produce incompatible solutions?
-                    </p>
-
-                    <p class="text-gray-700 leading-relaxed mb-6">
-                        To answer this, we built CooperBench. We constructed 652 tasks from 12 popular open-source libraries across Python, TypeScript, Go, and Rust. Eight co-authors with real-world software engineering backgrounds created new features, unit tests, and ground-truth code for these libraries. Each task assigns two agents different features that can be implemented independently but may conflict without proper coordination.
+                        We wanted to know if AI agents follow the same pattern. So we built a benchmark called CooperBench. We took 12 popular open-source libraries and created tasks where two agents each build a different feature. The features are compatible. They can be merged. But they touch the same files. If the agents don't coordinate, their code will conflict.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-8">
-                        The features are logically compatible. They can be merged into the same codebase. But they touch overlapping files and functions. Without understanding each other's goals, plans, and expectations, the agents' solutions may introduce incompatible changes. This mirrors real-world software development where coordination failures stem from insufficient mutual understanding.
+                        This is how real software development works. Two engineers on the same repo need to stay in sync, or their pull requests will clash.
                     </p>
 
                     <!-- Section: The Curse of Coordination -->
                     <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">The curse of coordination</h2>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        We evaluated five state-of-the-art models on CooperBench, including GPT-5, Claude Sonnet 4.5, and MiniMax M2. The results were consistent across all of them.
+                        We tested five leading models on CooperBench, including GPT-5, Claude Sonnet 4.5, and MiniMax M2. The results were consistent across all of them.
                     </p>
 
                     <div class="border border-red-200 rounded-xl p-6 mb-8 bg-red-50 not-prose">
@@ -228,7 +230,7 @@
                     </div>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        This pattern held across the full spectrum of task difficulties. We call this the <em>curse of coordination</em>. When two agents need to coordinate, they perform worse than one agent doing both tasks alone.
+                        This held across easy, medium, and hard tasks. We call it the <em>curse of coordination</em>. Two agents working together perform worse than one agent doing both tasks alone.
                     </p>
 
                     <!-- Main Results Figure -->
@@ -241,7 +243,7 @@
                             />
                         </div>
                         <figcaption class="text-sm text-gray-500 mt-4 text-center">
-                            <strong>Left</strong> shows success rates by model. Solo performance (blue) consistently exceeds Cooperative performance (black) across all models. <strong>Right</strong> shows the gap across task difficulty levels. The shaded area represents the coordination gap, which is largest for medium-difficulty tasks.
+                            Solo performance consistently beats cooperative performance across all models. The gap is largest for medium-difficulty tasks.
                         </figcaption>
                     </figure>
 
@@ -250,7 +252,7 @@
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-8">
-                        We also ran experiments scaling the number of agents from 2 to 4. Performance dropped monotonically. With 2 agents we saw 68.6% success. With 3 agents it fell to 46.5%. With 4 agents it dropped to 30.0%. More agents means more coordination overhead and more opportunities for failure.
+                        We also tried scaling to more agents. Performance kept dropping. With 2 agents we saw 68.6% success. With 3 it fell to 46.5%. With 4 it dropped to 30.0%. More agents, more coordination overhead, more opportunities for failure.
                     </p>
 
                     <!-- Section: Communication -->
@@ -261,15 +263,11 @@
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        We compared performance with and without the communication tool. The results were striking.
+                        We compared performance with and without the communication tool. Communication does reduce merge conflicts. When agents can talk, they produce patches that are more structurally compatible. They learn about each other's plans and adjust.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        Communication does reduce merge conflicts. When agents can talk to each other, they produce patches that are more structurally compatible. This makes intuitive sense. Agents learn about each other's plans and adjust accordingly.
-                    </p>
-
-                    <p class="text-gray-700 leading-relaxed mb-6">
-                        But communication does not improve overall success. Despite fewer merge conflicts, the final merged code does not pass more tests. The difference between "with communication" and "without communication" settings is not statistically significant.
+                        But communication does not improve overall success. Despite fewer merge conflicts, the final merged code does not pass more tests.
                     </p>
 
                     <!-- Communication Figure -->
@@ -282,12 +280,12 @@
                             />
                         </div>
                         <figcaption class="text-sm text-gray-500 mt-4 text-center">
-                            <strong>(a)</strong> Communication does not improve success rates. <strong>(b)</strong> Communication does reduce merge conflicts. <strong>(c)</strong> Agents spend up to 20% of their action budget on communication.
+                            Communication doesn't improve success rates, but it does reduce merge conflicts. Agents spend up to 20% of their action budget on communication.
                         </figcaption>
                     </figure>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        Agents are talking a lot. They spend up to 20% of their action budget on communication, split roughly equally between planning messages, questions, and status updates. But why does all this effort not translate into better outcomes?
+                        Agents are talking a lot. They spend up to 20% of their action budget on communication. But why doesn't all this effort translate into better outcomes?
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
@@ -297,15 +295,15 @@
                     <div class="space-y-4 mb-8 not-prose">
                         <div class="border-l-4 border-orange-400 pl-5 py-3">
                             <h4 class="font-semibold text-gray-900 mb-1">Repetition</h4>
-                            <p class="text-gray-600">Agents send the same information multiple times. Verbose status messages add little new information and reduce signal. The communication channel becomes noisy rather than informative.</p>
+                            <p class="text-gray-600">Agents send the same information multiple times. Verbose status updates add little new information. The channel becomes noisy.</p>
                         </div>
                         <div class="border-l-4 border-orange-400 pl-5 py-3">
                             <h4 class="font-semibold text-gray-900 mb-1">Unresponsiveness</h4>
-                            <p class="text-gray-600">Direct questions go unanswered. When one agent asks "Which approach would you prefer?", the response is often silence. Without an answer, the coordination loop collapses. Both agents continue with potentially incompatible assumptions.</p>
+                            <p class="text-gray-600">Direct questions go unanswered. One agent asks "Which approach would you prefer?" Silence. Both agents keep working with different assumptions.</p>
                         </div>
                         <div class="border-l-4 border-orange-400 pl-5 py-3">
                             <h4 class="font-semibold text-gray-900 mb-1">Hallucination</h4>
-                            <p class="text-gray-600">Agents claim things that are not true. They assert completion of changes that were never made. They describe interfaces that do not exist. False information creates noise that makes coordination harder, not easier.</p>
+                            <p class="text-gray-600">Agents claim things that aren't true. They say they finished changes that were never made. They describe code that doesn't exist. Lies make coordination harder, not easier.</p>
                         </div>
                     </div>
 
@@ -319,19 +317,19 @@
                             />
                         </div>
                         <figcaption class="text-sm text-gray-500 mt-4 text-center">
-                            Breakdown of communication error patterns across models. Models that communicate more show different error distributions, but all exhibit significant rates of repetition, unresponsiveness, and hallucination.
+                            All models show high rates of repetition, unresponsiveness, and hallucination in their communication.
                         </figcaption>
                     </figure>
 
                     <p class="text-gray-700 leading-relaxed mb-8">
-                        This reveals something important. Agents lack the critical <em>pragmatics</em> understanding of language. Communication is not just about message passing. It is about achieving certain functions through passing those messages. Agents are "talking" a lot, but they cannot achieve their communication goals when the channel is jammed with repetitions, unresponded questions, and false information.
+                        Communication is not just about sending messages. It's about getting things done through those messages. Agents talk a lot, but the talking doesn't accomplish anything when the channel is jammed with repetitions, unanswered questions, and lies.
                     </p>
 
                     <!-- Section: Three Capability Gaps -->
                     <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">The deeper problem</h2>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        Communication alone does not explain the failures. Even when agents communicate their plans clearly, coordination still breaks down. We analyzed hundreds of failed trajectories and identified three underlying capability gaps.
+                        But communication alone doesn't explain the failures. Even when agents communicate their plans clearly, coordination still breaks down. We looked at hundreds of failed runs and found three patterns.
                     </p>
 
                     <div class="bg-white border border-gray-200 rounded-xl overflow-hidden mb-8 not-prose">
@@ -340,8 +338,8 @@
                                 <div class="flex items-start gap-5">
                                     <div class="flex-shrink-0 w-28 font-semibold text-gray-900">Expectation</div>
                                     <div class="flex-1">
-                                        <p class="text-gray-600 mb-2">Agent A announces it will modify <code class="bg-gray-100 px-1.5 py-0.5 rounded text-sm">prompts.py</code> and call B's function. Agent B states it will insert code at a specific location. Both agents communicate their plans explicitly. Yet the merge fails.</p>
-                                        <p class="text-gray-600">The problem is not missing information but failure to <em>integrate</em> it. Despite hearing B's plan, A proceeds as if B's code will not exist. This is the most common cause, occurring in 63% of failures.</p>
+                                        <p class="text-gray-600 mb-2">Agent A says "I'm going to modify the config file and call your function." Agent B says "I'm adding code at line 50." Both agents are clear about their plans. The merge still fails.</p>
+                                        <p class="text-gray-600">The problem isn't missing information. It's that A heard B's plan and then acted like B's code wouldn't exist. This happens in 63% of failures.</p>
                                     </div>
                                 </div>
                             </div>
@@ -349,8 +347,8 @@
                                 <div class="flex items-start gap-5">
                                     <div class="flex-shrink-0 w-28 font-semibold text-gray-900">Commitment</div>
                                     <div class="flex-1">
-                                        <p class="text-gray-600 mb-2">The agent promises "I will add bypass check at lines 100-104." Later it claims completion with a checkmark. But after merge, the bypass code is missing.</p>
-                                        <p class="text-gray-600">The partner trusted this claim and built on it. But under workspace isolation, trust was all they had. The commitment was <em>unverifiable</em>. No pasted signature, no diff, nothing the partner could check without access to the branch.</p>
+                                        <p class="text-gray-600 mb-2">The agent promises "I'll add the validation check." Later it says "Done ✓". But after merge, the validation code is missing.</p>
+                                        <p class="text-gray-600">The partner trusted this and built on it. But they couldn't verify. They were working on separate branches. Trust was all they had, and trust was misplaced.</p>
                                     </div>
                                 </div>
                             </div>
@@ -358,8 +356,8 @@
                                 <div class="flex items-start gap-5">
                                     <div class="flex-shrink-0 w-28 font-semibold text-gray-900">Communication</div>
                                     <div class="flex-1">
-                                        <p class="text-gray-600 mb-2">Agent A asks a direct question. "Which approach would you prefer?" The response is silence.</p>
-                                        <p class="text-gray-600">Without an answer, the coordination loop collapses. A needed a decision to proceed. Without one, both agents continued with potentially incompatible assumptions.</p>
+                                        <p class="text-gray-600 mb-2">Agent A asks "Which approach do you prefer?" Silence.</p>
+                                        <p class="text-gray-600">A needed a decision to move forward. Without one, both agents kept working with different assumptions.</p>
                                     </div>
                                 </div>
                             </div>
@@ -367,90 +365,79 @@
                     </div>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        The common thread across these failures is <em>partial observability</em>. Each agent acts while holding an uncertain model of its partner's state, edits, and commitments. A merge can be conflict-free yet still embed incompatible assumptions.
-                    </p>
-
-                    <h3 class="text-xl font-bold text-gray-900 mt-10 mb-4">The trust paradox</h3>
-
-                    <p class="text-gray-700 leading-relaxed mb-6">
-                        We hypothesize that a deeper tension underlies expectation failures. Models are trained to be cautious, requiring observable evidence and resisting unverifiable assertions. This is a sensible default for single-agent interactions, where users may attempt to mislead the model.
+                        In all these cases, agents can't see each other's work. Each agent is guessing what its partner is doing. A merge can look clean and still be broken.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-8">
-                        But collaboration under workspace isolation requires the opposite. Agents must trust partner claims about states they cannot observe. When Agent A reports "I added the handler at line 50", Agent B's instinct is to verify. But verification fails because they are on separate branches. This mismatch between <em>verification-first</em> training and <em>trust-requiring</em> collaboration may partly explain why agents consistently fail to update their model of partner state despite explicit communication.
+                        There's a tension here. Models are trained to be cautious, to want observable evidence, to resist unverifiable claims. That makes sense when users might try to mislead them. But collaboration requires trust. When Agent A says "I added the handler at line 50", Agent B can't verify it because they're on separate branches. Agents are trained to verify, but collaboration requires them to trust. This mismatch may explain why they fail to update their picture of what their partner is doing, even when told directly.
                     </p>
 
                     <!-- Section: Glimmers of Hope -->
                     <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">Glimmers of hope</h2>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        Not all runs fail. Among successful traces, we observe coordination patterns that are largely absent from failures. These behaviors are not prompted or scaffolded. They emerge when agents successfully navigate partial observability.
+                        Not all runs fail. Sometimes agents figure it out. In successful traces, we see coordination patterns that are mostly absent from failures. Nobody prompted these behaviors. They just emerge.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        What they share is a shift from vague intentions to specific commitments that a partner can verify even without seeing the underlying work.
+                        The successful agents move from vague intentions to specific commitments. Instead of "I'll handle the authentication," they say "I'll modify lines 68-84 and nothing else."
                     </p>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 not-prose">
                         <div class="border border-green-200 rounded-xl p-5 bg-green-50">
                             <h4 class="font-semibold text-green-900 mb-2">Role division</h4>
-                            <p class="text-sm text-green-700 mb-3">Agents agree on who handles which part of the task and establish clear boundaries around their scope.</p>
+                            <p class="text-sm text-green-700 mb-3">Agents agree on who does what and stick to it.</p>
                             <p class="text-xs text-green-600 italic">"I'll add header + octal_str; you add binary_str between them."</p>
                         </div>
                         <div class="border border-green-200 rounded-xl p-5 bg-green-50">
                             <h4 class="font-semibold text-green-900 mb-2">Resource division</h4>
-                            <p class="text-sm text-green-700 mb-3">Agents avoid collisions by partitioning shared resources at specific files, code ranges, or ownership blocks.</p>
+                            <p class="text-sm text-green-700 mb-3">Agents claim specific lines or files and stay out of each other's way.</p>
                             <p class="text-xs text-green-600 italic">"I will modify ONLY lines 68-84. I will NOT touch anything else."</p>
                         </div>
                         <div class="border border-green-200 rounded-xl p-5 bg-green-50">
                             <h4 class="font-semibold text-green-900 mb-2">Negotiation</h4>
-                            <p class="text-sm text-green-700 mb-3">Agents resolve conflicting approaches by proposing alternatives and converging on a single plan before acting.</p>
+                            <p class="text-sm text-green-700 mb-3">Agents hash out disagreements before coding, not after.</p>
                             <p class="text-xs text-green-600 italic">"Option 1 vs Option 2. Which do you prefer? I'll wait for your response."</p>
                         </div>
                     </div>
 
                     <p class="text-gray-700 leading-relaxed mb-8">
-                        These coordination patterns are rare in our traces. But their presence in successful cases suggests that the underlying capability exists. The challenge is not teaching agents new coordination skills but making existing ones reliable.
+                        These patterns are rare. But when they show up, things work. The capability exists. The challenge is making it reliable.
                     </p>
 
                     <!-- Section: What This Means -->
-                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">What this means</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">Where this leaves us</h2>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        Recent work from industry labs has shown that multi-agent systems can produce impressive results. Cursor recently <a href="https://cursor.com/blog/scaling-agents" class="text-primary hover:underline">reported</a> running hundreds of concurrent agents on a single project, coordinating their work across millions of lines of code. They found that separating agents into planners and workers, with explicit role hierarchies, helped avoid the coordination problems we observe.
+                        If you're hoping to deploy multiple AI agents on the same project, our results are sobering. Right now, you're better off with one agent doing everything than two agents splitting the work. The coordination overhead eats the gains.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        Our findings help explain why such scaffolding is necessary. Without explicit structure, agents struggle to coordinate even on simple two-agent tasks. The emergent role division and resource division we observe in successful traces is exactly what hierarchical systems like Cursor's enforce by design.
+                        Industry labs have found workarounds. Cursor recently <a href="https://cursor.com/blog/scaling-agents" class="text-primary hover:underline">reported</a> running hundreds of concurrent agents on a single project by separating them into planners and workers with explicit role hierarchies. Our findings help explain why such scaffolding is necessary. Without it, agents struggle to coordinate even on simple two-agent tasks.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        But scaffolding is not a solution. It is a workaround. It places the coordination burden on human developers who must design the right structures. And it limits the flexibility of agent teams, preventing them from adapting to novel situations where the right division of work is not obvious at the start.
+                        But scaffolding is a workaround, not a solution. It places the coordination burden on human developers who must design the right structures. And it limits flexibility. Agent teams can't adapt to novel situations where the right division of work isn't obvious at the start.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        Our work suggests that the field needs a shift. Individual capability is not enough. We need agents with <em>social intelligence</em>. The ability to understand others, communicate effectively, and coordinate actions.
-                    </p>
-
-                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-8 not-prose">
-                        <p class="text-gray-700 leading-relaxed">
-                            Prompt optimization yields only marginal improvements. Most errors stem from coordination challenges, not prompt wording. The capability gaps we identify require deeper changes. Training objectives that reward coordination under partial observability. Lightweight protocols for verifiable commitments. Richer communication channels such as screen sharing to expand bandwidth beyond text.
-                        </p>
-                    </div>
-
-                    <!-- Section: Looking Forward -->
-                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">Looking forward</h2>
-
-                    <p class="text-gray-700 leading-relaxed mb-6">
-                        In a future where agents team with humans in high-stakes domains, accelerate science and technology research, and empower creative endeavors, it is hard to imagine how an agent incapable of coordination would contribute. However strong their individual capabilities.
+                        This matters beyond software. The same coordination failures will appear anywhere we deploy multiple agents together. Scientific research, business operations, creative projects. If agents can't coordinate on a codebase where success is clearly defined by passing tests, they'll struggle even more in domains where success is ambiguous.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        Our work demonstrates that coordination, not raw coding ability, is a central bottleneck for multi-agent software development. But coordination is not beyond reach. In successful traces, we see what coordination could look like. The capability exists. Making it reliable is the challenge.
+                        But this isn't permanent. In our successful traces, we saw agents figure out coordination on their own. They divided roles, partitioned files, negotiated approaches. The capability is there. It's just not reliable yet.
+                    </p>
+
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        And that's what makes us hopeful. These emergent coordination behaviors give us something to work with. CooperBench captures hundreds of examples where agents succeed and fail at working together. That's a training signal. Future models could be post-trained on these traces, learning what good coordination looks like.
+                    </p>
+
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        Even better, CooperBench isn't just a dataset. It's a live environment. You can drop models in, pair them up, and let them learn to work together through trial and error. The same tasks that expose failures today can be the training ground that fixes them.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-8">
-                        We release CooperBench as an open benchmark to measure progress on these fronts. We encourage researchers to develop novel frameworks, to train agents to achieve higher success rates, and to close the gap between solo and cooperative performance. Only by developing social intelligence beyond individual capabilities can we build AI agents that become reliable teammates.
+                        The bottleneck for multi-agent systems isn't raw ability. It's social intelligence. But social intelligence can be taught. And now we have a place to teach it.
                     </p>
 
                 </div>
