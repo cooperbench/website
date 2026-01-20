@@ -1,159 +1,298 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Primary Meta Tags -->
+        <meta name="title" content="404 - Page Not Found | CooperBench" />
+        <meta
+            name="description"
+            content="The page you're looking for doesn't exist."
+        />
+        <meta name="robots" content="noindex, nofollow" />
 
-  <!-- Primary Meta Tags -->
-  <meta name="title" content="404 - Page Not Found | CooperBench">
-  <meta name="description" content="The page you're looking for doesn't exist.">
-  <meta name="robots" content="noindex, nofollow">
+        <title>404 - Page Not Found | CooperBench</title>
 
-  <title>404 - Page Not Found | CooperBench</title>
+        <!-- Favicon -->
+        <link rel="icon" type="image/x-icon" href="static/images/favicon.ico" />
+        <link rel="apple-touch-icon" href="static/images/favicon.ico" />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
-  <link rel="apple-touch-icon" href="static/images/favicon.ico">
+        <!-- Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="static/css/fontawesome.all.min.css" />
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+        <!-- Custom Tailwind Config -->
+        <script>
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: "#2563eb",
+                            "primary-hover": "#1d4ed8",
+                            secondary: "#64748b",
+                            accent: "#0ea5e9",
+                        },
+                        fontFamily: {
+                            sans: ["Nebula Sans", "system-ui", "sans-serif"],
+                            clash: ["Clash Display", "sans-serif"],
+                        },
+                        animation: {
+                            "fade-in-up": "fadeInUp 0.6s ease-out",
+                            float: "float 3s ease-in-out infinite",
+                        },
+                        keyframes: {
+                            fadeInUp: {
+                                from: {
+                                    opacity: "0",
+                                    transform: "translateY(30px)",
+                                },
+                                to: {
+                                    opacity: "1",
+                                    transform: "translateY(0)",
+                                },
+                            },
+                            float: {
+                                "0%, 100%": { transform: "translateY(0px)" },
+                                "50%": { transform: "translateY(-20px)" },
+                            },
+                        },
+                    },
+                },
+            };
+        </script>
 
-  <!-- Custom Tailwind Config -->
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            'primary': '#2563eb',
-            'primary-hover': '#1d4ed8',
-            'secondary': '#64748b',
-            'accent': '#0ea5e9',
-          },
-          fontFamily: {
-            'sans': ['Inter', 'Segoe UI', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-            'clash': ['Clash Display', 'sans-serif'],
-          },
-          animation: {
-            'fade-in-up': 'fadeInUp 0.6s ease-out',
-            'float': 'float 3s ease-in-out infinite',
-          },
-          keyframes: {
-            fadeInUp: {
-              'from': { opacity: '0', transform: 'translateY(30px)' },
-              'to': { opacity: '1', transform: 'translateY(0)' },
-            },
-            float: {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-20px)' },
+        <!-- Fonts -->
+        <style>
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Light.woff2") format("woff2");
+                font-weight: 300;
+                font-style: normal;
+                font-display: swap;
             }
-          }
-        }
-      }
-    }
-  </script>
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-LightItalic.woff2")
+                    format("woff2");
+                font-weight: 300;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Book.woff2") format("woff2");
+                font-weight: 400;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-BookItalic.woff2")
+                    format("woff2");
+                font-weight: 400;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Medium.woff2") format("woff2");
+                font-weight: 500;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-MediumItalic.woff2")
+                    format("woff2");
+                font-weight: 500;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Semibold.woff2")
+                    format("woff2");
+                font-weight: 600;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-SemiboldItalic.woff2")
+                    format("woff2");
+                font-weight: 600;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Bold.woff2") format("woff2");
+                font-weight: 700;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-BoldItalic.woff2")
+                    format("woff2");
+                font-weight: 700;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Black.woff2") format("woff2");
+                font-weight: 800;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-BlackItalic.woff2")
+                    format("woff2");
+                font-weight: 800;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Clash Display";
+                src: url("static/fonts/ClashDisplay Semibold.otf")
+                    format("opentype");
+                font-weight: 600;
+                font-style: normal;
+                font-display: swap;
+            }
+        </style>
+    </head>
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <body
+        class="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen flex items-center justify-center"
+    >
+        <div class="max-w-2xl mx-auto px-6 text-center animate-fade-in-up">
+            <!-- 404 Illustration -->
+            <div class="mb-8">
+                <div
+                    class="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-2xl animate-float"
+                >
+                    <i
+                        class="fas fa-exclamation-triangle text-white text-6xl"
+                    ></i>
+                </div>
+            </div>
 
-  <!-- Local Clash Display Font -->
-  <style>
-    @font-face {
-      font-family: 'Clash Display';
-      src: url('static/fonts/ClashDisplay Semibold.otf') format('opentype');
-      font-weight: 600;
-      font-style: normal;
-      font-display: swap;
-    }
-  </style>
-</head>
+            <!-- Error Message -->
+            <h1
+                class="text-7xl md:text-8xl font-extrabold text-gray-900 mb-4"
+                style="font-family: &quot;Clash Display&quot;, sans-serif"
+            >
+                404
+            </h1>
 
-<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen flex items-center justify-center">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+                Page Not Found
+            </h2>
 
-  <div class="max-w-2xl mx-auto px-6 text-center animate-fade-in-up">
-    <!-- 404 Illustration -->
-    <div class="mb-8">
-      <div class="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-2xl animate-float">
-        <i class="fas fa-exclamation-triangle text-white text-6xl"></i>
-      </div>
-    </div>
+            <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                Oops! The page you're looking for seems to have gotten lost in a
+                merge conflict.
+                <br class="hidden md:block" />
+                Let's get you back on track.
+            </p>
 
-    <!-- Error Message -->
-    <h1 class="text-7xl md:text-8xl font-extrabold text-gray-900 mb-4" style="font-family: 'Clash Display', sans-serif;">
-      404
-    </h1>
+            <!-- Action Buttons -->
+            <div
+                class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8"
+            >
+                <a
+                    href="/"
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+                >
+                    <i class="fas fa-home mr-2"></i>
+                    <span>Back to Home</span>
+                </a>
 
-    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-      Page Not Found
-    </h2>
+                <a
+                    href="https://github.com/cooperbench/CooperBench"
+                    target="_blank"
+                    class="inline-flex items-center px-6 py-3 bg-gray-900 text-white font-semibold rounded-xl shadow-lg hover:bg-gray-800 hover:shadow-xl hover:scale-105 transition-all duration-300"
+                >
+                    <i class="fab fa-github mr-2"></i>
+                    <span>View GitHub</span>
+                </a>
+            </div>
 
-    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
-      Oops! The page you're looking for seems to have gotten lost in a merge conflict.
-      <br class="hidden md:block">
-      Let's get you back on track.
-    </p>
+            <!-- Helpful Links -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 max-w-lg mx-auto">
+                <h3 class="text-xl font-bold text-gray-900 mb-4">
+                    You might be interested in:
+                </h3>
+                <ul class="space-y-3 text-left">
+                    <li>
+                        <a
+                            href="/#benchmark"
+                            class="flex items-center text-primary hover:text-primary-hover transition-colors duration-300 group"
+                        >
+                            <i
+                                class="fas fa-chevron-right mr-2 text-sm group-hover:translate-x-1 transition-transform"
+                            ></i>
+                            <span class="font-semibold"
+                                >Learn about CooperBench</span
+                            >
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="/#BibTeX"
+                            class="flex items-center text-primary hover:text-primary-hover transition-colors duration-300 group"
+                        >
+                            <i
+                                class="fas fa-chevron-right mr-2 text-sm group-hover:translate-x-1 transition-transform"
+                            ></i>
+                            <span class="font-semibold"
+                                >View the Research Paper</span
+                            >
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="https://huggingface.co/CodeConflict"
+                            target="_blank"
+                            class="flex items-center text-primary hover:text-primary-hover transition-colors duration-300 group"
+                        >
+                            <i
+                                class="fas fa-chevron-right mr-2 text-sm group-hover:translate-x-1 transition-transform"
+                            ></i>
+                            <span class="font-semibold"
+                                >Download the Dataset</span
+                            >
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="https://github.com/cooperbench/CooperBench"
+                            target="_blank"
+                            class="flex items-center text-primary hover:text-primary-hover transition-colors duration-300 group"
+                        >
+                            <i
+                                class="fas fa-chevron-right mr-2 text-sm group-hover:translate-x-1 transition-transform"
+                            ></i>
+                            <span class="font-semibold">Explore the Code</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-    <!-- Action Buttons -->
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-      <a href="/"
-        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-        <i class="fas fa-home mr-2"></i>
-        <span>Back to Home</span>
-      </a>
+            <!-- Footer Note -->
+            <p class="text-sm text-gray-500 mt-8">
+                Error Code: 404 | Stanford University SALT-NLP
+            </p>
+        </div>
 
-      <a href="https://github.com/cooperbench/CooperBench" target="_blank"
-        class="inline-flex items-center px-6 py-3 bg-gray-900 text-white font-semibold rounded-xl shadow-lg hover:bg-gray-800 hover:shadow-xl hover:scale-105 transition-all duration-300">
-        <i class="fab fa-github mr-2"></i>
-        <span>View GitHub</span>
-      </a>
-    </div>
-
-    <!-- Helpful Links -->
-    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-lg mx-auto">
-      <h3 class="text-xl font-bold text-gray-900 mb-4">You might be interested in:</h3>
-      <ul class="space-y-3 text-left">
-        <li>
-          <a href="/#benchmark" class="flex items-center text-primary hover:text-primary-hover transition-colors duration-300 group">
-            <i class="fas fa-chevron-right mr-2 text-sm group-hover:translate-x-1 transition-transform"></i>
-            <span class="font-semibold">Learn about CooperBench</span>
-          </a>
-        </li>
-        <li>
-          <a href="/#BibTeX" class="flex items-center text-primary hover:text-primary-hover transition-colors duration-300 group">
-            <i class="fas fa-chevron-right mr-2 text-sm group-hover:translate-x-1 transition-transform"></i>
-            <span class="font-semibold">View the Research Paper</span>
-          </a>
-        </li>
-        <li>
-          <a href="https://huggingface.co/CodeConflict" target="_blank" class="flex items-center text-primary hover:text-primary-hover transition-colors duration-300 group">
-            <i class="fas fa-chevron-right mr-2 text-sm group-hover:translate-x-1 transition-transform"></i>
-            <span class="font-semibold">Download the Dataset</span>
-          </a>
-        </li>
-        <li>
-          <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="flex items-center text-primary hover:text-primary-hover transition-colors duration-300 group">
-            <i class="fas fa-chevron-right mr-2 text-sm group-hover:translate-x-1 transition-transform"></i>
-            <span class="font-semibold">Explore the Code</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Footer Note -->
-    <p class="text-sm text-gray-500 mt-8">
-      Error Code: 404 | Stanford University SALT-NLP
-    </p>
-  </div>
-
-  <!-- Defer Font Awesome -->
-  <script defer src="static/js/fontawesome.all.min.js"></script>
-
-</body>
-
+        <!-- Defer Font Awesome -->
+        <script defer src="static/js/fontawesome.all.min.js"></script>
+    </body>
 </html>

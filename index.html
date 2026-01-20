@@ -5,25 +5,54 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <!-- Primary Meta Tags -->
-        <meta name="title" content="CooperBench: Why Coding Agents Cannot be Your Teammates Yet" />
-        <meta name="description" content="CooperBench is a benchmark of over 600 collaborative coding tasks. We find that agents achieve 30% lower success rates when working together compared to performing both tasks individually." />
-        <meta name="keywords" content="multi-agent systems, AI coordination, coding agents, software engineering, agent cooperation, merge conflicts, LLM agents" />
-        <meta name="author" content="Arpandeep Khatua, Hao Zhu, Peter Tran, Arya Prabhudesai, Frederic Sadrieh, Johann K. Lieberwirth, Xinkai Yu, Yicheng Fu, Michael J. Ryan, Jiaxin Pei, Diyi Yang" />
+        <meta
+            name="title"
+            content="CooperBench: Why Coding Agents Cannot be Your Teammates Yet"
+        />
+        <meta
+            name="description"
+            content="CooperBench is a benchmark of over 600 collaborative coding tasks. We find that agents achieve 30% lower success rates when working together compared to performing both tasks individually."
+        />
+        <meta
+            name="keywords"
+            content="multi-agent systems, AI coordination, coding agents, software engineering, agent cooperation, merge conflicts, LLM agents"
+        />
+        <meta
+            name="author"
+            content="Arpandeep Khatua, Hao Zhu, Peter Tran, Arya Prabhudesai, Frederic Sadrieh, Johann K. Lieberwirth, Xinkai Yu, Yicheng Fu, Michael J. Ryan, Jiaxin Pei, Diyi Yang"
+        />
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="article" />
         <meta property="og:site_name" content="Stanford University" />
-        <meta property="og:title" content="CooperBench: Why Coding Agents Cannot be Your Teammates Yet" />
-        <meta property="og:description" content="CooperBench is a benchmark of over 600 collaborative coding tasks. We find that agents achieve 30% lower success rates when working together compared to performing both tasks individually." />
+        <meta
+            property="og:title"
+            content="CooperBench: Why Coding Agents Cannot be Your Teammates Yet"
+        />
+        <meta
+            property="og:description"
+            content="CooperBench is a benchmark of over 600 collaborative coding tasks. We find that agents achieve 30% lower success rates when working together compared to performing both tasks individually."
+        />
         <meta property="og:url" content="https://cotomata.com/" />
-        <meta property="og:image" content="https://cotomata.com/static/images/social_preview.png" />
+        <meta
+            property="og:image"
+            content="https://cotomata.com/static/images/social_preview.png"
+        />
 
         <!-- Twitter -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="CooperBench: Why Coding Agents Cannot be Your Teammates Yet" />
-        <meta name="twitter:description" content="CooperBench is a benchmark of over 600 collaborative coding tasks. We find that agents achieve 30% lower success rates when working together compared to performing both tasks individually." />
+        <meta
+            name="twitter:title"
+            content="CooperBench: Why Coding Agents Cannot be Your Teammates Yet"
+        />
+        <meta
+            name="twitter:description"
+            content="CooperBench is a benchmark of over 600 collaborative coding tasks. We find that agents achieve 30% lower success rates when working together compared to performing both tasks individually."
+        />
 
-        <title>CooperBench: Why Coding Agents Cannot be Your Teammates Yet</title>
+        <title>
+            CooperBench: Why Coding Agents Cannot be Your Teammates Yet
+        </title>
 
         <!-- Favicon -->
         <link rel="icon" type="image/x-icon" href="static/images/favicon.ico" />
@@ -32,10 +61,16 @@
         <script src="https://cdn.tailwindcss.com"></script>
 
         <!-- Font Awesome (CDN) -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        />
 
         <!-- Academic Icons -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css"
+        />
 
         <script>
             tailwind.config = {
@@ -45,7 +80,7 @@
                             primary: "#1a1a1a",
                         },
                         fontFamily: {
-                            sans: ["Inter", "system-ui", "sans-serif"],
+                            sans: ["Nebula Sans", "system-ui", "sans-serif"],
                             serif: ["Georgia", "Cambria", "serif"],
                         },
                     },
@@ -54,19 +89,127 @@
         </script>
 
         <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <style>
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Light.woff2") format("woff2");
+                font-weight: 300;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-LightItalic.woff2")
+                    format("woff2");
+                font-weight: 300;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Book.woff2") format("woff2");
+                font-weight: 400;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-BookItalic.woff2")
+                    format("woff2");
+                font-weight: 400;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Medium.woff2") format("woff2");
+                font-weight: 500;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-MediumItalic.woff2")
+                    format("woff2");
+                font-weight: 500;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Semibold.woff2")
+                    format("woff2");
+                font-weight: 600;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-SemiboldItalic.woff2")
+                    format("woff2");
+                font-weight: 600;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Bold.woff2") format("woff2");
+                font-weight: 700;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-BoldItalic.woff2")
+                    format("woff2");
+                font-weight: 700;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Black.woff2") format("woff2");
+                font-weight: 800;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-BlackItalic.woff2")
+                    format("woff2");
+                font-weight: 800;
+                font-style: italic;
+                font-display: swap;
+            }
+        </style>
     </head>
 
     <body class="bg-white text-gray-900">
         <!-- Header -->
-        <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-100 z-50">
+        <header
+            class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-100 z-50"
+        >
             <div class="max-w-4xl mx-auto px-6">
                 <div class="flex items-center justify-between h-14">
-                    <a href="#" class="text-lg font-semibold text-gray-900">CooperBench</a>
+                    <a href="#" class="text-lg font-semibold text-gray-900"
+                        >CooperBench</a
+                    >
                     <nav class="flex items-center gap-6">
-                        <a href="blog.html" class="text-sm text-gray-600 hover:text-gray-900">Blog</a>
-                        <a href="viewer.html" class="text-sm text-gray-600 hover:text-gray-900">Trajectories</a>
-                        <a href="#authors" class="text-sm text-gray-600 hover:text-gray-900">Authors</a>
+                        <a
+                            href="blog.html"
+                            class="text-sm text-gray-600 hover:text-gray-900"
+                            >Blog</a
+                        >
+                        <a
+                            href="viewer.html"
+                            class="text-sm text-gray-600 hover:text-gray-900"
+                            >Trajectories</a
+                        >
+                        <a
+                            href="#authors"
+                            class="text-sm text-gray-600 hover:text-gray-900"
+                            >Authors</a
+                        >
                     </nav>
                 </div>
             </div>
@@ -74,35 +217,59 @@
 
         <!-- Main Content -->
         <main class="pt-14">
-            
             <!-- Hero Section -->
             <section class="relative py-20 px-6 overflow-hidden">
                 <!-- Animated Grid Background -->
-                <div id="animated-grid-container" class="absolute inset-0 text-gray-300"></div>
-                
+                <div
+                    id="animated-grid-container"
+                    class="absolute inset-0 text-gray-300"
+                ></div>
+
                 <div class="relative max-w-3xl mx-auto text-center z-10">
-                    <h1 class="text-3xl md:text-4xl font-semibold text-gray-900 leading-tight mb-6">
-                        CooperBench:<br>Why Coding Agents Cannot be Your Teammates Yet
+                    <h1
+                        class="text-3xl md:text-4xl font-semibold text-gray-900 leading-tight mb-6"
+                    >
+                        CooperBench:<br />
+                        Benchmarking AI Agents' Cooperation
                     </h1>
 
-                    <p class="text-sm text-gray-500 mb-8">
-                        Arpandeep Khatua*, Hao Zhu*, Peter Tran†, Arya Prabhudesai†, Frederic Sadrieh†,<br>
-                        Johann K. Lieberwirth†, Xinkai Yu, Yicheng Fu, Michael J. Ryan, Jiaxin Pei, Diyi Yang<br>
-                        <span class="text-gray-400">Stanford University & SAP Labs</span><br>
-                        <span class="text-xs text-gray-400">*Equal contribution (Stanford) · †Equal contribution (SAP Labs)</span>
+                    <p class="text-2xl text-gray-500 mb-8">
+                        <!--Arpandeep Khatua*, Hao Zhu*, Peter Tran†, Arya Prabhudesai†, Frederic Sadrieh†,<br>
+                        Johann K. Lieberwirth†, Xinkai Yu, Yicheng Fu, Michael J. Ryan, Jiaxin Pei, Diyi Yang<br>-->
+                        <span class="text-gray-400"
+                            >Stanford University & SAP Labs US</span
+                        ><br />
+                        <!--<span class="text-xs text-gray-400"
+                            >*Equal contribution (Stanford) · †Equal
+                            contribution (SAP Labs)</span
+                        >-->
                     </p>
 
                     <div class="flex flex-wrap justify-center gap-3 mb-12">
-                        <a href="blog.html" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">
+                        <a
+                            href="blog.html"
+                            class="inline-flex items-center px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800"
+                        >
                             <i class="fas fa-book-open mr-2 text-xs"></i>Blog
                         </a>
-                        <a href="#" class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+                        <a
+                            href="#"
+                            class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50"
+                        >
                             <i class="fas fa-file-pdf mr-2 text-xs"></i>Paper
                         </a>
-                        <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+                        <a
+                            href="https://github.com/cooperbench/CooperBench"
+                            target="_blank"
+                            class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50"
+                        >
                             <i class="fab fa-github mr-2 text-xs"></i>Code
                         </a>
-                        <a href="https://huggingface.co/CodeConflict" target="_blank" class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+                        <a
+                            href="https://huggingface.co/CodeConflict"
+                            target="_blank"
+                            class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50"
+                        >
                             <i class="fas fa-database mr-2 text-xs"></i>Dataset
                         </a>
                     </div>
@@ -112,9 +279,20 @@
             <!-- TL;DR -->
             <section class="pb-12 px-6">
                 <div class="max-w-3xl mx-auto">
-                    <div class="bg-gray-50 rounded-xl p-6 border border-gray-100">
-                    <p class="text-lg text-gray-700 leading-relaxed">
-                            Can AI agents work together as teammates? We find that <strong>coordinating agents perform much worse than a single agent</strong> given the same total workload. This coordination deficit presents a fundamental barrier to deploying AI systems that can work alongside humans or other agents.
+                    <div
+                        class="bg-gray-50 rounded-xl p-6 border border-gray-100"
+                    >
+                        <p class="text-lg text-gray-700 leading-relaxed">
+                            Can AI agents work together as teammates? We find
+                            that
+                            <strong
+                                >coordinating agents perform much worse than a
+                                single agent</strong
+                            >
+                            given the same total workload. This coordination
+                            deficit presents a fundamental barrier to deploying
+                            AI systems that can work alongside humans or other
+                            agents.
                         </p>
                     </div>
                 </div>
@@ -124,14 +302,16 @@
             <section class="py-12 px-6" id="results">
                 <div class="max-w-4xl mx-auto">
                     <div class="bg-white rounded-xl border border-gray-200 p-6">
-                        <img 
-                            src="static/images/main_results.png" 
+                        <img
+                            src="static/images/main_results.png"
                             alt="Main Results: Solo vs Collaborative success rates"
                             class="w-full"
                         />
                         <p class="text-sm text-gray-500 mt-4 text-center">
-                            <strong>Left.</strong> Success rates by model. Solo (blue) consistently exceeds Coop (black). 
-                            <strong>Right.</strong> The coordination gap is largest for medium-difficulty tasks.
+                            <strong>Left.</strong> Success rates by model. Solo
+                            (blue) consistently exceeds Coop (black).
+                            <strong>Right.</strong> The coordination gap is
+                            largest for medium-difficulty tasks.
                         </p>
                     </div>
                 </div>
@@ -140,41 +320,74 @@
             <!-- Key Findings (Organized like RQs) -->
             <section class="py-12 px-6">
                 <div class="max-w-3xl mx-auto">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-8">Key Findings</h2>
-                    
+                    <h2 class="text-xl font-semibold text-gray-900 mb-8">
+                        Key Findings
+                    </h2>
+
                     <div class="space-y-8">
                         <!-- Finding 1 -->
                         <div>
-                            <h3 class="text-base font-medium text-gray-900 mb-2">
+                            <h3
+                                class="text-base font-medium text-gray-900 mb-2"
+                            >
                                 1. Agents perform worse together than alone
                             </h3>
                             <p class="text-gray-600 leading-relaxed">
-                                GPT-5 and Claude Sonnet 4.5 achieve only 25% success with two-agent cooperation, roughly 50% lower than when a single agent handles both tasks. This gap persists across all models and task difficulties.
-                        </p>
-                    </div>
+                                GPT-5 and Claude Sonnet 4.5 achieve only 25%
+                                success with two-agent cooperation, roughly 50%
+                                lower than when a single agent handles both
+                                tasks. This gap persists across all models and
+                                task difficulties.
+                            </p>
+                        </div>
 
                         <!-- Finding 2 -->
                         <div>
-                            <h3 class="text-base font-medium text-gray-900 mb-2">
-                                2. Communication reduces conflicts but not failures
+                            <h3
+                                class="text-base font-medium text-gray-900 mb-2"
+                            >
+                                2. Communication reduces conflicts but not
+                                failures
                             </h3>
                             <p class="text-gray-600 leading-relaxed">
-                                Agents spend up to 20% of their budget on communication. This reduces merge conflicts but does not improve overall success. The channel is jammed with repetition, unresponsiveness, and hallucination.
+                                Agents spend up to 20% of their budget on
+                                communication. This reduces merge conflicts but
+                                does not improve overall success. The channel is
+                                jammed with repetition, unresponsiveness, and
+                                hallucination.
                             </p>
-                    </div>
+                        </div>
 
                         <!-- Finding 3 -->
                         <div>
-                            <h3 class="text-base font-medium text-gray-900 mb-2">
-                                3. Three capability gaps underlie coordination failures
+                            <h3
+                                class="text-base font-medium text-gray-900 mb-2"
+                            >
+                                3. Three capability gaps underlie coordination
+                                failures
                             </h3>
                             <p class="text-gray-600 leading-relaxed mb-3">
-                                Even when agents communicate well, coordination breaks down due to:
+                                Even when agents communicate well, coordination
+                                breaks down due to:
                             </p>
                             <ul class="text-gray-600 space-y-1 ml-4">
-                                <li><strong>Expectation failures (63%)</strong> where agents fail to integrate information about partner state</li>
-                                <li><strong>Communication failures (28%)</strong> where questions go unanswered, breaking decision loops</li>
-                                <li><strong>Commitment failures (10%)</strong> where agents break promises or make unverifiable claims</li>
+                                <li>
+                                    <strong>Expectation failures (63%)</strong>
+                                    where agents fail to integrate information
+                                    about partner state
+                                </li>
+                                <li>
+                                    <strong
+                                        >Communication failures (28%)</strong
+                                    >
+                                    where questions go unanswered, breaking
+                                    decision loops
+                                </li>
+                                <li>
+                                    <strong>Commitment failures (10%)</strong>
+                                    where agents break promises or make
+                                    unverifiable claims
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -184,73 +397,120 @@
             <!-- Emergent Coordination Patterns with Trajectory Viewer -->
             <section class="py-12 px-6 bg-gray-50" id="emergent">
                 <div class="max-w-4xl mx-auto">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-2">Emergent Coordination Patterns</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-2">
+                        Emergent Coordination Patterns
+                    </h2>
                     <p class="text-gray-600 mb-6">
-                        Among successful runs, we observe coordination patterns largely absent from failures. These patterns are not prompted or scaffolded.
+                        Among successful runs, we observe coordination patterns
+                        largely absent from failures. These patterns are not
+                        prompted or scaffolded.
                     </p>
 
                     <!-- Example Selector -->
                     <div class="flex flex-wrap gap-2 mb-4">
-                        <button onclick="loadExample('role_division')" id="btn-role_division" 
-                            class="px-4 py-2 text-sm font-medium transition-colors bg-blue-600 text-white rounded-lg">
+                        <button
+                            onclick="loadExample('role_division')"
+                            id="btn-role_division"
+                            class="px-4 py-2 text-sm font-medium transition-colors bg-blue-600 text-white rounded-lg"
+                        >
                             Role Division
                         </button>
-                        <button onclick="loadExample('resource_division')" id="btn-resource_division"
-                            class="px-4 py-2 text-sm font-medium transition-colors bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                        <button
+                            onclick="loadExample('resource_division')"
+                            id="btn-resource_division"
+                            class="px-4 py-2 text-sm font-medium transition-colors bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                        >
                             Resource Division
                         </button>
-                        <button onclick="loadExample('negotiation')" id="btn-negotiation"
-                            class="px-4 py-2 text-sm font-medium transition-colors bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                        <button
+                            onclick="loadExample('negotiation')"
+                            id="btn-negotiation"
+                            class="px-4 py-2 text-sm font-medium transition-colors bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                        >
                             Negotiation
                         </button>
                     </div>
 
                     <!-- Example Description -->
-                    <div id="example-description" class="mb-4 p-4 bg-white rounded-lg border border-gray-200">
+                    <div
+                        id="example-description"
+                        class="mb-4 p-4 bg-white rounded-lg border border-gray-200"
+                    >
                         <p class="text-sm text-gray-700" id="example-text">
-                            <span class="font-semibold text-blue-700">Role Division</span> — Agents agree on who handles which part of the task. One agent delegates: "I'll add header + octal_str; you add binary_str between them."
+                            <span class="font-semibold text-blue-700"
+                                >Role Division</span
+                            >
+                            — Agents agree on who handles which part of the
+                            task. One agent delegates: "I'll add header +
+                            octal_str; you add binary_str between them."
                         </p>
                     </div>
 
                     <!-- Legend -->
-                    <div class="flex flex-wrap items-center gap-4 text-xs text-gray-500 mb-3">
+                    <div
+                        class="flex flex-wrap items-center gap-4 text-xs text-gray-500 mb-3"
+                    >
                         <div class="flex items-center gap-1.5">
-                            <div class="w-2.5 h-2.5 bg-orange-400 rounded-sm"></div>
+                            <div
+                                class="w-2.5 h-2.5 bg-orange-400 rounded-sm"
+                            ></div>
                             <span>Message</span>
                         </div>
                         <div class="flex items-center gap-1.5">
-                            <div class="w-2.5 h-2.5 bg-blue-600 rounded-sm"></div>
+                            <div
+                                class="w-2.5 h-2.5 bg-blue-600 rounded-sm"
+                            ></div>
                             <span>View</span>
                         </div>
                         <div class="flex items-center gap-1.5">
-                            <div class="w-2.5 h-2.5 bg-green-500 rounded-sm"></div>
+                            <div
+                                class="w-2.5 h-2.5 bg-green-500 rounded-sm"
+                            ></div>
                             <span>Edit</span>
                         </div>
                         <div class="flex items-center gap-1.5">
-                            <div class="w-2.5 h-2.5 bg-yellow-400 rounded-sm"></div>
+                            <div
+                                class="w-2.5 h-2.5 bg-yellow-400 rounded-sm"
+                            ></div>
                             <span>Bash</span>
                         </div>
                         <div class="flex items-center gap-1.5">
-                            <div class="w-2.5 h-2.5 bg-sky-400 rounded-sm"></div>
+                            <div
+                                class="w-2.5 h-2.5 bg-sky-400 rounded-sm"
+                            ></div>
                             <span>Search</span>
                         </div>
                     </div>
 
                     <!-- Timeline Visualization -->
-                    <div class="mb-4 rounded-lg border border-gray-200 bg-white p-4">
+                    <div
+                        class="mb-4 rounded-lg border border-gray-200 bg-white p-4"
+                    >
                         <div id="timeline-container">
                             <!-- Agent A Timeline -->
                             <div class="mb-2">
                                 <div class="flex items-center gap-2">
-                                    <span class="text-xs font-medium text-red-600 w-14">Agent A</span>
-                                    <div id="timeline-a" class="relative h-3 bg-gray-100 rounded-full flex-1"></div>
+                                    <span
+                                        class="text-xs font-medium text-red-600 w-14"
+                                        >Agent A</span
+                                    >
+                                    <div
+                                        id="timeline-a"
+                                        class="relative h-3 bg-gray-100 rounded-full flex-1"
+                                    ></div>
                                 </div>
                             </div>
                             <!-- Agent B Timeline -->
                             <div>
                                 <div class="flex items-center gap-2">
-                                    <span class="text-xs font-medium text-blue-600 w-14">Agent B</span>
-                                    <div id="timeline-b" class="relative h-3 bg-gray-100 rounded-full flex-1"></div>
+                                    <span
+                                        class="text-xs font-medium text-blue-600 w-14"
+                                        >Agent B</span
+                                    >
+                                    <div
+                                        id="timeline-b"
+                                        class="relative h-3 bg-gray-100 rounded-full flex-1"
+                                    ></div>
                                 </div>
                             </div>
                         </div>
@@ -258,12 +518,25 @@
 
                     <!-- Messages List -->
                     <div class="rounded-lg border border-gray-200 bg-white">
-                        <div class="px-4 py-2 border-b border-gray-100 flex items-center justify-between">
-                            <span class="text-sm font-medium text-gray-700">Interaction Log</span>
-                            <a href="viewer.html" class="text-xs text-gray-500 hover:text-gray-700">Full viewer →</a>
+                        <div
+                            class="px-4 py-2 border-b border-gray-100 flex items-center justify-between"
+                        >
+                            <span class="text-sm font-medium text-gray-700"
+                                >Interaction Log</span
+                            >
+                            <a
+                                href="viewer.html"
+                                class="text-xs text-gray-500 hover:text-gray-700"
+                                >Full viewer →</a
+                            >
                         </div>
-                        <div id="messages-container" class="max-h-64 overflow-y-auto">
-                            <div class="text-gray-400 text-center py-6 text-sm">Loading...</div>
+                        <div
+                            id="messages-container"
+                            class="max-h-64 overflow-y-auto"
+                        >
+                            <div class="text-gray-400 text-center py-6 text-sm">
+                                Loading...
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -272,40 +545,75 @@
             <!-- About CooperBench (Collapsible) -->
             <section class="py-12 px-6" id="benchmark">
                 <div class="max-w-3xl mx-auto">
-                    <button 
-                        onclick="toggleSection('benchmark-content')" 
+                    <button
+                        onclick="toggleSection('benchmark-content')"
                         class="w-full flex items-center justify-between text-left"
                     >
-                        <h2 class="text-xl font-semibold text-gray-900">About CooperBench</h2>
-                        <i id="benchmark-icon" class="fas fa-chevron-down text-gray-400 text-sm transition-transform"></i>
+                        <h2 class="text-xl font-semibold text-gray-900">
+                            About CooperBench
+                        </h2>
+                        <i
+                            id="benchmark-icon"
+                            class="fas fa-chevron-down text-gray-400 text-sm transition-transform"
+                        ></i>
                     </button>
-                    
+
                     <div id="benchmark-content" class="mt-4">
                         <p class="text-gray-600 leading-relaxed mb-6">
-                            CooperBench is the first benchmark designed to measure how well AI agents can cooperate when handling individual tasks with potential conflicts. We constructed 652 tasks from 12 popular open-source libraries across Python, TypeScript, Go, and Rust.
+                            CooperBench is the first benchmark designed to
+                            measure how well AI agents can cooperate when
+                            handling individual tasks with potential conflicts.
+                            We constructed 652 tasks from 12 popular open-source
+                            libraries across Python, TypeScript, Go, and Rust.
                         </p>
-                        
+
                         <div class="flex flex-wrap gap-6 text-center mb-6">
                             <div>
-                                <div class="text-2xl font-semibold text-gray-900">652</div>
+                                <div
+                                    class="text-2xl font-semibold text-gray-900"
+                                >
+                                    652
+                                </div>
                                 <div class="text-sm text-gray-500">Tasks</div>
-                        </div>
+                            </div>
                             <div>
-                                <div class="text-2xl font-semibold text-gray-900">12</div>
-                                <div class="text-sm text-gray-500">Repositories</div>
-                    </div>
-                    <div>
-                                <div class="text-2xl font-semibold text-gray-900">4</div>
-                                <div class="text-sm text-gray-500">Languages</div>
-                        </div>
+                                <div
+                                    class="text-2xl font-semibold text-gray-900"
+                                >
+                                    12
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    Repositories
+                                </div>
+                            </div>
                             <div>
-                                <div class="text-2xl font-semibold text-gray-900">8</div>
-                                <div class="text-sm text-gray-500">Annotators</div>
-                    </div>
-                </div>
+                                <div
+                                    class="text-2xl font-semibold text-gray-900"
+                                >
+                                    4
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    Languages
+                                </div>
+                            </div>
+                            <div>
+                                <div
+                                    class="text-2xl font-semibold text-gray-900"
+                                >
+                                    8
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    Annotators
+                                </div>
+                            </div>
+                        </div>
 
                         <p class="text-gray-600 leading-relaxed">
-                            Each task assigns two agents different features that can be implemented independently but may conflict without proper coordination. Eight co-authors with real-world software engineering backgrounds created new features, unit tests, and ground-truth code.
+                            Each task assigns two agents different features that
+                            can be implemented independently but may conflict
+                            without proper coordination. Eight co-authors with
+                            real-world software engineering backgrounds created
+                            new features, unit tests, and ground-truth code.
                         </p>
                     </div>
                 </div>
@@ -314,266 +622,408 @@
             <!-- Getting Started -->
             <section class="py-12 px-6 bg-gray-50">
                 <div class="max-w-3xl mx-auto">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Getting Started</h2>
-                    
-                    <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-6">
-                                <pre class="text-green-400 text-sm"><code>git clone https://github.com/cooperbench/CooperBench.git
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">
+                        Getting Started
+                    </h2>
+
+                    <div
+                        class="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-6"
+                    >
+                        <pre
+                            class="text-green-400 text-sm"
+                        ><code>git clone https://github.com/cooperbench/CooperBench.git
 cd CooperBench
 pip install -r requirements.txt</code></pre>
-                        </div>
+                    </div>
 
                     <div class="flex flex-wrap gap-3">
-                        <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">
+                        <a
+                            href="https://github.com/cooperbench/CooperBench"
+                            target="_blank"
+                            class="inline-flex items-center px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800"
+                        >
                             <i class="fab fa-github mr-2"></i>GitHub
                         </a>
-                        <a href="https://huggingface.co/CodeConflict" target="_blank" class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-white">
+                        <a
+                            href="https://huggingface.co/CodeConflict"
+                            target="_blank"
+                            class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-white"
+                        >
                             <i class="fas fa-database mr-2"></i>HuggingFace
                         </a>
-                        </div>
-                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- BibTeX -->
             <section class="py-12 px-6" id="citation">
                 <div class="max-w-3xl mx-auto">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-semibold text-gray-900">Citation</h2>
-                        <button onclick="copyBibTeX()" class="text-sm text-gray-500 hover:text-gray-700">
+                        <h2 class="text-xl font-semibold text-gray-900">
+                            Citation
+                        </h2>
+                        <button
+                            onclick="copyBibTeX()"
+                            class="text-sm text-gray-500 hover:text-gray-700"
+                        >
                             <i class="fas fa-copy mr-1"></i>Copy
                         </button>
-                        </div>
-                    <pre id="bibtex-code" class="bg-gray-50 rounded-lg p-4 text-xs text-gray-600 overflow-x-auto border border-gray-200"><code>@article{cooperbench2026,
+                    </div>
+                    <pre
+                        id="bibtex-code"
+                        class="bg-gray-50 rounded-lg p-4 text-xs text-gray-600 overflow-x-auto border border-gray-200"
+                    ><code>@article{cooperbench2026,
   title={CooperBench: Why Coding Agents Cannot be Your Teammates Yet},
-  author={Khatua*, Arpandeep and Zhu*, Hao and Tran†, Peter and Prabhudesai†, Arya 
-          and Sadrieh†, Frederic and Lieberwirth†, Johann K. and Yu, Xinkai 
+  author={Khatua*, Arpandeep and Zhu*, Hao and Tran†, Peter and Prabhudesai†, Arya
+          and Sadrieh†, Frederic and Lieberwirth†, Johann K. and Yu, Xinkai
           and Fu, Yicheng and Ryan, Michael J. and Pei, Jiaxin and Yang, Diyi},
   journal={arXiv preprint},
   year={2026},
   url={https://cooperbench.com/},
   note={*Equal contribution (Stanford) · †Equal contribution (SAP Labs)}
 }</code></pre>
-                    </div>
+                </div>
             </section>
 
             <!-- Authors -->
             <section class="py-12 px-6 bg-gray-50" id="authors">
                 <div class="max-w-4xl mx-auto">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-8 text-center">Authors</h2>
-                    
+                    <h2
+                        class="text-xl font-semibold text-gray-900 mb-8 text-center"
+                    >
+                        Authors
+                    </h2>
+
                     <div class="flex flex-wrap justify-center gap-8">
-                        <a href="https://arpandeep.com/" target="_blank" class="text-center group">
-                            <img src="static/images/arpan.jpg" alt="Arpandeep Khatua" class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition" />
-                            <div class="text-sm font-medium text-gray-900">Arpandeep Khatua*</div>
+                        <a
+                            href="https://arpandeep.com/"
+                            target="_blank"
+                            class="text-center group"
+                        >
+                            <img
+                                src="static/images/arpan.jpg"
+                                alt="Arpandeep Khatua"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                            />
+                            <div class="text-sm font-medium text-gray-900">
+                                Arpandeep Khatua*
+                            </div>
                         </a>
-                        <a href="https://hao.computer/" target="_blank" class="text-center group">
-                            <img src="static/images/hao_zhu.png" alt="Hao Zhu" class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition" />
-                            <div class="text-sm font-medium text-gray-900">Hao Zhu*</div>
+                        <a
+                            href="https://hao.computer/"
+                            target="_blank"
+                            class="text-center group"
+                        >
+                            <img
+                                src="static/images/hao_zhu.png"
+                                alt="Hao Zhu"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                            />
+                            <div class="text-sm font-medium text-gray-900">
+                                Hao Zhu*
+                            </div>
                         </a>
-                        <a href="https://www.linkedin.com/in/thekiet/" target="_blank" class="text-center group">
-                            <img src="static/images/peter.jpeg" alt="Peter Tran" class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition" />
-                            <div class="text-sm font-medium text-gray-900">Peter Tran†</div>
+                        <a
+                            href="https://www.linkedin.com/in/thekiet/"
+                            target="_blank"
+                            class="text-center group"
+                        >
+                            <img
+                                src="static/images/peter.jpeg"
+                                alt="Peter Tran"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                            />
+                            <div class="text-sm font-medium text-gray-900">
+                                Peter Tran†
+                            </div>
                         </a>
-                        <a href="https://www.linkedin.com/in/arya-prabhudesai/" target="_blank" class="text-center group">
-                            <img src="static/images/arya.png" alt="Arya Prabhudesai" class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition" />
-                            <div class="text-sm font-medium text-gray-900">Arya Prabhudesai†</div>
+                        <a
+                            href="https://www.linkedin.com/in/arya-prabhudesai/"
+                            target="_blank"
+                            class="text-center group"
+                        >
+                            <img
+                                src="static/images/arya.png"
+                                alt="Arya Prabhudesai"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                            />
+                            <div class="text-sm font-medium text-gray-900">
+                                Arya Prabhudesai†
+                            </div>
                         </a>
-                        <a href="https://fsadrieh.github.io/" target="_blank" class="text-center group">
-                            <img src="static/images/frederic.jpg" alt="Frederic Sadrieh" class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition" />
-                            <div class="text-sm font-medium text-gray-900">Frederic Sadrieh†</div>
+                        <a
+                            href="https://fsadrieh.github.io/"
+                            target="_blank"
+                            class="text-center group"
+                        >
+                            <img
+                                src="static/images/frederic.jpg"
+                                alt="Frederic Sadrieh"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                            />
+                            <div class="text-sm font-medium text-gray-900">
+                                Frederic Sadrieh†
+                            </div>
                         </a>
                         <div class="text-center">
-                            <div class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium">JL</div>
-                            <div class="text-sm font-medium text-gray-900">Johann K. Lieberwirth†</div>
+                            <div
+                                class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium"
+                            >
+                                JL
+                            </div>
+                            <div class="text-sm font-medium text-gray-900">
+                                Johann K. Lieberwirth†
+                            </div>
                         </div>
                         <div class="text-center">
-                            <div class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium">XY</div>
-                            <div class="text-sm font-medium text-gray-900">Xinkai Yu</div>
-                                </div>
-                        <div class="text-center">
-                            <div class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium">YF</div>
-                            <div class="text-sm font-medium text-gray-900">Yicheng Fu</div>
+                            <div
+                                class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium"
+                            >
+                                XY
+                            </div>
+                            <div class="text-sm font-medium text-gray-900">
+                                Xinkai Yu
+                            </div>
                         </div>
-                        <a href="https://michryan.com/" target="_blank" class="text-center group">
-                            <img src="static/images/michaelryan.jpg" alt="Michael J. Ryan" class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition" />
-                            <div class="text-sm font-medium text-gray-900">Michael J. Ryan</div>
+                        <div class="text-center">
+                            <div
+                                class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium"
+                            >
+                                YF
+                            </div>
+                            <div class="text-sm font-medium text-gray-900">
+                                Yicheng Fu
+                            </div>
+                        </div>
+                        <a
+                            href="https://michryan.com/"
+                            target="_blank"
+                            class="text-center group"
+                        >
+                            <img
+                                src="static/images/michaelryan.jpg"
+                                alt="Michael J. Ryan"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                            />
+                            <div class="text-sm font-medium text-gray-900">
+                                Michael J. Ryan
+                            </div>
                         </a>
                         <div class="text-center">
-                            <div class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium">JP</div>
-                            <div class="text-sm font-medium text-gray-900">Jiaxin Pei</div>
+                            <div
+                                class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium"
+                            >
+                                JP
+                            </div>
+                            <div class="text-sm font-medium text-gray-900">
+                                Jiaxin Pei
+                            </div>
                         </div>
-                        <a href="https://cs.stanford.edu/~diyiy/" target="_blank" class="text-center group">
-                            <img src="static/images/diyi_yang.png" alt="Diyi Yang" class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition" />
-                            <div class="text-sm font-medium text-gray-900">Diyi Yang</div>
-                            </a>
+                        <a
+                            href="https://cs.stanford.edu/~diyiy/"
+                            target="_blank"
+                            class="text-center group"
+                        >
+                            <img
+                                src="static/images/diyi_yang.png"
+                                alt="Diyi Yang"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 grayscale group-hover:grayscale-0 transition"
+                            />
+                            <div class="text-sm font-medium text-gray-900">
+                                Diyi Yang
+                            </div>
+                        </a>
                     </div>
 
                     <p class="text-center text-sm text-gray-500 mt-6">
-                        Stanford University & SAP Labs · *Equal contribution (Stanford) · †Equal contribution (SAP Labs)
+                        Stanford University & SAP Labs · *Equal contribution
+                        (Stanford) · †Equal contribution (SAP Labs)
                     </p>
                 </div>
             </section>
-
         </main>
 
         <!-- Footer -->
         <footer class="py-8 px-6 border-t border-gray-100">
             <div class="max-w-4xl mx-auto text-center text-sm text-gray-400">
                 <p>CooperBench · Stanford University</p>
-                </div>
-            </footer>
+            </div>
+        </footer>
 
-            <script>
+        <script>
             function toggleSection(id) {
                 const content = document.getElementById(id);
-                const iconId = id.replace('-content', '-icon');
+                const iconId = id.replace("-content", "-icon");
                 const icon = document.getElementById(iconId);
-                
-                if (content.classList.contains('hidden')) {
-                    content.classList.remove('hidden');
-                    icon.style.transform = 'rotate(0deg)';
+
+                if (content.classList.contains("hidden")) {
+                    content.classList.remove("hidden");
+                    icon.style.transform = "rotate(0deg)";
                 } else {
-                    content.classList.add('hidden');
-                    icon.style.transform = 'rotate(-90deg)';
+                    content.classList.add("hidden");
+                    icon.style.transform = "rotate(-90deg)";
                 }
             }
 
             function copyBibTeX() {
-                const bibtex = document.getElementById('bibtex-code').textContent;
+                const bibtex =
+                    document.getElementById("bibtex-code").textContent;
                 navigator.clipboard.writeText(bibtex);
             }
 
             // Trajectory Viewer - Emergent Behaviors
-                const exampleFiles = {
-                    role_division: 'delegation_claude_dottxt_ai_outlines_task_task1655_feature2_feature3_k1.json',
-                    resource_division: 'agency_gpt5_llama_index_task_task17244_feature1_feature5_k1.json',
-                    negotiation: 'negotiation_claude_samuelcolvin_dirty_equals_task_task43_feature7_feature8_k1.json'
+            const exampleFiles = {
+                role_division:
+                    "delegation_claude_dottxt_ai_outlines_task_task1655_feature2_feature3_k1.json",
+                resource_division:
+                    "agency_gpt5_llama_index_task_task17244_feature1_feature5_k1.json",
+                negotiation:
+                    "negotiation_claude_samuelcolvin_dirty_equals_task_task43_feature7_feature8_k1.json",
+            };
+
+            const exampleDescriptions = {
+                role_division:
+                    '<span class="font-semibold text-blue-700">Role Division</span> — Agents agree on who handles which part of the task. One agent delegates: "I\'ll add header + octal_str; you add binary_str between them."',
+                resource_division:
+                    '<span class="font-semibold text-green-700">Resource Division</span> — Agents avoid collisions by partitioning shared resources. One declares: "I will modify ONLY lines 68-84" and the other confirms: "I will NOT edit lines 68-84."',
+                negotiation:
+                    '<span class="font-semibold text-amber-700">Negotiation</span> — Agents resolve conflicting approaches by proposing alternatives. They present options ("Option 1 vs Option 2") and reach explicit agreement before acting.',
+            };
+
+            const exampleData = {};
+            let currentExample = "role_division";
+
+            function getToolColor(toolType) {
+                const colors = {
+                    communication: "bg-orange-400",
+                    view: "bg-blue-600",
+                    edit: "bg-green-500",
+                    bash: "bg-yellow-400",
+                    submit: "bg-red-500",
+                    find_grep: "bg-sky-400",
+                    search: "bg-sky-400",
                 };
+                return colors[toolType] || "bg-gray-400";
+            }
 
-                const exampleDescriptions = {
-                role_division: '<span class="font-semibold text-blue-700">Role Division</span> — Agents agree on who handles which part of the task. One agent delegates: "I\'ll add header + octal_str; you add binary_str between them."',
-                resource_division: '<span class="font-semibold text-green-700">Resource Division</span> — Agents avoid collisions by partitioning shared resources. One declares: "I will modify ONLY lines 68-84" and the other confirms: "I will NOT edit lines 68-84."',
-                negotiation: '<span class="font-semibold text-amber-700">Negotiation</span> — Agents resolve conflicting approaches by proposing alternatives. They present options ("Option 1 vs Option 2") and reach explicit agreement before acting.'
+            async function loadExample(type) {
+                currentExample = type;
+
+                // Update button styles
+                const buttonColors = {
+                    role_division: "blue",
+                    resource_division: "green",
+                    negotiation: "amber",
                 };
-
-                const exampleData = {};
-                let currentExample = 'role_division';
-
-                function getToolColor(toolType) {
-                    const colors = {
-                        communication: 'bg-orange-400',
-                        view: 'bg-blue-600',
-                        edit: 'bg-green-500',
-                        bash: 'bg-yellow-400',
-                        submit: 'bg-red-500',
-                        find_grep: 'bg-sky-400',
-                        search: 'bg-sky-400'
-                    };
-                    return colors[toolType] || 'bg-gray-400';
-                }
-
-                async function loadExample(type) {
-                    currentExample = type;
-                    
-                    // Update button styles
-                const buttonColors = { role_division: 'blue', resource_division: 'green', negotiation: 'amber' };
-                    ['role_division', 'resource_division', 'negotiation'].forEach(btn => {
+                ["role_division", "resource_division", "negotiation"].forEach(
+                    (btn) => {
                         const el = document.getElementById(`btn-${btn}`);
                         if (el) {
                             if (btn === type) {
-                            const color = buttonColors[btn];
-                            el.className = `px-4 py-2 text-sm font-medium transition-colors bg-${color}-600 text-white rounded-lg`;
+                                const color = buttonColors[btn];
+                                el.className = `px-4 py-2 text-sm font-medium transition-colors bg-${color}-600 text-white rounded-lg`;
                             } else {
-                            el.className = 'px-4 py-2 text-sm font-medium transition-colors bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200';
+                                el.className =
+                                    "px-4 py-2 text-sm font-medium transition-colors bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200";
                             }
                         }
-                    });
+                    },
+                );
 
-                    // Update description
-                    document.getElementById('example-text').innerHTML = exampleDescriptions[type];
+                // Update description
+                document.getElementById("example-text").innerHTML =
+                    exampleDescriptions[type];
 
-                    try {
-                        if (!exampleData[type]) {
-                            const response = await fetch(`static/data/${exampleFiles[type]}`);
-                            exampleData[type] = await response.json();
-                        }
-                        renderTimeline(exampleData[type]);
-                        renderMessages(exampleData[type]);
-                    } catch (error) {
-                        console.error('Error loading example:', error);
-                        document.getElementById('messages-container').innerHTML = 
-                        '<div class="text-gray-400 text-center py-6 text-sm">Error loading trajectory data.</div>';
+                try {
+                    if (!exampleData[type]) {
+                        const response = await fetch(
+                            `static/data/${exampleFiles[type]}`,
+                        );
+                        exampleData[type] = await response.json();
                     }
+                    renderTimeline(exampleData[type]);
+                    renderMessages(exampleData[type]);
+                } catch (error) {
+                    console.error("Error loading example:", error);
+                    document.getElementById("messages-container").innerHTML =
+                        '<div class="text-gray-400 text-center py-6 text-sm">Error loading trajectory data.</div>';
                 }
+            }
 
-                function renderTimeline(data) {
-                    const agents = {};
-                    data.forEach(step => {
-                        if (!agents[step.agentId]) agents[step.agentId] = [];
-                        agents[step.agentId].push(step);
-                    });
+            function renderTimeline(data) {
+                const agents = {};
+                data.forEach((step) => {
+                    if (!agents[step.agentId]) agents[step.agentId] = [];
+                    agents[step.agentId].push(step);
+                });
 
-                    const agentIds = Object.keys(agents).sort();
-                    const agentA = agentIds[0] || 'agent_1';
-                    const agentB = agentIds[1] || 'agent_2';
+                const agentIds = Object.keys(agents).sort();
+                const agentA = agentIds[0] || "agent_1";
+                const agentB = agentIds[1] || "agent_2";
 
-                    const allTimes = data.map(s => s.timestampMs);
-                    const minTime = Math.min(...allTimes);
-                    const maxTime = Math.max(...allTimes);
-                    const duration = maxTime - minTime || 1;
+                const allTimes = data.map((s) => s.timestampMs);
+                const minTime = Math.min(...allTimes);
+                const maxTime = Math.max(...allTimes);
+                const duration = maxTime - minTime || 1;
 
-                    // Render timeline A
-                    const timelineA = document.getElementById('timeline-a');
-                    timelineA.innerHTML = '';
-                    (agents[agentA] || []).forEach(step => {
-                        const left = ((step.timestampMs - minTime) / duration) * 98;
-                        const block = document.createElement('div');
-                        block.className = `absolute top-0 h-full ${getToolColor(step.toolType)} cursor-pointer hover:opacity-80 transition-opacity rounded-full`;
-                        block.style.left = `${left}%`;
-                        block.style.width = '2%';
-                    block.style.minWidth = '4px';
-                        block.onclick = () => scrollToMessage(step.id);
-                        timelineA.appendChild(block);
-                    });
+                // Render timeline A
+                const timelineA = document.getElementById("timeline-a");
+                timelineA.innerHTML = "";
+                (agents[agentA] || []).forEach((step) => {
+                    const left = ((step.timestampMs - minTime) / duration) * 98;
+                    const block = document.createElement("div");
+                    block.className = `absolute top-0 h-full ${getToolColor(step.toolType)} cursor-pointer hover:opacity-80 transition-opacity rounded-full`;
+                    block.style.left = `${left}%`;
+                    block.style.width = "2%";
+                    block.style.minWidth = "4px";
+                    block.onclick = () => scrollToMessage(step.id);
+                    timelineA.appendChild(block);
+                });
 
-                    // Render timeline B
-                    const timelineB = document.getElementById('timeline-b');
-                    timelineB.innerHTML = '';
-                    (agents[agentB] || []).forEach(step => {
-                        const left = ((step.timestampMs - minTime) / duration) * 98;
-                        const block = document.createElement('div');
-                        block.className = `absolute top-0 h-full ${getToolColor(step.toolType)} cursor-pointer hover:opacity-80 transition-opacity rounded-full`;
-                        block.style.left = `${left}%`;
-                        block.style.width = '2%';
-                    block.style.minWidth = '4px';
-                        block.onclick = () => scrollToMessage(step.id);
-                        timelineB.appendChild(block);
-                    });
-                }
+                // Render timeline B
+                const timelineB = document.getElementById("timeline-b");
+                timelineB.innerHTML = "";
+                (agents[agentB] || []).forEach((step) => {
+                    const left = ((step.timestampMs - minTime) / duration) * 98;
+                    const block = document.createElement("div");
+                    block.className = `absolute top-0 h-full ${getToolColor(step.toolType)} cursor-pointer hover:opacity-80 transition-opacity rounded-full`;
+                    block.style.left = `${left}%`;
+                    block.style.width = "2%";
+                    block.style.minWidth = "4px";
+                    block.onclick = () => scrollToMessage(step.id);
+                    timelineB.appendChild(block);
+                });
+            }
 
-                function renderMessages(data) {
-                    const container = document.getElementById('messages-container');
-                    container.innerHTML = '';
+            function renderMessages(data) {
+                const container = document.getElementById("messages-container");
+                container.innerHTML = "";
 
-                    const agentIds = [...new Set(data.map(s => s.agentId))].sort();
-                    const isAgentA = id => id === agentIds[0];
+                const agentIds = [
+                    ...new Set(data.map((s) => s.agentId)),
+                ].sort();
+                const isAgentA = (id) => id === agentIds[0];
 
-                    data.forEach(step => {
-                        const isA = isAgentA(step.agentId);
-                        
-                        const msgEl = document.createElement('div');
-                        msgEl.id = `msg-${step.id}`;
-                    msgEl.className = `px-4 py-3 border-b border-gray-50 transition-colors ${isA ? 'bg-white' : 'bg-gray-50/50'}`;
+                data.forEach((step) => {
+                    const isA = isAgentA(step.agentId);
 
-                        const toolLabel = getToolLabel(step.toolType);
-                        
-                        let details = step.details || '';
-                    details = details.replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 rounded text-xs">$1</code>');
-                        details = details.replace(/\n/g, '<br>');
+                    const msgEl = document.createElement("div");
+                    msgEl.id = `msg-${step.id}`;
+                    msgEl.className = `px-4 py-3 border-b border-gray-50 transition-colors ${isA ? "bg-white" : "bg-gray-50/50"}`;
 
-                        msgEl.innerHTML = `
+                    const toolLabel = getToolLabel(step.toolType);
+
+                    let details = step.details || "";
+                    details = details.replace(
+                        /`([^`]+)`/g,
+                        '<code class="bg-gray-100 px-1 rounded text-xs">$1</code>',
+                    );
+                    details = details.replace(/\n/g, "<br>");
+
+                    msgEl.innerHTML = `
                             <div class="flex items-start gap-3">
-                                <div class="flex-shrink-0 w-14 text-xs font-medium ${isA ? 'text-red-600' : 'text-blue-600'}">
-                                    ${isA ? 'Agent A' : 'Agent B'}
+                                <div class="flex-shrink-0 w-14 text-xs font-medium ${isA ? "text-red-600" : "text-blue-600"}">
+                                    ${isA ? "Agent A" : "Agent B"}
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center gap-2 mb-1">
@@ -584,35 +1034,71 @@ pip install -r requirements.txt</code></pre>
                             </div>
                         `;
 
-                        container.appendChild(msgEl);
-                    });
-                }
+                    container.appendChild(msgEl);
+                });
+            }
 
-                function getToolLabel(toolType) {
-                    const labels = {
-                        communication: { label: 'Message', bg: 'bg-orange-100', text: 'text-orange-700' },
-                        view: { label: 'View', bg: 'bg-blue-100', text: 'text-blue-700' },
-                        edit: { label: 'Edit', bg: 'bg-green-100', text: 'text-green-700' },
-                        bash: { label: 'Bash', bg: 'bg-yellow-100', text: 'text-yellow-700' },
-                        submit: { label: 'Submit', bg: 'bg-red-100', text: 'text-red-700' },
-                        find_grep: { label: 'Search', bg: 'bg-sky-100', text: 'text-sky-700' },
-                        search: { label: 'Search', bg: 'bg-sky-100', text: 'text-sky-700' }
-                    };
-                    return labels[toolType] || { label: toolType, bg: 'bg-gray-100', text: 'text-gray-600' };
-                }
-
-                function scrollToMessage(id) {
-                    const el = document.getElementById(`msg-${id}`);
-                    if (el) {
-                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        el.classList.add('bg-yellow-50');
-                        setTimeout(() => el.classList.remove('bg-yellow-50'), 1500);
+            function getToolLabel(toolType) {
+                const labels = {
+                    communication: {
+                        label: "Message",
+                        bg: "bg-orange-100",
+                        text: "text-orange-700",
+                    },
+                    view: {
+                        label: "View",
+                        bg: "bg-blue-100",
+                        text: "text-blue-700",
+                    },
+                    edit: {
+                        label: "Edit",
+                        bg: "bg-green-100",
+                        text: "text-green-700",
+                    },
+                    bash: {
+                        label: "Bash",
+                        bg: "bg-yellow-100",
+                        text: "text-yellow-700",
+                    },
+                    submit: {
+                        label: "Submit",
+                        bg: "bg-red-100",
+                        text: "text-red-700",
+                    },
+                    find_grep: {
+                        label: "Search",
+                        bg: "bg-sky-100",
+                        text: "text-sky-700",
+                    },
+                    search: {
+                        label: "Search",
+                        bg: "bg-sky-100",
+                        text: "text-sky-700",
+                    },
+                };
+                return (
+                    labels[toolType] || {
+                        label: toolType,
+                        bg: "bg-gray-100",
+                        text: "text-gray-600",
                     }
+                );
+            }
+
+            function scrollToMessage(id) {
+                const el = document.getElementById(`msg-${id}`);
+                if (el) {
+                    el.scrollIntoView({ behavior: "smooth", block: "center" });
+                    el.classList.add("bg-yellow-50");
+                    setTimeout(() => el.classList.remove("bg-yellow-50"), 1500);
                 }
+            }
 
             // Load default example on page load
-            window.addEventListener('load', () => setTimeout(() => loadExample('role_division'), 300));
-            </script>
+            window.addEventListener("load", () =>
+                setTimeout(() => loadExample("role_division"), 300),
+            );
+        </script>
         <script src="static/js/animated-grid.js"></script>
     </body>
 </html>

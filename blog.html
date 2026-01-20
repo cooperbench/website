@@ -60,7 +60,10 @@
         <script src="https://cdn.tailwindcss.com"></script>
 
         <!-- Font Awesome (CDN) -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        />
 
         <!-- Custom Tailwind Styles -->
         <link rel="stylesheet" href="static/css/tailwind-custom.css" />
@@ -77,15 +80,14 @@
                             accent: "#0ea5e9",
                         },
                         fontFamily: {
-                            sans: [
-                                "Inter",
-                                "Segoe UI",
-                                "-apple-system",
-                                "BlinkMacSystemFont",
-                                "sans-serif",
-                            ],
+                            sans: ["Nebula Sans", "system-ui", "sans-serif"],
                             clash: ["Clash Display", "sans-serif"],
-                            serif: ["Georgia", "Cambria", "Times New Roman", "serif"],
+                            serif: [
+                                "Georgia",
+                                "Cambria",
+                                "Times New Roman",
+                                "serif",
+                            ],
                         },
                     },
                 },
@@ -93,16 +95,102 @@
         </script>
 
         <!-- Fonts -->
-        <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-            rel="stylesheet"
-        />
-
-        <!-- Local Clash Display Font -->
         <style>
             @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Light.woff2") format("woff2");
+                font-weight: 300;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-LightItalic.woff2")
+                    format("woff2");
+                font-weight: 300;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Book.woff2") format("woff2");
+                font-weight: 400;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-BookItalic.woff2")
+                    format("woff2");
+                font-weight: 400;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Medium.woff2") format("woff2");
+                font-weight: 500;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-MediumItalic.woff2")
+                    format("woff2");
+                font-weight: 500;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Semibold.woff2")
+                    format("woff2");
+                font-weight: 600;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-SemiboldItalic.woff2")
+                    format("woff2");
+                font-weight: 600;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Bold.woff2") format("woff2");
+                font-weight: 700;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-BoldItalic.woff2")
+                    format("woff2");
+                font-weight: 700;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Black.woff2") format("woff2");
+                font-weight: 800;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-BlackItalic.woff2")
+                    format("woff2");
+                font-weight: 800;
+                font-style: italic;
+                font-display: swap;
+            }
+            @font-face {
                 font-family: "Clash Display";
-                src: url("static/fonts/ClashDisplay Semibold.otf") format("opentype");
+                src: url("static/fonts/ClashDisplay Semibold.otf")
+                    format("opentype");
                 font-weight: 600;
                 font-style: normal;
                 font-display: swap;
@@ -112,39 +200,32 @@
 
     <body class="bg-white">
         <!-- Header Navigation Bar -->
-        <header class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
+        <header
+            class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-100 z-50"
+        >
             <div class="max-w-4xl mx-auto px-6">
-                <div class="flex items-center justify-between h-16">
-                    <!-- Logo -->
-                    <div class="flex-shrink-0">
+                <div class="flex items-center justify-between h-14">
+                    <a
+                        href="index.html"
+                        class="text-lg font-semibold text-gray-900"
+                        >CooperBench</a
+                    >
+                    <nav class="flex items-center gap-6">
                         <a
                             href="index.html"
-                            class="text-xl font-bold text-gray-900 hover:text-primary transition-colors duration-300 font-clash"
+                            class="text-sm text-gray-600 hover:text-gray-900"
+                            >Home</a
                         >
-                            CooperBench
-                        </a>
-                    </div>
-
-                    <!-- Navigation Links -->
-                    <nav class="flex items-center space-x-8">
-                        <a
-                            href="index.html"
-                            class="text-sm font-medium text-gray-600 hover:text-primary transition-colors duration-300"
-                        >
-                            Home
-                        </a>
                         <a
                             href="blog.html"
-                            class="text-sm font-medium text-primary transition-colors duration-300"
+                            class="text-sm text-gray-900 font-medium"
+                            >Blog</a
                         >
-                            Blog
-                        </a>
                         <a
                             href="viewer.html"
-                            class="text-sm font-medium text-gray-600 hover:text-primary transition-colors duration-300"
+                            class="text-sm text-gray-600 hover:text-gray-900"
+                            >Trajectories</a
                         >
-                            Trajectory Viewer
-                        </a>
                     </nav>
                 </div>
             </div>
@@ -153,212 +234,394 @@
         <!-- Main Content -->
         <main class="pt-24 pb-20">
             <article class="max-w-3xl mx-auto px-6">
-                
                 <!-- Article Header -->
                 <header class="mb-12">
                     <p class="text-sm text-gray-500 mb-4">January 2026</p>
-                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
+                    <h1
+                        class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6"
+                    >
                         The Curse of Coordination
                     </h1>
                     <p class="text-xl text-gray-600 leading-relaxed">
-                        Why adding a teammate makes AI agents worse, not better
+                        Why we cannot have AI agents on our teams yet.
                     </p>
                 </header>
 
                 <!-- Author Info -->
-                <div class="flex items-center gap-4 mb-12 pb-8 border-b border-gray-200">
+                <div
+                    class="flex items-center gap-4 mb-12 pb-8 border-b border-gray-200"
+                >
                     <div class="flex -space-x-2">
-                        <img src="static/images/arpan.jpg" alt="Arpandeep" class="w-10 h-10 rounded-full border-2 border-white" />
-                        <img src="static/images/hao_zhu.png" alt="Hao" class="w-10 h-10 rounded-full border-2 border-white" />
+                        <img
+                            src="static/images/arpan.jpg"
+                            alt="Arpandeep"
+                            class="w-10 h-10 rounded-full border-2 border-white"
+                        />
+                        <img
+                            src="static/images/hao_zhu.png"
+                            alt="Hao"
+                            class="w-10 h-10 rounded-full border-2 border-white"
+                        />
                     </div>
                     <div>
-                        <p class="text-sm font-medium text-gray-900">Arpandeep Khatua*, Hao Zhu*, Peter Tran†, Arya Prabhudesai†, Frederic Sadrieh†, Johann K. Lieberwirth† et al.</p>
-                        <p class="text-sm text-gray-500">Stanford University & SAP Labs</p>
-                        <p class="text-xs text-gray-400 mt-1">*Equal contribution (Stanford) · †Equal contribution (SAP Labs)</p>
+                        <p class="text-sm font-medium text-gray-900">
+                            Arpandeep Khatua, Hao Zhu
+                        </p>
                     </div>
                 </div>
 
                 <!-- Article Body -->
                 <div class="prose prose-lg max-w-none">
-                    
                     <!-- TL;DR -->
-                    <div class="mb-10 not-prose py-6 px-6 bg-blue-50 rounded-xl">
-                        <p class="text-xs font-semibold text-blue-900 uppercase tracking-wider mb-3">Quick Summary</p>
+                    <div
+                        class="mb-10 not-prose py-6 px-6 bg-blue-50 rounded-xl"
+                    >
+                        <p
+                            class="text-xs font-semibold text-blue-900 uppercase tracking-wider mb-3"
+                        >
+                            Quick Summary
+                        </p>
                         <p class="text-gray-800 leading-relaxed">
-                            We built a benchmark to test whether AI coding agents can work together. They can't. When two agents split a workload that one agent handles fine alone, success rates drop by half. The problem isn't that they lack skill. It's that they lack the ability to coordinate.
+                            We built a benchmark to test whether AI coding
+                            agents can work together. They can't. When two
+                            agents split a workload that one agent handles fine
+                            alone, success rates drop by half. The problem isn't
+                            that they lack skill. It's that they lack the
+                            ability to coordinate.
                         </p>
                     </div>
 
                     <!-- Introduction -->
                     <p class="text-lg text-gray-700 leading-relaxed mb-6">
-                        Imagine you're pair programming with a colleague. Now imagine they don't follow the plan, ignore half your questions, and sometimes just lie about what they've done. That's what it's like when AI agents try to work together.
+                        Imagine you're pair programming with a colleague. Now
+                        imagine they don't follow the plan, ignore half your
+                        questions, and sometimes just lie about what they've
+                        done. That's what it's like when AI agents try to work
+                        together.
                     </p>
 
                     <p class="text-lg text-gray-700 leading-relaxed mb-6">
-                        Most achievements in modern civilization arise from individuals working cooperatively. From the construction of cathedrals to the development of open-source software, human teams consistently outperform individuals on complex tasks. As AI agents become more capable, we naturally expect these abilities to translate to effective teamwork.
+                        Most achievements in modern civilization arise from
+                        individuals working cooperatively. From the construction
+                        of cathedrals to the development of open-source
+                        software, human teams consistently outperform
+                        individuals on complex tasks. As AI agents become more
+                        capable, we naturally expect these abilities to
+                        translate to effective teamwork with other agents and
+                        humans.
                     </p>
 
                     <p class="text-lg text-gray-700 leading-relaxed mb-6">
-                        We tested this assumption. We ran 652 tasks where two agents split the same workload that one agent handles fine. Success rates dropped by half.
+                        We tested this assumption. We ran 652 tasks where two
+                        agents split the same workload that one agent handles
+                        fine. Success rates dropped by half.
                     </p>
 
                     <!-- Section: The Setup -->
-                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">The setup</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">
+                        The setup
+                    </h2>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        In human teams, adding teammates should improve productivity. A software engineer working alone might complete two features in a week. Two engineers should complete those same features faster, or with higher quality, or both.
+                        In human teams, adding teammates should improve
+                        productivity. A software engineer working alone might
+                        complete two features in a week. Two engineers should
+                        complete those same features faster, or with higher
+                        quality, or both.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        We wanted to know if AI agents follow the same pattern. So we built a benchmark called CooperBench. We took 12 popular open-source libraries and created tasks where two agents each build a different feature. The features are compatible. They can be merged. But they touch the same files. If the agents don't coordinate, their code will conflict.
+                        We wanted to know if AI agents follow the same pattern.
+                        So we built a benchmark called CooperBench. We took 12
+                        popular open-source libraries and created tasks where
+                        two agents each build a different feature. The features
+                        are compatible. They can be merged. But they touch the
+                        same files. If the agents don't coordinate, their code
+                        will conflict.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-8">
-                        This is how real software development works. Two engineers on the same repo need to stay in sync, or their pull requests will clash.
+                        This is how real software development works. Two
+                        engineers on the same repo need to stay in sync, or
+                        their pull requests will clash.
                     </p>
 
                     <!-- Section: The Curse of Coordination -->
-                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">The curse of coordination</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">
+                        The curse of coordination
+                    </h2>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        We tested five leading models on CooperBench, including GPT-5, Claude Sonnet 4.5, and MiniMax M2. The results were consistent across all of them.
+                        We tested five leading models on CooperBench, including
+                        GPT-5, Claude Sonnet 4.5, and MiniMax M2. The results
+                        were consistent across all of them.
                     </p>
 
                     <div class="mb-8 not-prose py-5 px-6 bg-red-50 rounded-xl">
                         <p class="text-gray-800 leading-relaxed">
-                            <span class="font-semibold text-gray-900">GPT-5 and Claude Sonnet 4.5</span> achieve only <span class="font-semibold text-red-600">25% success</span> when two agents cooperate. That's <span class="font-semibold text-red-600">50% lower</span> than one agent doing both features alone.
+                            <span class="font-semibold text-gray-900"
+                                >GPT-5 and Claude Sonnet 4.5</span
+                            >
+                            achieve only
+                            <span class="font-semibold text-red-600"
+                                >25% success</span
+                            >
+                            when two agents cooperate. That's
+                            <span class="font-semibold text-red-600"
+                                >50% lower</span
+                            >
+                            than one agent doing both features alone.
                         </p>
                     </div>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        This held across easy, medium, and hard tasks. We call it the <em>curse of coordination</em>. Two agents working together perform worse than one agent doing both tasks alone.
+                        This held across easy, medium, and hard tasks. We call
+                        it the <em>curse of coordination</em>. Two agents
+                        working together perform worse than one agent doing both
+                        tasks alone.
                     </p>
 
                     <!-- Main Results Figure -->
                     <figure class="my-10 not-prose">
-                        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-                            <img 
-                                src="static/images/main_results.png" 
+                        <div
+                            class="bg-white rounded-xl p-4 shadow-sm border border-gray-200"
+                        >
+                            <img
+                                src="static/images/main_results.png"
                                 alt="Main results showing Solo vs Cooperative success rates"
                                 class="w-full rounded-lg"
                             />
                         </div>
-                        <figcaption class="text-sm text-gray-500 mt-4 text-center">
-                            Solo performance consistently beats cooperative performance across all models. The gap is largest for medium-difficulty tasks.
+                        <figcaption
+                            class="text-sm text-gray-500 mt-4 text-center"
+                        >
+                            Solo performance consistently beats cooperative
+                            performance across all models. The gap is largest
+                            for medium-difficulty tasks.
                         </figcaption>
                     </figure>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        The gap is largest for tasks of medium difficulty. When tasks are trivially easy, agents can spare effort for coordination. When tasks are impossibly hard, coordination problems are overshadowed by technical challenges. But in the middle, where most real work happens, the coordination overhead becomes the limiting factor.
+                        The gap is largest for tasks of medium difficulty. When
+                        tasks are trivially easy, agents can spare effort for
+                        coordination. When tasks are impossibly hard,
+                        coordination problems are overshadowed by technical
+                        challenges. But in the middle, where most real work
+                        happens, the coordination overhead becomes the limiting
+                        factor.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-8">
-                        We also tried scaling to more agents. Performance kept dropping. With 2 agents we saw 68.6% success. With 3 it fell to 46.5%. With 4 it dropped to 30.0%. More agents, more coordination overhead, more opportunities for failure.
+                        We also tried scaling to more agents. Performance kept
+                        dropping. With 2 agents we saw 68.6% success. With 3 it
+                        fell to 46.5%. With 4 it dropped to 30.0%. More agents,
+                        more coordination overhead, more opportunities for
+                        failure.
                     </p>
 
                     <!-- Section: Communication -->
-                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">What is jamming the communication channel</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">
+                        What is jamming the communication channel
+                    </h2>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        Our agents have access to a communication tool that allows them to send natural language messages to each other in real time. If the curse of coordination stems from a lack of communication, then agents that communicate more should perform better. Right?
+                        Our agents have access to a communication tool that
+                        allows them to send natural language messages to each
+                        other in real time. If the curse of coordination stems
+                        from a lack of communication, then agents that
+                        communicate more should perform better. Right?
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        We compared performance with and without the communication tool. Communication does reduce merge conflicts. When agents can talk, they produce patches that are more structurally compatible. They learn about each other's plans and adjust.
+                        We compared performance with and without the
+                        communication tool. Communication does reduce merge
+                        conflicts. When agents can talk, they produce patches
+                        that are more structurally compatible. They learn about
+                        each other's plans and adjust.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        But communication does not improve overall success. Despite fewer merge conflicts, the final merged code does not pass more tests.
+                        But communication does not improve overall success.
+                        Despite fewer merge conflicts, the final merged code
+                        does not pass more tests.
                     </p>
 
                     <!-- Communication Figure -->
                     <figure class="my-10 not-prose">
-                        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-                            <img 
-                                src="static/images/conflict_rate_change_scatter.png" 
+                        <div
+                            class="bg-white rounded-xl p-4 shadow-sm border border-gray-200"
+                        >
+                            <img
+                                src="static/images/conflict_rate_change_scatter.png"
                                 alt="Effect of communication on cooperation"
                                 class="w-full rounded-lg"
                             />
                         </div>
-                        <figcaption class="text-sm text-gray-500 mt-4 text-center">
-                            Communication doesn't improve success rates, but it does reduce merge conflicts. Agents spend up to 20% of their action budget on communication.
+                        <figcaption
+                            class="text-sm text-gray-500 mt-4 text-center"
+                        >
+                            Communication doesn't improve success rates, but it
+                            does reduce merge conflicts. Agents spend up to 20%
+                            of their action budget on communication.
                         </figcaption>
                     </figure>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        Agents are talking a lot. They spend up to 20% of their action budget on communication. But why doesn't all this effort translate into better outcomes?
+                        Agents are talking a lot. They spend up to 20% of their
+                        action budget on communication. But why doesn't all this
+                        effort translate into better outcomes?
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        We identified three major problems in agent communication.
+                        We identified three major problems in agent
+                        communication.
                     </p>
 
                     <div class="space-y-4 mb-8 not-prose">
                         <div class="border-l-4 border-orange-400 pl-5 py-3">
-                            <h4 class="font-semibold text-gray-900 mb-1">Repetition</h4>
-                            <p class="text-gray-600">Agents send the same information multiple times. Verbose status updates add little new information. The channel becomes noisy.</p>
+                            <h4 class="font-semibold text-gray-900 mb-1">
+                                Repetition
+                            </h4>
+                            <p class="text-gray-600">
+                                Agents send the same information multiple times.
+                                Verbose status updates add little new
+                                information. The channel becomes noisy.
+                            </p>
                         </div>
                         <div class="border-l-4 border-orange-400 pl-5 py-3">
-                            <h4 class="font-semibold text-gray-900 mb-1">Unresponsiveness</h4>
-                            <p class="text-gray-600">Direct questions go unanswered. One agent asks "Which approach would you prefer?" Silence. Both agents keep working with different assumptions.</p>
+                            <h4 class="font-semibold text-gray-900 mb-1">
+                                Unresponsiveness
+                            </h4>
+                            <p class="text-gray-600">
+                                Direct questions go unanswered. One agent asks
+                                "Which approach would you prefer?" Silence. Both
+                                agents keep working with different assumptions.
+                            </p>
                         </div>
                         <div class="border-l-4 border-orange-400 pl-5 py-3">
-                            <h4 class="font-semibold text-gray-900 mb-1">Hallucination</h4>
-                            <p class="text-gray-600">Agents claim things that aren't true. They say they finished changes that were never made. They describe code that doesn't exist. Lies make coordination harder, not easier.</p>
+                            <h4 class="font-semibold text-gray-900 mb-1">
+                                Hallucination
+                            </h4>
+                            <p class="text-gray-600">
+                                Agents claim things that aren't true. They say
+                                they finished changes that were never made. They
+                                describe code that doesn't exist. Lies make
+                                coordination harder, not easier.
+                            </p>
                         </div>
                     </div>
 
                     <!-- Communication Errors Figure -->
                     <figure class="my-10 not-prose">
-                        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-                            <img 
-                                src="static/images/conversation_errors_v5_buckets.png" 
+                        <div
+                            class="bg-white rounded-xl p-4 shadow-sm border border-gray-200"
+                        >
+                            <img
+                                src="static/images/conversation_errors_v5_buckets.png"
                                 alt="Communication error patterns across models"
                                 class="w-full rounded-lg"
                             />
                         </div>
-                        <figcaption class="text-sm text-gray-500 mt-4 text-center">
-                            All models show high rates of repetition, unresponsiveness, and hallucination in their communication.
+                        <figcaption
+                            class="text-sm text-gray-500 mt-4 text-center"
+                        >
+                            All models show high rates of repetition,
+                            unresponsiveness, and hallucination in their
+                            communication.
                         </figcaption>
                     </figure>
 
                     <p class="text-gray-700 leading-relaxed mb-8">
-                        Communication is not just about sending messages. It's about getting things done through those messages. Agents talk a lot, but the talking doesn't accomplish anything when the channel is jammed with repetitions, unanswered questions, and lies.
+                        Communication is not just about sending messages. It's
+                        about getting things done through those messages. Agents
+                        talk a lot, but the talking doesn't accomplish anything
+                        when the channel is jammed with repetitions, unanswered
+                        questions, and lies.
                     </p>
 
                     <!-- Section: Three Capability Gaps -->
-                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">The deeper problem</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">
+                        The deeper problem
+                    </h2>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        But communication alone doesn't explain the failures. Even when agents communicate their plans clearly, coordination still breaks down. We looked at hundreds of failed runs and found three patterns.
+                        But communication alone doesn't explain the failures.
+                        Even when agents communicate their plans clearly,
+                        coordination still breaks down. We looked at hundreds of
+                        failed runs and found three patterns.
                     </p>
 
-                    <div class="bg-white border border-gray-200 rounded-xl overflow-hidden mb-8 not-prose">
+                    <div
+                        class="bg-white border border-gray-200 rounded-xl overflow-hidden mb-8 not-prose"
+                    >
                         <div class="divide-y divide-gray-200">
                             <div class="p-6">
                                 <div class="flex items-start gap-5">
-                                    <div class="flex-shrink-0 w-28 font-semibold text-gray-900">Expectation</div>
+                                    <div
+                                        class="flex-shrink-0 w-28 font-semibold text-gray-900"
+                                    >
+                                        Expectation
+                                    </div>
                                     <div class="flex-1">
-                                        <p class="text-gray-600 mb-2">Agent A says "I'm going to modify the config file and call your function." Agent B says "I'm adding code at line 50." Both agents are clear about their plans. The merge still fails.</p>
-                                        <p class="text-gray-600">The problem isn't missing information. It's that A heard B's plan and then acted like B's code wouldn't exist. This happens in 63% of failures.</p>
+                                        <p class="text-gray-600 mb-2">
+                                            Agent A says "I'm going to modify
+                                            the config file and call your
+                                            function." Agent B says "I'm adding
+                                            code at line 50." Both agents are
+                                            clear about their plans. The merge
+                                            still fails.
+                                        </p>
+                                        <p class="text-gray-600">
+                                            The problem isn't missing
+                                            information. It's that A heard B's
+                                            plan and then acted like B's code
+                                            wouldn't exist. This happens in 63%
+                                            of failures.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                             <div class="p-6">
                                 <div class="flex items-start gap-5">
-                                    <div class="flex-shrink-0 w-28 font-semibold text-gray-900">Commitment</div>
+                                    <div
+                                        class="flex-shrink-0 w-28 font-semibold text-gray-900"
+                                    >
+                                        Commitment
+                                    </div>
                                     <div class="flex-1">
-                                        <p class="text-gray-600 mb-2">The agent promises "I'll add the validation check." Later it says "Done ✓". But after merge, the validation code is missing.</p>
-                                        <p class="text-gray-600">The partner trusted this and built on it. But they couldn't verify. They were working on separate branches. Trust was all they had, and trust was misplaced.</p>
+                                        <p class="text-gray-600 mb-2">
+                                            The agent promises "I'll add the
+                                            validation check." Later it says
+                                            "Done ✓". But after merge, the
+                                            validation code is missing.
+                                        </p>
+                                        <p class="text-gray-600">
+                                            The partner trusted this and built
+                                            on it. But they couldn't verify.
+                                            They were working on separate
+                                            branches. Trust was all they had,
+                                            and trust was misplaced.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                             <div class="p-6">
                                 <div class="flex items-start gap-5">
-                                    <div class="flex-shrink-0 w-28 font-semibold text-gray-900">Communication</div>
+                                    <div
+                                        class="flex-shrink-0 w-28 font-semibold text-gray-900"
+                                    >
+                                        Communication
+                                    </div>
                                     <div class="flex-1">
-                                        <p class="text-gray-600 mb-2">Agent A asks "Which approach do you prefer?" Silence.</p>
-                                        <p class="text-gray-600">A needed a decision to move forward. Without one, both agents kept working with different assumptions.</p>
+                                        <p class="text-gray-600 mb-2">
+                                            Agent A asks "Which approach do you
+                                            prefer?" Silence.
+                                        </p>
+                                        <p class="text-gray-600">
+                                            A needed a decision to move forward.
+                                            Without one, both agents kept
+                                            working with different assumptions.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -366,94 +629,182 @@
                     </div>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        In all these cases, agents can't see each other's work. Each agent is guessing what its partner is doing. A merge can look clean and still be broken.
+                        In all these cases, agents can't see each other's work.
+                        Each agent is guessing what its partner is doing. A
+                        merge can look clean and still be broken.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-8">
-                        There's a tension here. Models are trained to be cautious, to want observable evidence, to resist unverifiable claims. That makes sense when users might try to mislead them. But collaboration requires trust. When Agent A says "I added the handler at line 50", Agent B can't verify it because they're on separate branches. Agents are trained to verify, but collaboration requires them to trust. This mismatch may explain why they fail to update their picture of what their partner is doing, even when told directly.
+                        There's a tension here. Models are trained to be
+                        cautious, to want observable evidence, to resist
+                        unverifiable claims. That makes sense when users might
+                        try to mislead them. But collaboration requires trust.
+                        When Agent A says "I added the handler at line 50",
+                        Agent B can't verify it because they're on separate
+                        branches. Agents are trained to verify, but
+                        collaboration requires them to trust. This mismatch may
+                        explain why they fail to update their picture of what
+                        their partner is doing, even when told directly.
                     </p>
 
                     <!-- Section: Glimmers of Hope -->
-                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">Glimmers of hope</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">
+                        Glimmers of hope
+                    </h2>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        Not all runs fail. Sometimes agents figure it out. In successful traces, we see coordination patterns that are mostly absent from failures. Nobody prompted these behaviors. They just emerge.
+                        Not all runs fail. Sometimes agents figure it out. In
+                        successful traces, we see coordination patterns that are
+                        mostly absent from failures. Nobody prompted these
+                        behaviors. They just emerge.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        The successful agents move from vague intentions to specific commitments. Instead of "I'll handle the authentication," they say "I'll modify lines 68-84 and nothing else."
+                        The successful agents move from vague intentions to
+                        specific commitments. Instead of "I'll handle the
+                        authentication," they say "I'll modify lines 68-84 and
+                        nothing else."
                     </p>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 not-prose">
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 not-prose"
+                    >
                         <div class="rounded-xl p-5 bg-green-50">
-                            <h4 class="font-semibold text-green-900 mb-2">Role division</h4>
-                            <p class="text-sm text-green-700 mb-3">Agents agree on who does what and stick to it.</p>
-                            <p class="text-xs text-green-600 italic">"I'll add header + octal_str; you add binary_str between them."</p>
+                            <h4 class="font-semibold text-green-900 mb-2">
+                                Role division
+                            </h4>
+                            <p class="text-sm text-green-700 mb-3">
+                                Agents agree on who does what and stick to it.
+                            </p>
+                            <p class="text-xs text-green-600 italic">
+                                "I'll add header + octal_str; you add binary_str
+                                between them."
+                            </p>
                         </div>
                         <div class="rounded-xl p-5 bg-green-50">
-                            <h4 class="font-semibold text-green-900 mb-2">Resource division</h4>
-                            <p class="text-sm text-green-700 mb-3">Agents claim specific lines or files and stay out of each other's way.</p>
-                            <p class="text-xs text-green-600 italic">"I will modify ONLY lines 68-84. I will NOT touch anything else."</p>
+                            <h4 class="font-semibold text-green-900 mb-2">
+                                Resource division
+                            </h4>
+                            <p class="text-sm text-green-700 mb-3">
+                                Agents claim specific lines or files and stay
+                                out of each other's way.
+                            </p>
+                            <p class="text-xs text-green-600 italic">
+                                "I will modify ONLY lines 68-84. I will NOT
+                                touch anything else."
+                            </p>
                         </div>
                         <div class="rounded-xl p-5 bg-green-50">
-                            <h4 class="font-semibold text-green-900 mb-2">Negotiation</h4>
-                            <p class="text-sm text-green-700 mb-3">Agents hash out disagreements before coding, not after.</p>
-                            <p class="text-xs text-green-600 italic">"Option 1 vs Option 2. Which do you prefer? I'll wait for your response."</p>
+                            <h4 class="font-semibold text-green-900 mb-2">
+                                Negotiation
+                            </h4>
+                            <p class="text-sm text-green-700 mb-3">
+                                Agents hash out disagreements before coding, not
+                                after.
+                            </p>
+                            <p class="text-xs text-green-600 italic">
+                                "Option 1 vs Option 2. Which do you prefer? I'll
+                                wait for your response."
+                            </p>
                         </div>
                     </div>
 
                     <p class="text-gray-700 leading-relaxed mb-8">
-                        These patterns are rare. But when they show up, things work. The capability exists. The challenge is making it reliable.
+                        These patterns are rare. But when they show up, things
+                        work. The capability exists. The challenge is making it
+                        reliable.
                     </p>
 
                     <!-- Section: What This Means -->
-                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">Where this leaves us</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mt-14 mb-6">
+                        Where this leaves us
+                    </h2>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        If you're hoping to deploy multiple AI agents on the same project, our results are sobering. Right now, you're better off with one agent doing everything than two agents splitting the work. The coordination overhead eats the gains.
+                        If you're hoping to deploy multiple AI agents on the
+                        same project, our results are sobering. Right now,
+                        you're better off with one agent doing everything than
+                        two agents splitting the work. The coordination overhead
+                        eats the gains.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        Industry labs have found workarounds. Cursor recently <a href="https://cursor.com/blog/scaling-agents" class="text-primary hover:underline">reported</a> running hundreds of concurrent agents on a single project by separating them into planners and workers with explicit role hierarchies. Our findings help explain why such scaffolding is necessary. Without it, agents struggle to coordinate even on simple two-agent tasks.
+                        Industry labs have found workarounds. Cursor recently
+                        <a
+                            href="https://cursor.com/blog/scaling-agents"
+                            class="text-primary hover:underline"
+                            >reported</a
+                        >
+                        running hundreds of concurrent agents on a single
+                        project by separating them into planners and workers
+                        with explicit role hierarchies. Our findings help
+                        explain why such scaffolding is necessary. Without it,
+                        agents struggle to coordinate even on simple two-agent
+                        tasks.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        But scaffolding is a workaround, not a solution. It places the coordination burden on human developers who must design the right structures. And it limits flexibility. Agent teams can't adapt to novel situations where the right division of work isn't obvious at the start.
+                        But scaffolding is a workaround, not a solution. It
+                        places the coordination burden on human developers who
+                        must design the right structures. And it limits
+                        flexibility. Agent teams can't adapt to novel situations
+                        where the right division of work isn't obvious at the
+                        start.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        This matters beyond software. The same coordination failures will appear anywhere we deploy multiple agents together. Scientific research, business operations, creative projects. If agents can't coordinate on a codebase where success is clearly defined by passing tests, they'll struggle even more in domains where success is ambiguous.
+                        This matters beyond software. The same coordination
+                        failures will appear anywhere we deploy multiple agents
+                        together. Scientific research, business operations,
+                        creative projects. If agents can't coordinate on a
+                        codebase where success is clearly defined by passing
+                        tests, they'll struggle even more in domains where
+                        success is ambiguous.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        But this isn't permanent. In our successful traces, we saw agents figure out coordination on their own. They divided roles, partitioned files, negotiated approaches. The capability is there. It's just not reliable yet.
+                        But this isn't permanent. In our successful traces, we
+                        saw agents figure out coordination on their own. They
+                        divided roles, partitioned files, negotiated approaches.
+                        The capability is there. It's just not reliable yet.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        And that's what makes us hopeful. These emergent coordination behaviors give us something to work with. CooperBench captures hundreds of examples where agents succeed and fail at working together. That's a training signal. Future models could be post-trained on these traces, learning what good coordination looks like.
+                        And that's what makes us hopeful. These emergent
+                        coordination behaviors give us something to work with.
+                        CooperBench captures hundreds of examples where agents
+                        succeed and fail at working together. That's a training
+                        signal. Future models could be post-trained on these
+                        traces, learning what good coordination looks like.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-6">
-                        Even better, CooperBench isn't just a dataset. It's a live environment. You can drop models in, pair them up, and let them learn to work together through trial and error. The same tasks that expose failures today can be the training ground that fixes them.
+                        Even better, CooperBench isn't just a dataset. It's a
+                        live environment. You can drop models in, pair them up,
+                        and let them learn to work together through trial and
+                        error. The same tasks that expose failures today can be
+                        the training ground that fixes them.
                     </p>
 
                     <p class="text-gray-700 leading-relaxed mb-8">
-                        The bottleneck for multi-agent systems isn't raw ability. It's social intelligence. But social intelligence can be taught. And now we have a place to teach it.
+                        The bottleneck for multi-agent systems isn't raw
+                        ability. It's social intelligence. But social
+                        intelligence can be taught. And now we have a place to
+                        teach it.
                     </p>
-
                 </div>
 
                 <!-- Call to Action -->
                 <div class="mt-16 pt-8 border-t border-gray-200">
                     <div class="flex flex-wrap gap-4 justify-center">
-                        <a 
+                        <a
                             href="#"
                             class="inline-flex items-center px-5 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
                         >
                             <i class="fas fa-file-pdf mr-2"></i>
                             Read the Paper
                         </a>
-                        <a 
+                        <a
                             href="https://github.com/cooperbench/CooperBench"
                             target="_blank"
                             class="inline-flex items-center px-5 py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-colors"
@@ -461,7 +812,7 @@
                             <i class="fab fa-github mr-2"></i>
                             View Code
                         </a>
-                        <a 
+                        <a
                             href="https://huggingface.co/CodeConflict"
                             target="_blank"
                             class="inline-flex items-center px-5 py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-colors"
@@ -473,12 +824,18 @@
                 </div>
 
                 <!-- Citation -->
-                <div class="mt-12 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                    <h3 class="text-sm font-semibold text-gray-900 mb-3">Cite this work</h3>
-                    <pre class="text-xs text-gray-600 overflow-x-auto"><code>@article{cooperbench2026,
+                <div
+                    class="mt-12 p-6 bg-gray-50 rounded-xl border border-gray-200"
+                >
+                    <h3 class="text-sm font-semibold text-gray-900 mb-3">
+                        Cite this work
+                    </h3>
+                    <pre
+                        class="text-xs text-gray-600 overflow-x-auto"
+                    ><code>@article{cooperbench2026,
   title={CooperBench: Why Coding Agents Cannot be Your Teammates Yet},
-  author={Khatua*, Arpandeep and Zhu*, Hao and Tran†, Peter and Prabhudesai†, Arya 
-          and Sadrieh†, Frederic and Lieberwirth†, Johann K. and Yu, Xinkai 
+  author={Khatua*, Arpandeep and Zhu*, Hao and Tran†, Peter and Prabhudesai†, Arya
+          and Sadrieh†, Frederic and Lieberwirth†, Johann K. and Yu, Xinkai
           and Fu, Yicheng and Ryan, Michael J. and Pei, Jiaxin and Yang, Diyi},
   journal={arXiv preprint},
   year={2026},
@@ -486,7 +843,6 @@
   note={*Equal contribution (Stanford) · †Equal contribution (SAP Labs)}
 }</code></pre>
                 </div>
-
             </article>
         </main>
 
@@ -494,12 +850,23 @@
         <footer class="bg-gray-50 border-t border-gray-200 py-8 px-6">
             <div class="max-w-3xl mx-auto text-center text-sm text-gray-500">
                 <p class="mb-2">
-                    <a href="index.html" class="text-primary hover:underline">CooperBench</a> · 
-                    Stanford University & SAP Labs
+                    <a href="index.html" class="text-primary hover:underline"
+                        >CooperBench</a
+                    >
+                    · Stanford University & SAP Labs
                 </p>
                 <p>
-                    <a href="https://github.com/cooperbench/CooperBench" class="hover:text-gray-700">GitHub</a> · 
-                    <a href="https://huggingface.co/CodeConflict" class="hover:text-gray-700">HuggingFace</a>
+                    <a
+                        href="https://github.com/cooperbench/CooperBench"
+                        class="hover:text-gray-700"
+                        >GitHub</a
+                    >
+                    ·
+                    <a
+                        href="https://huggingface.co/CodeConflict"
+                        class="hover:text-gray-700"
+                        >HuggingFace</a
+                    >
                 </p>
             </div>
         </footer>
