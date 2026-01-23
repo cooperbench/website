@@ -79,10 +79,15 @@
                         colors: {
                             primary: "#1a1a1a",
                         },
-                        fontFamily: {
-                            sans: ["Nebula Sans", "system-ui", "sans-serif"],
-                            serif: ["Georgia", "Cambria", "serif"],
-                        },
+                    },
+                    fontFamily: {
+                        sans: [
+                            '"Nebula Sans"',
+                            "ui-sans-serif",
+                            "system-ui",
+                            "sans-serif",
+                        ],
+                        serif: ["Georgia", "Cambria", "serif"],
                     },
                 },
             };
@@ -181,10 +186,15 @@
                 font-style: italic;
                 font-display: swap;
             }
+            body,
+            .font-sans,
+            .font-display {
+                font-family: "Nebula Sans", system-ui, sans-serif !important;
+            }
         </style>
     </head>
 
-    <body class="bg-white text-gray-900">
+    <body class="bg-white text-gray-900 font-sans">
         <!-- Header -->
         <header
             class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-100 z-50"
