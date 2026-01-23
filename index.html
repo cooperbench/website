@@ -307,18 +307,8 @@
             <!-- Main Figure (The Key Result) -->
             <section class="py-12 px-6" id="results">
                 <div class="max-w-4xl mx-auto">
-                    <div class="bg-white rounded-xl border border-gray-200 p-6">
-                        <img
-                            src="static/images/main_results.png"
-                            alt="Main Results: Solo vs Collaborative success rates"
-                            class="w-full"
-                        />
-                        <p class="text-sm text-gray-500 mt-4 text-center">
-                            <strong>Left.</strong> Success rates by model. Solo
-                            (blue) consistently exceeds Coop (black).
-                            <strong>Right.</strong> The coordination gap is
-                            largest for medium-difficulty tasks.
-                        </p>
+                    <div class="bg-white rounded-xl border border-gray-200 p-6 min-h-[400px]">
+                        <div id="chart-root" class="w-full h-full"></div>
                     </div>
                 </div>
             </section>
@@ -1195,6 +1185,8 @@ pip install -r requirements.txt</code></pre>
             window.addEventListener('load', () => setTimeout(renderLeaderboard, 100));
         </script>
         <script src="static/js/animated-grid.js"></script>
+        <link rel="stylesheet" href="static/chart/chart-bundle.css" />
+        <script src="static/chart/chart-bundle.js"></script>
     </body>
 </html>
 
