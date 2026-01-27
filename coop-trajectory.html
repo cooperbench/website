@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Trajectory - CooperBench</title>
+        <meta name="description" content="View multi-agent execution trajectory from CooperBench" />
+        <link rel="icon" type="image/svg+xml" href="static/images/favicon.svg?v=2" />
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ["Nebula Sans", "system-ui", "sans-serif"],
+                        },
+                    },
+                },
+            };
+        </script>
+
+        <style>
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Light.woff2") format("woff2");
+                font-weight: 300;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Book.woff2") format("woff2");
+                font-weight: 400;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Medium.woff2") format("woff2");
+                font-weight: 500;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Semibold.woff2") format("woff2");
+                font-weight: 600;
+                font-style: normal;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Nebula Sans";
+                src: url("static/fonts/NebulaSans-Bold.woff2") format("woff2");
+                font-weight: 700;
+                font-style: normal;
+                font-display: swap;
+            }
+            .step-card {
+                transition: all 0.15s ease;
+            }
+            .step-card:hover {
+                transform: translateX(2px);
+            }
+            .timeline-block {
+                transition: opacity 0.15s ease;
+            }
+            .timeline-block:hover {
+                opacity: 0.8;
+            }
+            pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+            .highlight-ring {
+                animation: pulse-ring 1.5s ease-out;
+            }
+            @keyframes pulse-ring {
+                0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); }
+                70% { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+            }
+            body, .font-sans, h1, h2, h3, h4, h5, h6 {
+                font-family: "Nebula Sans", system-ui, sans-serif !important;
+            }
+        </style>
+    </head>
+
+    <body class="bg-gray-50 text-gray-900 font-sans">
+        <!-- Header with Navigation -->
+        <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-200 z-50">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="flex items-center justify-between h-14">
+                    <a href="index.html" class="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                        <img src="static/images/favicon.svg" alt="" class="w-5 h-5" style="filter: brightness(0);">
+                        CooperBench
+                    </a>
+                    <nav class="flex items-center gap-6">
+                        <a href="leaderboard.html" class="text-sm text-gray-600 hover:text-gray-900">Leaderboard</a>
+                        <a href="tasks.html" class="text-sm text-gray-600 hover:text-gray-900">Tasks</a>
+                        <a href="viewer.html" class="text-sm text-gray-600 hover:text-gray-900">Trajectories</a>
+                        <a href="blog.html" class="text-sm text-gray-600 hover:text-gray-900">Blog</a>
+                        <a href="https://arxiv.org/abs/2601.13295" target="_blank" class="text-sm text-gray-600 hover:text-gray-900">Paper <span class="text-xs">↗</span></a>
+                        <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="text-gray-600 hover:text-gray-900"><i class="fab fa-github"></i></a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main class="pt-14">
+            <!-- Task Info Bar -->
+            <div class="bg-white">
+                <div class="max-w-7xl mx-auto px-6 py-4">
+                    <!-- Breadcrumb with back link -->
+                    <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                        <a href="leaderboard.html" class="hover:text-gray-700 flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                            Leaderboard
+                        </a>
+                        <span class="text-gray-300">›</span>
+                        <span id="header-model" class="font-medium text-gray-700">Loading...</span>
+                        <span class="text-gray-300">›</span>
+                        <span id="header-repo" class="text-gray-600"></span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 id="task-title" class="text-lg font-semibold text-gray-900">Trajectory</h1>
+                            <p id="task-features" class="text-sm text-gray-500 mt-0.5"></p>
+                        </div>
+                        <div id="task-status-badge"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Run Information (always visible, borderless containers) -->
+            <div id="run-info-section" class="hidden bg-gray-50/50">
+                <div class="max-w-7xl mx-auto px-6 py-5">
+                    <!-- Two-column layout for Agent A and Agent B -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Agent A -->
+                        <div class="p-4">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                                <span class="font-medium text-gray-900 text-sm">Agent A</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 text-sm">
+                                <div>
+                                    <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Model</div>
+                                    <div id="info-model-a" class="font-mono text-gray-900 text-xs">—</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Steps</div>
+                                    <div id="info-steps-a" class="font-mono text-gray-900">—</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Input Tokens</div>
+                                    <div id="info-input-a" class="font-mono text-gray-900">—</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Output Tokens</div>
+                                    <div id="info-output-a" class="font-mono text-gray-900">—</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Cost</div>
+                                    <div id="info-cost-a" class="font-mono text-gray-900">—</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Agent B -->
+                        <div class="p-4">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                                <span class="font-medium text-gray-900 text-sm">Agent B</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 text-sm">
+                                <div>
+                                    <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Model</div>
+                                    <div id="info-model-b" class="font-mono text-gray-900 text-xs">—</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Steps</div>
+                                    <div id="info-steps-b" class="font-mono text-gray-900">—</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Input Tokens</div>
+                                    <div id="info-input-b" class="font-mono text-gray-900">—</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Output Tokens</div>
+                                    <div id="info-output-b" class="font-mono text-gray-900">—</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Cost</div>
+                                    <div id="info-cost-b" class="font-mono text-gray-900">—</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Summary row -->
+                    <div class="mt-4 flex flex-wrap items-center gap-6 text-sm text-gray-600 px-4">
+                        <div><span class="text-gray-400">Duration:</span> <span id="info-duration" class="font-mono">—</span></div>
+                        <div><span class="text-gray-400">Total Cost:</span> <span id="info-cost-total" class="font-mono">—</span></div>
+                        <div><span class="text-gray-400">Started:</span> <span id="info-started" class="font-mono text-xs">—</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="max-w-7xl mx-auto px-6 py-6">
+                <!-- Status -->
+                <div id="load-status" class="mb-3 text-xs hidden"></div>
+
+                <!-- Viewer Section -->
+                <section id="viewer-section" class="hidden">
+                    <!-- Stats & Legend -->
+                    <div class="flex flex-wrap items-center gap-4 text-[11px] text-gray-500 mb-3">
+                        <span class="text-red-600 font-medium">A: <span id="stats-agent-a">0</span></span>
+                        <span class="text-blue-600 font-medium">B: <span id="stats-agent-b">0</span></span>
+                        <span id="stats-duration">0s</span>
+                        <span class="text-gray-300">|</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-yellow-400 rounded-sm"></span>Bash</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-sky-300 rounded-sm"></span>Find</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-blue-600 rounded-sm"></span>View</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-green-500 rounded-sm"></span>Edit</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-orange-400 rounded-sm"></span>Comm</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-red-500 rounded-sm"></span>Submit</span>
+                    </div>
+
+                    <!-- Timeline -->
+                    <div class="bg-white rounded-lg border border-gray-200 p-3 mb-4">
+                        <div class="space-y-1.5">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] text-red-500 w-4">A</span>
+                                <div id="timeline-a" class="relative h-3 bg-gray-100 rounded flex-1 overflow-hidden"></div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] text-blue-500 w-4">B</span>
+                                <div id="timeline-b" class="relative h-3 bg-gray-100 rounded flex-1 overflow-hidden"></div>
+                            </div>
+                        </div>
+                        <div id="time-markers" class="flex justify-between mt-1.5 pl-6 text-[9px] text-gray-400"></div>
+                    </div>
+
+                    <!-- Filter Controls -->
+                    <div class="flex flex-wrap items-center gap-3 mb-4 text-[11px]">
+                        <span class="text-gray-400">Filter:</span>
+                        <label class="flex items-center gap-1 cursor-pointer text-gray-600">
+                            <input type="checkbox" id="filter-comm" checked class="w-3 h-3 rounded" onchange="applyFilters()" />
+                            <span>Comm</span>
+                        </label>
+                        <label class="flex items-center gap-1 cursor-pointer text-gray-600">
+                            <input type="checkbox" id="filter-edit" checked class="w-3 h-3 rounded" onchange="applyFilters()" />
+                            <span>Edit</span>
+                        </label>
+                        <label class="flex items-center gap-1 cursor-pointer text-gray-600">
+                            <input type="checkbox" id="filter-view" checked class="w-3 h-3 rounded" onchange="applyFilters()" />
+                            <span>View</span>
+                        </label>
+                        <label class="flex items-center gap-1 cursor-pointer text-gray-600">
+                            <input type="checkbox" id="filter-bash" checked class="w-3 h-3 rounded" onchange="applyFilters()" />
+                            <span>Bash</span>
+                        </label>
+                        <label class="flex items-center gap-1 cursor-pointer text-gray-600">
+                            <input type="checkbox" id="filter-other" checked class="w-3 h-3 rounded" onchange="applyFilters()" />
+                            <span>Other</span>
+                        </label>
+                    </div>
+
+                    <!-- Steps List -->
+                    <div class="bg-white rounded-lg border border-gray-200">
+                        <div class="px-3 py-2 border-b border-gray-100 flex items-center justify-between">
+                            <span class="text-xs font-medium text-gray-600">Steps</span>
+                            <span id="step-count" class="text-xs text-gray-400">0</span>
+                        </div>
+                        <div id="steps-container" class="space-y-2 p-3">
+                            <div class="text-gray-400 text-center py-8 text-xs">Loading trajectory...</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Loading State -->
+                <section id="loading-state" class="text-center py-16">
+                    <div class="inline-flex items-center gap-2 text-gray-400">
+                        <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span class="text-sm">Loading trajectory...</span>
+                    </div>
+                </section>
+
+                <!-- Error State -->
+                <section id="error-state" class="hidden text-center py-16">
+                    <div class="text-red-500 mb-4">
+                        <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                    <p id="error-message" class="text-gray-600 mb-4">Trajectory not found</p>
+                    <a href="leaderboard.html" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                        Back to Leaderboard
+                    </a>
+                </section>
+            </div>
+        </main>
+
+        <script>
+            let stepsA = [];
+            let stepsB = [];
+            let allSteps = [];
+            let timeRange = { start: 0, end: 0, duration: 0 };
+
+            const modelNames = {
+                gpt5: 'GPT-5',
+                claude: 'Claude Sonnet 4.5',
+                minimax: 'MiniMax M2',
+                qwen_coder: 'Qwen3-Coder-30B',
+                qwen: 'Qwen3-30B'
+            };
+
+            // Load trajectory on page load
+            async function init() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const model = urlParams.get('model');
+                const repo = urlParams.get('repo');
+                const task = urlParams.get('task');
+                const features = urlParams.get('features');
+                const passed = urlParams.get('passed');
+
+                if (!model || !repo || !task || !features) {
+                    showError('Missing required parameters. Please access this page from the leaderboard.');
+                    return;
+                }
+
+                // Update header/breadcrumb info
+                const modelName = modelNames[model] || model;
+                document.getElementById('header-model').textContent = modelName;
+                document.getElementById('header-repo').textContent = repo.replace(/_/g, ' ');
+                document.title = `${modelName} - ${repo} - CooperBench`;
+
+                // Update task info bar
+                document.getElementById('task-title').textContent = `${repo.replace(/_/g, ' ')} / ${task}`;
+                document.getElementById('task-features').textContent = `Features: ${features.replace(/_/g, ' + ')}`;
+
+                // Show status badge if available
+                if (passed !== null) {
+                    const isPassed = passed === 'true';
+                    document.getElementById('task-status-badge').innerHTML = isPassed
+                        ? '<span class="text-green-600 font-medium">✓ Pass</span>'
+                        : '<span class="text-red-500 font-medium">✗ Fail</span>';
+                }
+
+                await loadTrajectory(model, repo, task, features);
+            }
+
+            async function loadTrajectory(model, repo, task, features) {
+                const trajectoryPath = `static/data/coop/trajectories/${model}/${repo}_${task}_${features}.json.gz`;
+
+                try {
+                    const response = await fetch(trajectoryPath);
+                    if (!response.ok) {
+                        throw new Error(`Trajectory not found (${response.status})`);
+                    }
+
+                    // Decompress gzipped data
+                    const compressed = await response.arrayBuffer();
+                    const decompressed = pako.ungzip(new Uint8Array(compressed), { to: 'string' });
+                    const data = JSON.parse(decompressed);
+
+                    // Process steps
+                    stepsA = [];
+                    stepsB = [];
+
+                    const isSystemPrompt = (step) => {
+                        const content = step.content || step.text || step.message || '';
+                        if (typeof content !== 'string') return false;
+                        if (content.includes('You are OpenHands agent')) return true;
+                        if (content.includes('<ROLE>')) return true;
+                        if (content.includes('You are agent_')) return true;
+                        if (content.includes('**FEATURE DESCRIPTION**')) return true;
+                        if (content.includes('Added workspace context')) return true;
+                        return false;
+                    };
+
+                    data.forEach((step, idx) => {
+                        if (isSystemPrompt(step)) return;
+
+                        if (step.agentId === "agent_1" || step.agent === "A") {
+                            stepsA.push({ ...step, originalIndex: stepsA.length });
+                        } else {
+                            stepsB.push({ ...step, originalIndex: stepsB.length });
+                        }
+                    });
+
+                    // Extract and display run metadata
+                    extractRunInfo(data);
+
+                    document.getElementById('loading-state').classList.add('hidden');
+                    processAndRender();
+                } catch (e) {
+                    console.error("Error loading trajectory:", e);
+                    showError(`Could not load trajectory: ${e.message}`);
+                }
+            }
+
+            function showError(message) {
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('error-state').classList.remove('hidden');
+                document.getElementById('error-message').textContent = message;
+            }
+
+            // Clean up model names like "global.anthropic.claude-sonnet-4-5-20250929-v1:0" to "claude-sonnet-4-5@20250929"
+            function cleanModelName(model) {
+                if (!model) return '—';
+                // Remove "global.anthropic." or similar prefixes
+                let cleaned = model.replace(/^global\.\w+\./, '');
+                // Handle AWS Bedrock format: claude-sonnet-4-5-20250929-v1:0 → claude-sonnet-4-5@20250929
+                cleaned = cleaned.replace(/-(\d{8})-v\d+:\d+$/, '@$1');
+                // Also handle other common patterns
+                cleaned = cleaned.replace(/-v\d+:\d+$/, '');
+                return cleaned;
+            }
+
+            // Format cost, show N/A if zero
+            function formatCost(cost) {
+                if (!cost || cost === 0) return 'N/A';
+                return `$${cost.toFixed(4)}`;
+            }
+
+            function extractRunInfo(data) {
+                // Separate data by agent
+                const agentASteps = data.filter(s => s.agentId === 'agent_1');
+                const agentBSteps = data.filter(s => s.agentId === 'agent_2');
+
+                // Get timestamps for duration
+                const timestamps = data.map(s => s.timestamp).filter(Boolean);
+                const startTime = timestamps[0];
+                const endTime = timestamps[timestamps.length - 1];
+
+                if (startTime && endTime) {
+                    const start = new Date(startTime);
+                    const end = new Date(endTime);
+                    const durationMs = end - start;
+                    const mins = Math.floor(durationMs / 60000);
+                    const secs = Math.floor((durationMs % 60000) / 1000);
+                    document.getElementById('info-duration').textContent = `${mins}m ${secs}s`;
+                    document.getElementById('info-started').textContent = start.toLocaleString();
+                }
+
+                // Extract per-agent info
+                function getAgentInfo(steps) {
+                    let model = null;
+                    let finalMetrics = null;
+                    
+                    for (const step of steps) {
+                        if (!model && step.tool_call_metadata?.model_response?.model) {
+                            model = step.tool_call_metadata.model_response.model;
+                        }
+                    }
+                    
+                    for (let i = steps.length - 1; i >= 0; i--) {
+                        if (steps[i].llm_metrics) {
+                            finalMetrics = steps[i].llm_metrics;
+                            break;
+                        }
+                    }
+                    
+                    return { model, finalMetrics, stepCount: steps.length };
+                }
+
+                const infoA = getAgentInfo(agentASteps);
+                const infoB = getAgentInfo(agentBSteps);
+
+                // Populate Agent A
+                document.getElementById('info-model-a').textContent = cleanModelName(infoA.model);
+                document.getElementById('info-steps-a').textContent = infoA.stepCount.toLocaleString();
+                if (infoA.finalMetrics) {
+                    const usage = infoA.finalMetrics.accumulated_token_usage || {};
+                    document.getElementById('info-input-a').textContent = (usage.prompt_tokens || 0).toLocaleString();
+                    document.getElementById('info-output-a').textContent = (usage.completion_tokens || 0).toLocaleString();
+                    document.getElementById('info-cost-a').textContent = formatCost(infoA.finalMetrics.accumulated_cost);
+                }
+
+                // Populate Agent B
+                document.getElementById('info-model-b').textContent = cleanModelName(infoB.model);
+                document.getElementById('info-steps-b').textContent = infoB.stepCount.toLocaleString();
+                if (infoB.finalMetrics) {
+                    const usage = infoB.finalMetrics.accumulated_token_usage || {};
+                    document.getElementById('info-input-b').textContent = (usage.prompt_tokens || 0).toLocaleString();
+                    document.getElementById('info-output-b').textContent = (usage.completion_tokens || 0).toLocaleString();
+                    document.getElementById('info-cost-b').textContent = formatCost(infoB.finalMetrics.accumulated_cost);
+                }
+
+                // Total cost
+                const totalCost = (infoA.finalMetrics?.accumulated_cost || 0) + (infoB.finalMetrics?.accumulated_cost || 0);
+                document.getElementById('info-cost-total').textContent = formatCost(totalCost);
+
+                // Show the section
+                document.getElementById('run-info-section').classList.remove('hidden');
+            }
+
+
+            // Tool type classification
+            function getToolType(step) {
+                const toolName = step.tool_call_metadata?.function_name || step.toolName || "";
+                const action = step.action || "";
+                const args = step.args || {};
+
+                if (toolName === "finish") return "submit";
+                if (toolName === "openhands_comm_send" || toolName === "openhands_comm_get") return "communication";
+                if (toolName === "task_tracker") return "task_tracking";
+                if (toolName === "think") return "think";
+
+                if (toolName === "execute_bash") {
+                    const cmd = (args.command || "").toLowerCase();
+                    if (cmd.includes("grep") || cmd.includes("find ") || cmd.includes("locate")) {
+                        return "find_grep";
+                    }
+                    return "bash";
+                }
+
+                if (toolName === "str_replace_editor") {
+                    const cmd = args.command;
+                    if (cmd === "view") return "view";
+                    if (cmd === "create") return "create";
+                    return "edit";
+                }
+
+                return "other";
+            }
+
+            function getToolColor(toolType) {
+                const colors = {
+                    bash: "bg-yellow-400",
+                    find_grep: "bg-sky-300",
+                    view: "bg-blue-600",
+                    edit: "bg-green-500",
+                    create: "bg-green-700",
+                    communication: "bg-orange-400",
+                    task_tracking: "bg-purple-400",
+                    submit: "bg-red-500",
+                    think: "bg-gray-400",
+                    recall: "bg-indigo-400",
+                    condensation: "bg-pink-400",
+                    message: "bg-teal-400",
+                    other: "bg-gray-300",
+                };
+                return colors[toolType] || "bg-gray-300";
+            }
+
+            function getToolIcon(toolType) {
+                const icons = {
+                    bash: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>`,
+                    find_grep: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>`,
+                    view: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>`,
+                    edit: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>`,
+                    create: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>`,
+                    communication: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>`,
+                    task_tracking: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>`,
+                    think: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>`,
+                    recall: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path></svg>`,
+                    other: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>`,
+                };
+                return icons[toolType] || icons.other;
+            }
+
+            function getToolLabel(toolType) {
+                const labels = {
+                    bash: "Bash",
+                    find_grep: "Find",
+                    view: "View",
+                    edit: "Edit",
+                    create: "Create",
+                    communication: "Comm",
+                    task_tracking: "Task",
+                    submit: "Submit",
+                    think: "Think",
+                    recall: "Recall",
+                    condensation: "Condense",
+                    message: "Msg",
+                    other: "Other",
+                };
+                return labels[toolType] || "Unknown";
+            }
+
+            function getPillStyle(toolType) {
+                const styles = {
+                    bash: "bg-amber-50 text-amber-700",
+                    find_grep: "bg-sky-50 text-sky-700",
+                    view: "bg-blue-50 text-blue-700",
+                    edit: "bg-emerald-50 text-emerald-700",
+                    create: "bg-emerald-50 text-emerald-700",
+                    communication: "bg-orange-50 text-orange-700",
+                    task_tracking: "bg-violet-50 text-violet-700",
+                    submit: "bg-rose-50 text-rose-700",
+                    think: "bg-gray-100 text-gray-600",
+                    recall: "bg-indigo-50 text-indigo-700",
+                    condensation: "bg-pink-50 text-pink-700",
+                    message: "bg-teal-50 text-teal-700",
+                    other: "bg-gray-100 text-gray-600",
+                };
+                return styles[toolType] || "bg-gray-100 text-gray-600";
+            }
+
+            function formatTimestamp(ts) {
+                try {
+                    const d = new Date(ts);
+                    return d.toLocaleTimeString("en-US", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: false,
+                    });
+                } catch {
+                    return ts;
+                }
+            }
+
+            function formatDuration(ms) {
+                if (ms < 1000) return ms + "ms";
+                if (ms < 60000) return (ms / 1000).toFixed(1) + "s";
+                return (ms / 60000).toFixed(1) + "m";
+            }
+
+            function processAndRender() {
+                allSteps = [
+                    ...stepsA.map((s, i) => ({ ...s, agent: "A", originalIndex: i })),
+                    ...stepsB.map((s, i) => ({ ...s, agent: "B", originalIndex: i })),
+                ];
+
+                allSteps.sort((a, b) => {
+                    const tA = new Date(a.timestamp || a.timestampMs).getTime();
+                    const tB = new Date(b.timestamp || b.timestampMs).getTime();
+                    return tA - tB;
+                });
+
+                if (allSteps.length > 0) {
+                    const times = allSteps
+                        .map((s) => new Date(s.timestamp || s.timestampMs).getTime())
+                        .filter((t) => !isNaN(t));
+                    timeRange.start = Math.min(...times);
+                    timeRange.end = Math.max(...times);
+                    timeRange.duration = timeRange.end - timeRange.start || 1;
+                }
+
+                document.getElementById("stats-agent-a").textContent = stepsA.length;
+                document.getElementById("stats-agent-b").textContent = stepsB.length;
+                document.getElementById("stats-duration").textContent = formatDuration(timeRange.duration);
+
+                document.getElementById("viewer-section").classList.remove("hidden");
+
+                renderTimeline();
+                renderSteps();
+            }
+
+            function renderTimeline() {
+                const timelineA = document.getElementById("timeline-a");
+                const timelineB = document.getElementById("timeline-b");
+                timelineA.innerHTML = "";
+                timelineB.innerHTML = "";
+
+                function renderAgent(steps, container, agent) {
+                    const filteredSteps = steps.filter(step => {
+                        const toolName = step.toolName || step.tool_call_metadata?.function_name || "";
+                        return !toolName.includes("comm_get") && !toolName.includes("receive");
+                    });
+
+                    filteredSteps.forEach((step, idx) => {
+                        const ts = new Date(step.timestamp || step.timestampMs).getTime();
+                        if (isNaN(ts)) return;
+
+                        const left = ((ts - timeRange.start) / timeRange.duration) * 100;
+                        const toolType = step.toolType || getToolType(step);
+
+                        let nextTs = timeRange.end;
+                        if (idx < filteredSteps.length - 1) {
+                            nextTs = new Date(filteredSteps[idx + 1].timestamp || filteredSteps[idx + 1].timestampMs).getTime();
+                        }
+                        const widthPct = Math.max(((nextTs - ts) / timeRange.duration) * 100, 0.5);
+
+                        const block = document.createElement("div");
+                        block.className = `absolute top-0 h-full ${getToolColor(toolType)} timeline-block cursor-pointer`;
+                        block.style.left = `${Math.min(left, 99.5)}%`;
+                        block.style.width = `${Math.min(widthPct, 100 - left)}%`;
+                        block.style.minWidth = "2px";
+                        block.title = `${formatTimestamp(step.timestamp || step.timestampMs)}: ${getToolLabel(toolType)}`;
+
+                        const globalIdx = allSteps.findIndex((s) => s.agent === agent && s.originalIndex === idx);
+                        block.onclick = () => scrollToStep(globalIdx);
+
+                        container.appendChild(block);
+                    });
+                }
+
+                renderAgent(stepsA, timelineA, "A");
+                renderAgent(stepsB, timelineB, "B");
+
+                const markers = document.getElementById("time-markers");
+                markers.innerHTML = "";
+                if (timeRange.duration > 0) {
+                    [0, 25, 50, 75, 100].forEach((pct) => {
+                        const t = timeRange.start + (timeRange.duration * pct) / 100;
+                        const span = document.createElement("span");
+                        span.textContent = formatTimestamp(new Date(t).toISOString());
+                        markers.appendChild(span);
+                    });
+                }
+            }
+
+            function renderSteps() {
+                const container = document.getElementById("steps-container");
+                container.innerHTML = "";
+
+                const filters = {
+                    comm: document.getElementById("filter-comm").checked,
+                    edit: document.getElementById("filter-edit").checked,
+                    view: document.getElementById("filter-view").checked,
+                    bash: document.getElementById("filter-bash").checked,
+                    other: document.getElementById("filter-other").checked,
+                };
+
+                let visibleCount = 0;
+
+                allSteps.forEach((step, idx) => {
+                    const toolType = step.toolType || getToolType(step);
+
+                    const toolName = step.toolName || step.tool_call_metadata?.function_name || "";
+                    if (toolName.includes("comm_get") || toolName.includes("receive")) return;
+
+                    if (toolType === "communication" && !filters.comm) return;
+                    if ((toolType === "edit" || toolType === "create") && !filters.edit) return;
+                    if (toolType === "view" && !filters.view) return;
+                    if ((toolType === "bash" || toolType === "find_grep") && !filters.bash) return;
+                    if (["submit", "task_tracking", "think", "ipython", "other", "recall", "condensation", "message"].includes(toolType) && !filters.other) return;
+
+                    visibleCount++;
+                    const isA = step.agent === "A";
+
+                    const div = document.createElement("div");
+                    div.id = `step-${idx}`;
+                    div.className = `flex ${isA ? "justify-start" : "justify-end"} scroll-mt-32`;
+
+                    let contentHtml = "";
+
+                    const commMessage = step.details || step.args?.message || step.args?.content || step.message || step.result || step.observation || step.response || step.received || "";
+                    if (toolType === "communication" && commMessage) {
+                        let formatted = escapeHtml(commMessage);
+                        formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+                        formatted = formatted.replace(/`([^`]+)`/g, '<code class="bg-gray-200 px-1 rounded text-xs">$1</code>');
+                        formatted = formatted.replace(/\n/g, "<br>");
+                        const isLong = commMessage.length > 300;
+                        const contentId = `content-${idx}`;
+                        contentHtml = `
+                            <div class="text-xs text-gray-600 leading-relaxed mt-1.5">
+                                <div id="${contentId}" class="${isLong ? 'max-h-24 overflow-hidden' : ''}">${formatted}</div>
+                                ${isLong ? `<button onclick="toggleExpand('${contentId}', this)" class="text-gray-400 hover:text-gray-600 text-[10px] mt-1">Show more ↓</button>` : ''}
+                            </div>`;
+                    } else if (toolType === "communication") {
+                        const toolName = step.toolName || step.tool_call_metadata?.function_name || "";
+                        if (toolName.includes("get") || toolName.includes("receive")) {
+                            contentHtml = `<div class="text-xs text-gray-400 italic mt-1.5">Checked for messages</div>`;
+                        } else {
+                            contentHtml = `<div class="text-xs text-gray-400 italic mt-1.5">(message content not available)</div>`;
+                        }
+                    }
+
+                    if ((toolType === "bash" || toolType === "find_grep") && step.args?.command) {
+                        contentHtml = `<div class="mt-1.5 text-xs font-mono bg-gray-100 text-gray-800 p-2 rounded border border-gray-200 whitespace-pre-wrap break-all">${escapeHtml(step.args.command)}</div>`;
+                    }
+
+                    if (toolType === "view" && step.args?.path) {
+                        contentHtml = `<div class="mt-1.5 text-xs text-gray-600"><span class="text-gray-400">file:</span> ${escapeHtml(step.args.path)}</div>`;
+                    }
+
+                    if (toolType === "edit" && step.args) {
+                        let editContent = "";
+                        if (step.args.path) {
+                            editContent += `<div class="text-gray-600 font-mono text-[10px]">${escapeHtml(step.args.path)}</div>`;
+                        }
+                        if (step.args.old_str || step.args.new_str) {
+                            const totalLines = (step.args.old_str?.split('\n').length || 0) + (step.args.new_str?.split('\n').length || 0);
+                            const isLong = totalLines > 15;
+                            const contentId = `diff-${idx}`;
+
+                            editContent += `<div id="${contentId}" class="mt-1.5 font-mono text-[10px] bg-gray-50 border border-gray-200 rounded overflow-hidden leading-tight ${isLong ? 'max-h-48' : ''}">`;
+                            if (step.args.old_str) {
+                                const oldLines = escapeHtml(step.args.old_str.slice(0, 1000)).split('\n');
+                                editContent += oldLines.map(line =>
+                                    `<div class="px-2 bg-red-50/30"><span class="text-red-500 select-none">-</span> <span class="text-gray-700">${line}</span></div>`
+                                ).join('');
+                                if (step.args.old_str.length > 1000) editContent += `<div class="px-2 text-gray-400">...</div>`;
+                            }
+                            if (step.args.new_str) {
+                                const newLines = escapeHtml(step.args.new_str.slice(0, 1000)).split('\n');
+                                editContent += newLines.map(line =>
+                                    `<div class="px-2 bg-green-50/30"><span class="text-green-600 select-none">+</span> <span class="text-gray-700">${line}</span></div>`
+                                ).join('');
+                                if (step.args.new_str.length > 1000) editContent += `<div class="px-2 text-gray-400">...</div>`;
+                            }
+                            editContent += `</div>`;
+                            if (isLong) {
+                                editContent += `<button onclick="toggleExpand('${contentId}', this)" class="text-gray-400 hover:text-gray-600 text-[10px] mt-1">Show more ↓</button>`;
+                            }
+                        }
+                        if (editContent) {
+                            contentHtml = `<div class="mt-1.5">${editContent}</div>`;
+                        }
+                    }
+
+                    if (toolType === "think" && step.args?.thought) {
+                        contentHtml = `<div class="mt-1.5 text-xs text-gray-600 italic">${escapeHtml(step.args.thought.slice(0, 300))}${step.args.thought.length > 300 ? "..." : ""}</div>`;
+                    }
+
+                    if (toolType === "submit") {
+                        const submitMsg = step.args?.message || step.args?.final_thought || "";
+                        contentHtml = `
+                            <div class="mt-1.5 flex items-start gap-2">
+                                <div class="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center">
+                                    <svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div class="text-xs text-gray-600">
+                                    <span class="font-medium text-emerald-700">Task completed</span>
+                                    ${submitMsg ? `<p class="mt-0.5 text-gray-500">${escapeHtml(submitMsg.slice(0, 200))}${submitMsg.length > 200 ? "..." : ""}</p>` : ""}
+                                </div>
+                            </div>`;
+                    }
+
+                    if (toolType === "recall" && step.args?.query) {
+                        contentHtml = `<div class="mt-1.5 text-xs text-gray-500 italic">Recalling: ${escapeHtml(step.args.query.slice(0, 200))}...</div>`;
+                    }
+
+                    if (toolType === "task_tracking" && step.args?.task_list) {
+                        const tasks = step.args.task_list;
+                        const done = tasks.filter(t => t.status === 'done').length;
+                        const inProgress = tasks.filter(t => t.status === 'in_progress').length;
+                        const todo = tasks.filter(t => t.status === 'todo').length;
+                        const taskListId = `tasks-${idx}`;
+
+                        let taskListHtml = tasks.map(t => {
+                            const statusIcon = t.status === 'done' ? '✓' : t.status === 'in_progress' ? '→' : '○';
+                            const statusColor = t.status === 'done' ? 'text-green-600' : t.status === 'in_progress' ? 'text-yellow-600' : 'text-gray-400';
+                            return `<div class="flex items-start gap-1.5"><span class="${statusColor}">${statusIcon}</span><span class="text-gray-600">${escapeHtml(t.title || t.id)}</span></div>`;
+                        }).join('');
+
+                        contentHtml = `
+                            <div class="mt-1.5 text-xs">
+                                <div class="text-gray-500">${tasks.length} tasks: <span class="text-green-600">${done} done</span>, <span class="text-yellow-600">${inProgress} in progress</span>, <span class="text-gray-400">${todo} todo</span></div>
+                                <div id="${taskListId}" class="mt-1.5 space-y-0.5 max-h-0 overflow-hidden">${taskListHtml}</div>
+                                <button onclick="toggleTaskList('${taskListId}', this)" class="text-gray-400 hover:text-gray-600 text-[10px] mt-1">Show tasks ↓</button>
+                            </div>`;
+                    }
+
+                    if (toolType === "create" && step.args?.path) {
+                        contentHtml = `<div class="mt-1.5 text-xs text-gray-600 font-mono">${escapeHtml(step.args.path)}</div>`;
+                    }
+
+                    if (toolType === "message") {
+                        const msgContent = step.args?.content || step.args?.message || step.content || step.message || step.details || "";
+                        if (msgContent) {
+                            contentHtml = `<div class="mt-1.5 text-xs text-gray-600">${escapeHtml(msgContent.slice(0, 300))}${msgContent.length > 300 ? "..." : ""}</div>`;
+                        }
+                    }
+
+                    if (toolType === "condensation") {
+                        const summary = step.args?.summary || step.summary || "";
+                        if (summary) {
+                            contentHtml = `<div class="mt-1.5 text-xs text-gray-500 italic">${escapeHtml(summary.slice(0, 200))}${summary.length > 200 ? "..." : ""}</div>`;
+                        } else {
+                            contentHtml = `<div class="mt-1.5 text-xs text-gray-400 italic">Context condensed</div>`;
+                        }
+                    }
+
+                    if (toolType === "other" && !contentHtml) {
+                        const anyContent = step.args?.content || step.args?.message || step.details || step.content || "";
+                        if (anyContent) {
+                            contentHtml = `<div class="mt-1.5 text-xs text-gray-600">${escapeHtml(String(anyContent).slice(0, 200))}${String(anyContent).length > 200 ? "..." : ""}</div>`;
+                        }
+                    }
+
+                    const labelColor = isA ? "text-red-400" : "text-blue-400";
+
+                    if (toolType === "submit") {
+                        div.innerHTML = `
+                        <div class="max-w-[85%]">
+                            <div class="step-card px-3 py-2 bg-white rounded border border-gray-200">
+                                ${contentHtml}
+                                <div class="text-[10px] text-gray-400 mt-1">${formatTimestamp(step.timestamp || step.timestampMs)}</div>
+                            </div>
+                        </div>
+                        `;
+                    } else {
+                        div.innerHTML = `
+                        <div class="max-w-[85%]">
+                            <div class="step-card px-3 py-2 bg-white rounded border border-gray-200">
+                                <div class="flex items-center gap-2 text-[11px]">
+                                    <span class="font-medium ${labelColor}">${isA ? "A" : "B"}</span>
+                                    <span class="px-1.5 py-0.5 rounded text-[10px] flex items-center gap-1 ${getPillStyle(toolType)}">${getToolIcon(toolType)}${getToolLabel(toolType)}</span>
+                                    <span class="text-gray-400 ml-auto">${formatTimestamp(step.timestamp || step.timestampMs)}</span>
+                                </div>
+                                ${contentHtml}
+                            </div>
+                        </div>
+                        `;
+                    }
+
+                    container.appendChild(div);
+                });
+
+                document.getElementById("step-count").textContent = `${visibleCount} of ${allSteps.length}`;
+
+                if (visibleCount === 0) {
+                    container.innerHTML = '<div class="text-gray-400 text-center py-8 text-sm">No steps match filters</div>';
+                }
+            }
+
+            function applyFilters() {
+                renderSteps();
+            }
+
+            function scrollToStep(idx) {
+                const el = document.getElementById(`step-${idx}`);
+                if (el) {
+                    el.scrollIntoView({ behavior: "smooth", block: "center" });
+                    el.classList.add("highlight-ring", "bg-yellow-50");
+                    setTimeout(() => {
+                        el.classList.remove("highlight-ring", "bg-yellow-50");
+                    }, 1500);
+                }
+            }
+
+            function escapeHtml(str) {
+                return str
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+            }
+
+            function toggleExpand(contentId, btn) {
+                const el = document.getElementById(contentId);
+                if (el.classList.contains('max-h-24') || el.classList.contains('max-h-48')) {
+                    el.classList.remove('max-h-24', 'max-h-48');
+                    btn.textContent = 'Show less ↑';
+                } else {
+                    if (contentId.startsWith('diff-')) {
+                        el.classList.add('max-h-48');
+                    } else {
+                        el.classList.add('max-h-24');
+                    }
+                    btn.textContent = 'Show more ↓';
+                }
+            }
+
+            function toggleTaskList(taskListId, btn) {
+                const el = document.getElementById(taskListId);
+                if (el.classList.contains('max-h-0')) {
+                    el.classList.remove('max-h-0');
+                    el.classList.add('max-h-96');
+                    btn.textContent = 'Hide tasks ↑';
+                } else {
+                    el.classList.remove('max-h-96');
+                    el.classList.add('max-h-0');
+                    btn.textContent = 'Show tasks ↓';
+                }
+            }
+
+            // Initialize on page load
+            window.addEventListener("load", init);
+        </script>
+    </body>
+</html>

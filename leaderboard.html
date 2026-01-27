@@ -146,7 +146,7 @@
 
     <main class="pt-14">
         <!-- Page Header -->
-        <div class="bg-white border-b border-gray-200">
+        <div class="bg-white">
             <div class="max-w-4xl mx-auto px-6 py-8">
                 <div class="text-sm text-gray-500 mb-4">
                     <a href="index.html" class="hover:text-gray-700">Home</a>
@@ -279,7 +279,7 @@
     <!-- Model Detail Panel -->
     <div id="panel-backdrop" class="fixed inset-0 bg-black/30 z-[60] opacity-0 pointer-events-none transition-opacity duration-200" onclick="closeModelPanel()"></div>
     <div id="model-panel" class="side-panel fixed top-4 right-4 bottom-4 w-full max-w-4xl bg-white z-[70] shadow-2xl rounded-xl flex flex-col overflow-hidden">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+        <div class="flex items-center justify-between px-6 py-4">
             <div>
                 <h2 id="panel-model-name" class="text-lg font-semibold text-gray-900">Model Results</h2>
                 <p id="panel-model-stats" class="text-sm text-gray-500">0/0 tasks passed</p>
@@ -292,7 +292,7 @@
         </div>
         
         <!-- Filters -->
-        <div class="px-6 py-3 border-b border-gray-100 flex items-center gap-4">
+        <div class="px-6 py-3 flex items-center gap-4">
             <input type="text" id="panel-search" placeholder="Search tasks..." class="flex-1 px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-gray-400" oninput="filterPanelTasks()">
             <select id="panel-filter-status" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none" onchange="filterPanelTasks()">
                 <option value="">All status</option>
@@ -305,7 +305,7 @@
         </div>
         
         <!-- Task count -->
-        <div class="px-6 py-2 text-xs text-gray-500 border-b border-gray-100">
+        <div class="px-6 py-2 text-xs text-gray-500">
             <span id="panel-task-count">0 tasks</span>
         </div>
         
@@ -520,7 +520,7 @@
                     : '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Fail</span>';
                 
                 const trajLink = hasTrajectory
-                    ? `<a href="viewer.html?model=${currentModelKey}&repo=${task.repo}&task=${task.taskId}&features=${task.features}" class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded">View →</a>`
+                    ? `<a href="coop-trajectory.html?model=${currentModelKey}&repo=${task.repo}&task=${task.taskId}&features=${task.features}&passed=${result.passed}" class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded">View →</a>`
                     : '<span class="text-xs text-gray-400">—</span>';
                 
                 return `
