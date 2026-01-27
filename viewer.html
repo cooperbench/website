@@ -11,6 +11,7 @@
         <link rel="icon" type="image/svg+xml" href="static/images/favicon.svg?v=2" />
 
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
@@ -463,7 +464,7 @@
             }
             
             async function loadTrajectoryFromParams(model, repo, task, features) {
-                const trajectoryPath = `static/data/coop/trajectories/${model}/${repo}_${task}_${features}.json`;
+                const trajectoryPath = `static/data/coop/trajectories/${model}/${repo}_${task}_${features}.json.gz`;
                 
                 showStatus(`Loading ${model} trajectory for ${repo}/${task}/${features}...`, 'info');
                 
@@ -472,7 +473,10 @@
                     if (!response.ok) {
                         throw new Error(`Trajectory not found: ${response.status}`);
                     }
-                    const data = await response.json();
+                    // Decompress gzipped data
+                    const compressed = await response.arrayBuffer();
+                    const decompressed = pako.ungzip(new Uint8Array(compressed), { to: 'string' });
+                    const data = JSON.parse(decompressed);
                     
                     // Data is array of steps with agentId field
                     stepsA = [];
