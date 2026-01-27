@@ -316,11 +316,6 @@
             </select>
         </div>
         
-        <!-- Task count -->
-        <div class="px-6 py-2 text-xs text-gray-500">
-            <span id="panel-task-count">0 tasks</span>
-        </div>
-        
         <!-- Task Table -->
         <div class="flex-1 overflow-y-auto">
             <table class="w-full text-sm">
@@ -521,8 +516,6 @@
                 
                 return true;
             });
-            
-            document.getElementById('panel-task-count').textContent = `${tasks.length} tasks`;
             
             const tbody = document.getElementById('panel-tasks-body');
             
