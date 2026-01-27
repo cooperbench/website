@@ -123,9 +123,16 @@
             }
             .step-card {
                 transition: all 0.15s ease;
+                overflow-wrap: break-word;
+                word-break: break-word;
             }
             .step-card:hover {
                 transform: translateX(2px);
+            }
+            /* Ensure code/paths don't overflow on mobile */
+            .step-card code,
+            .step-card .font-mono {
+                word-break: break-all;
             }
             .timeline-block {
                 transition: opacity 0.15s ease;
@@ -165,14 +172,14 @@
         </style>
     </head>
 
-    <body class="bg-gray-50 text-gray-900 font-sans">
+    <body class="bg-gray-50 text-gray-900 font-sans overflow-x-hidden">
         <!-- Header -->
         <header
             class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-200 z-50"
         >
-            <div class="max-w-6xl mx-auto px-6">
+            <div class="max-w-6xl mx-auto px-4 md:px-6">
                 <div class="flex items-center justify-between h-14">
-                    <a href="index.html" class="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                    <a href="index.html" class="flex items-center gap-2 text-base md:text-lg font-semibold text-gray-900">
                         <img src="static/images/favicon.svg" alt="" class="w-6 h-6">
                         CooperBench
                     </a>
@@ -209,35 +216,35 @@
         <main class="pt-14">
             <!-- Page Header -->
             <div class="bg-white border-b border-gray-200">
-                <div class="max-w-7xl mx-auto px-6 py-8">
-                    <h1 class="text-2xl font-semibold text-gray-900 mb-2">Trajectory Viewer</h1>
-                    <p class="text-gray-600">Explore multi-agent collaboration failures and coordination breakdowns</p>
+                <div class="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
+                    <h1 class="text-xl md:text-2xl font-semibold text-gray-900 mb-2">Trajectory Viewer</h1>
+                    <p class="text-sm md:text-base text-gray-600">Explore multi-agent collaboration failures and coordination breakdowns</p>
                 </div>
             </div>
 
             <!-- Filters Bar -->
             <div class="bg-white border-b border-gray-200 sticky top-14 z-40">
-                <div class="max-w-7xl mx-auto px-6 py-4">
-                    <div class="flex items-center gap-4">
-                        <span class="text-sm text-gray-500">Failure cause:</span>
-                        <div class="flex gap-2">
+                <div class="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4">
+                    <div class="flex items-center gap-2 md:gap-4 overflow-x-auto">
+                        <span class="hidden md:inline text-sm text-gray-500 flex-shrink-0">Failure cause:</span>
+                        <div class="flex gap-2 flex-shrink-0">
                             <button
                                 onclick="loadRandomExample('expectation')"
-                                class="px-3 py-1.5 text-sm rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                                class="px-2 md:px-3 py-1.5 text-xs md:text-sm rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors whitespace-nowrap"
                             >
                                 Expectation
                                 <span id="count-expectation" class="text-xs text-gray-400">(0)</span>
                             </button>
                             <button
                                 onclick="loadRandomExample('communication')"
-                                class="px-3 py-1.5 text-sm rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                                class="px-2 md:px-3 py-1.5 text-xs md:text-sm rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors whitespace-nowrap"
                             >
                                 Communication
                                 <span id="count-communication" class="text-xs text-gray-400">(0)</span>
                             </button>
                             <button
                                 onclick="loadRandomExample('commitment')"
-                                class="px-3 py-1.5 text-sm rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                                class="px-2 md:px-3 py-1.5 text-xs md:text-sm rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors whitespace-nowrap"
                             >
                                 Commitment
                                 <span id="count-commitment" class="text-xs text-gray-400">(0)</span>
@@ -245,7 +252,7 @@
                         </div>
                         <button
                             onclick="clearViewer()"
-                            class="ml-auto text-sm text-gray-400 hover:text-gray-600"
+                            class="ml-auto text-xs md:text-sm text-gray-400 hover:text-gray-600 flex-shrink-0"
                         >
                             Clear
                         </button>
@@ -254,7 +261,7 @@
             </div>
 
             <!-- Main Content -->
-            <div class="max-w-7xl mx-auto px-6 py-6">
+            <div class="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-6">
             <!-- Hidden file inputs -->
             <input
                 type="file"
@@ -1052,7 +1059,7 @@
                         const isLong = commMessage.length > 300;
                         const contentId = `content-${idx}`;
                         contentHtml = `
-                            <div class="text-xs text-gray-600 leading-relaxed mt-1.5">
+                            <div class="text-xs text-gray-600 leading-relaxed mt-1.5 break-words">
                                 <div id="${contentId}" class="${isLong ? 'max-h-24 overflow-hidden' : ''}">${formatted}</div>
                                 ${isLong ? `<button onclick="toggleExpand('${contentId}', this)" class="text-gray-400 hover:text-gray-600 text-[10px] mt-1">Show more ↓</button>` : ''}
                             </div>`;
@@ -1073,14 +1080,14 @@
 
                     // For view, show file path
                     if (toolType === "view" && step.args?.path) {
-                        contentHtml = `<div class="mt-1.5 text-xs text-gray-600"><span class="text-gray-400">file:</span> ${escapeHtml(step.args.path)}</div>`;
+                        contentHtml = `<div class="mt-1.5 text-xs text-gray-600 break-all"><span class="text-gray-400">file:</span> ${escapeHtml(step.args.path)}</div>`;
                     }
 
                     // For edit, show file path and changes (git-style diff, collapsible if long)
                     if (toolType === "edit" && step.args) {
                         let editContent = "";
                         if (step.args.path) {
-                            editContent += `<div class="text-gray-600 font-mono text-[10px]">${escapeHtml(step.args.path)}</div>`;
+                            editContent += `<div class="text-gray-600 font-mono text-[10px] break-all">${escapeHtml(step.args.path)}</div>`;
                         }
                         if (step.args.old_str || step.args.new_str) {
                             const totalLines = (step.args.old_str?.split('\n').length || 0) + (step.args.new_str?.split('\n').length || 0);
@@ -1114,7 +1121,7 @@
 
                     // For think, show the thought
                     if (toolType === "think" && step.args?.thought) {
-                        contentHtml = `<div class="mt-1.5 text-xs text-gray-600 italic">${escapeHtml(step.args.thought.slice(0, 300))}${step.args.thought.length > 300 ? "..." : ""}</div>`;
+                        contentHtml = `<div class="mt-1.5 text-xs text-gray-600 italic break-words">${escapeHtml(step.args.thought.slice(0, 300))}${step.args.thought.length > 300 ? "..." : ""}</div>`;
                     }
 
                     // For submit/finish, show as a completion indicator
@@ -1136,7 +1143,7 @@
 
                     // For recall, show query
                     if (toolType === "recall" && step.args?.query) {
-                        contentHtml = `<div class="mt-1.5 text-xs text-gray-500 italic">Recalling: ${escapeHtml(step.args.query.slice(0, 200))}...</div>`;
+                        contentHtml = `<div class="mt-1.5 text-xs text-gray-500 italic break-words">Recalling: ${escapeHtml(step.args.query.slice(0, 200))}...</div>`;
                     }
 
                     // For task_tracking, show task summary and list
@@ -1163,14 +1170,14 @@
 
                     // For create, show file path
                     if (toolType === "create" && step.args?.path) {
-                        contentHtml = `<div class="mt-1.5 text-xs text-gray-600 font-mono">${escapeHtml(step.args.path)}</div>`;
+                        contentHtml = `<div class="mt-1.5 text-xs text-gray-600 font-mono break-all">${escapeHtml(step.args.path)}</div>`;
                     }
 
                     // For message type, try to find content
                     if (toolType === "message") {
                         const msgContent = step.args?.content || step.args?.message || step.content || step.message || step.details || "";
                         if (msgContent) {
-                            contentHtml = `<div class="mt-1.5 text-xs text-gray-600">${escapeHtml(msgContent.slice(0, 300))}${msgContent.length > 300 ? "..." : ""}</div>`;
+                            contentHtml = `<div class="mt-1.5 text-xs text-gray-600 break-words">${escapeHtml(msgContent.slice(0, 300))}${msgContent.length > 300 ? "..." : ""}</div>`;
                         }
                     }
 
@@ -1178,7 +1185,7 @@
                     if (toolType === "condensation") {
                         const summary = step.args?.summary || step.summary || "";
                         if (summary) {
-                            contentHtml = `<div class="mt-1.5 text-xs text-gray-500 italic">${escapeHtml(summary.slice(0, 200))}${summary.length > 200 ? "..." : ""}</div>`;
+                            contentHtml = `<div class="mt-1.5 text-xs text-gray-500 italic break-words">${escapeHtml(summary.slice(0, 200))}${summary.length > 200 ? "..." : ""}</div>`;
                         } else {
                             contentHtml = `<div class="mt-1.5 text-xs text-gray-400 italic">Context condensed</div>`;
                         }
@@ -1188,7 +1195,7 @@
                     if (toolType === "other" && !contentHtml) {
                         const anyContent = step.args?.content || step.args?.message || step.details || step.content || "";
                         if (anyContent) {
-                            contentHtml = `<div class="mt-1.5 text-xs text-gray-600">${escapeHtml(String(anyContent).slice(0, 200))}${String(anyContent).length > 200 ? "..." : ""}</div>`;
+                            contentHtml = `<div class="mt-1.5 text-xs text-gray-600 break-words">${escapeHtml(String(anyContent).slice(0, 200))}${String(anyContent).length > 200 ? "..." : ""}</div>`;
                         }
                     }
 
