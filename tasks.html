@@ -50,18 +50,36 @@
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex items-center justify-between h-14">
                 <a href="index.html" class="flex items-center gap-2 text-lg font-semibold text-gray-900">
-                    <img src="static/images/favicon.svg" alt="" class="w-5 h-5" style="filter: brightness(0);">
+                    <img src="static/images/favicon.svg" alt="" class="w-6 h-6">
                     CooperBench
                 </a>
-                <nav class="flex items-center gap-6">
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center gap-6">
                     <a href="leaderboard.html" class="text-sm text-gray-600 hover:text-gray-900">Leaderboard</a>
                     <a href="tasks.html" class="text-sm text-gray-900 font-medium">Tasks</a>
                     <a href="viewer.html" class="text-sm text-gray-600 hover:text-gray-900">Trajectories</a>
                     <a href="blog.html" class="text-sm text-gray-600 hover:text-gray-900">Blog</a>
-                    <a href="https://arxiv.org/abs/2601.13295" target="_blank" class="text-sm text-gray-600 hover:text-gray-900">Paper <span class="text-xs">↗</span></a>
+                    <a href="static/pdfs/main.pdf" target="_blank" class="text-sm text-gray-600 hover:text-gray-900">Paper <span class="text-xs">↗</span></a>
                     <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="text-gray-600 hover:text-gray-900"><i class="fab fa-github"></i></a>
                 </nav>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-600 hover:text-gray-900" onclick="toggleMobileMenu()">
+                    <i id="menu-icon" class="fas fa-bars text-lg"></i>
+                </button>
             </div>
+
+            <!-- Mobile Navigation -->
+            <nav id="mobile-menu" class="hidden md:hidden border-t border-gray-100 py-3">
+                <div class="flex flex-col gap-3">
+                    <a href="leaderboard.html" class="text-sm text-gray-600 hover:text-gray-900 py-1">Leaderboard</a>
+                    <a href="tasks.html" class="text-sm text-gray-900 font-medium py-1">Tasks</a>
+                    <a href="viewer.html" class="text-sm text-gray-600 hover:text-gray-900 py-1">Trajectories</a>
+                    <a href="blog.html" class="text-sm text-gray-600 hover:text-gray-900 py-1">Blog</a>
+                    <a href="https://arxiv.org/abs/2601.13295" target="_blank" class="text-sm text-gray-600 hover:text-gray-900 py-1">Paper <span class="text-xs">↗</span></a>
+                    <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="text-sm text-gray-600 hover:text-gray-900 py-1"><i class="fab fa-github mr-2"></i>GitHub</a>
+                </div>
+            </nav>
         </div>
     </header>
 
@@ -211,6 +229,14 @@
     </div>
 
     <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('menu-icon');
+            menu.classList.toggle('hidden');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        }
+
         let allTasks = [];
         let allFeatures = [];
 
