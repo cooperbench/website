@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Leaderboard · CooperBench</title>
+    <meta name="description" content="Model performance on CooperBench collaborative coding tasks" />
+    <link rel="icon" type="image/svg+xml" href="static/images/favicon.svg?v=2" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nebula Sans', 'system-ui', 'sans-serif'],
+                        mono: ['SF Mono', 'Monaco', 'monospace'],
+                    },
+                },
+            },
+        };
+    </script>
+    
+    <style>
+        @font-face {
+            font-family: "Nebula Sans";
+            src: url("static/fonts/NebulaSans-Light.woff2") format("woff2");
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Nebula Sans";
+            src: url("static/fonts/NebulaSans-LightItalic.woff2") format("woff2");
+            font-weight: 300;
+            font-style: italic;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Nebula Sans";
+            src: url("static/fonts/NebulaSans-Book.woff2") format("woff2");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Nebula Sans";
+            src: url("static/fonts/NebulaSans-BookItalic.woff2") format("woff2");
+            font-weight: 400;
+            font-style: italic;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Nebula Sans";
+            src: url("static/fonts/NebulaSans-Medium.woff2") format("woff2");
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Nebula Sans";
+            src: url("static/fonts/NebulaSans-MediumItalic.woff2") format("woff2");
+            font-weight: 500;
+            font-style: italic;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Nebula Sans";
+            src: url("static/fonts/NebulaSans-Semibold.woff2") format("woff2");
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Nebula Sans";
+            src: url("static/fonts/NebulaSans-SemiboldItalic.woff2") format("woff2");
+            font-weight: 600;
+            font-style: italic;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Nebula Sans";
+            src: url("static/fonts/NebulaSans-Bold.woff2") format("woff2");
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Nebula Sans";
+            src: url("static/fonts/NebulaSans-BoldItalic.woff2") format("woff2");
+            font-weight: 700;
+            font-style: italic;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Nebula Sans";
+            src: url("static/fonts/NebulaSans-Black.woff2") format("woff2");
+            font-weight: 800;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Nebula Sans";
+            src: url("static/fonts/NebulaSans-BlackItalic.woff2") format("woff2");
+            font-weight: 800;
+            font-style: italic;
+            font-display: swap;
+        }
+        body, .font-sans, h1, h2, h3, h4, h5, h6 {
+            font-family: "Nebula Sans", system-ui, sans-serif !important;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-200 z-50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-14">
+                <a href="index.html" class="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                        <img src="static/images/favicon.svg" alt="" class="w-5 h-5" style="filter: brightness(0);">
+                        CooperBench
+                    </a>
+                <nav class="flex items-center gap-6">
+                    <a href="leaderboard.html" class="text-sm text-gray-900 font-medium">Leaderboard</a>
+                    <a href="tasks.html" class="text-sm text-gray-600 hover:text-gray-900">Tasks</a>
+                    <a href="viewer.html" class="text-sm text-gray-600 hover:text-gray-900">Trajectories</a>
+                    <a href="blog.html" class="text-sm text-gray-600 hover:text-gray-900">Blog</a>
+                    <a href="https://arxiv.org/abs/2601.13295" target="_blank" class="text-sm text-gray-600 hover:text-gray-900">Paper <span class="text-xs">↗</span></a>
+                    <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="text-gray-600 hover:text-gray-900"><i class="fab fa-github"></i></a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-14">
+        <!-- Page Header -->
+        <div class="bg-white border-b border-gray-200">
+            <div class="max-w-4xl mx-auto px-6 py-8">
+                <div class="text-sm text-gray-500 mb-4">
+                    <a href="index.html" class="hover:text-gray-700">Home</a>
+                    <span class="mx-2">›</span>
+                    <span class="text-gray-900">Leaderboard</span>
+                </div>
+                
+                <h1 class="text-2xl font-semibold text-gray-900 mb-2">Leaderboard</h1>
+                <p class="text-gray-600">Model performance on 652 collaborative coding tasks</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="max-w-4xl mx-auto px-6 py-8">
+            <!-- View Toggle -->
+            <div class="flex items-center gap-4 mb-6">
+                <button id="btn-coop" onclick="setView('coop')" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-900 text-white">
+                    Cooperative
+                </button>
+                <button id="btn-solo" onclick="setView('solo')" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                    Solo
+                </button>
+            </div>
+
+            <!-- Leaderboard Table -->
+            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-gray-200 bg-gray-50">
+                            <th class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3">Rank</th>
+                            <th class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3">Model</th>
+                            <th class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3 w-1/2">
+                                <span id="metric-label">Cooperative Success Rate</span>
+                            </th>
+                            <th class="text-right text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body" class="divide-y divide-gray-100">
+                        <!-- Rows will be rendered here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Legend -->
+            <div id="legend" class="mt-4 flex items-center gap-6 text-xs text-gray-500">
+                <div class="flex items-center gap-2">
+                    <div id="legend-bar" class="w-3 h-3 bg-gray-900 rounded-sm"></div>
+                    <span id="legend-label">Cooperative</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div id="legend-ci" class="w-8 h-0.5 bg-gray-600"></div>
+                    <span>95% CI</span>
+                </div>
+            </div>
+
+            <!-- Methodology Note -->
+            <div class="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 class="text-sm font-medium text-gray-900 mb-2">Methodology</h3>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                    <strong>Cooperative:</strong> Two agents work on separate features that may conflict. Success requires both features to pass tests after merging.
+                </p>
+                <p class="text-sm text-gray-600 leading-relaxed mt-2">
+                    <strong>Solo:</strong> A single agent implements both features sequentially. This serves as the upper bound for what agents can achieve.
+                </p>
+                <p class="text-sm text-gray-500 mt-3">
+                    All models evaluated on the same 652 tasks with identical prompts and tool access.
+                </p>
+            </div>
+
+            <!-- Detailed Results -->
+            <div class="mt-8">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Detailed Results</h2>
+                
+                <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-gray-200 bg-gray-50">
+                                <th class="text-left font-medium text-gray-700 px-4 py-3">Model</th>
+                                <th class="text-center font-medium text-gray-700 px-4 py-3">Solo</th>
+                                <th class="text-center font-medium text-gray-700 px-4 py-3">Coop</th>
+                                <th class="text-center font-medium text-gray-700 px-4 py-3">Gap</th>
+                                <th class="text-center font-medium text-gray-700 px-4 py-3">Conflict Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr>
+                                <td class="px-4 py-3 font-medium">GPT-5</td>
+                                <td class="px-4 py-3 text-center">52.3%</td>
+                                <td class="px-4 py-3 text-center">27.8%</td>
+                                <td class="px-4 py-3 text-center text-red-600">-24.5%</td>
+                                <td class="px-4 py-3 text-center">18.2%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium">Claude Sonnet 4.5</td>
+                                <td class="px-4 py-3 text-center">49.8%</td>
+                                <td class="px-4 py-3 text-center">25.9%</td>
+                                <td class="px-4 py-3 text-center text-red-600">-23.9%</td>
+                                <td class="px-4 py-3 text-center">16.7%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium">MiniMax M2</td>
+                                <td class="px-4 py-3 text-center">32.1%</td>
+                                <td class="px-4 py-3 text-center">14.0%</td>
+                                <td class="px-4 py-3 text-center text-red-600">-18.1%</td>
+                                <td class="px-4 py-3 text-center">22.4%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium">Qwen3-Coder-30B</td>
+                                <td class="px-4 py-3 text-center">28.6%</td>
+                                <td class="px-4 py-3 text-center">13.3%</td>
+                                <td class="px-4 py-3 text-center text-red-600">-15.3%</td>
+                                <td class="px-4 py-3 text-center">25.1%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium">Qwen3-30B</td>
+                                <td class="px-4 py-3 text-center">12.4%</td>
+                                <td class="px-4 py-3 text-center">4.6%</td>
+                                <td class="px-4 py-3 text-center text-red-600">-7.8%</td>
+                                <td class="px-4 py-3 text-center">31.2%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-200 bg-white py-8 px-6">
+        <div class="max-w-4xl mx-auto text-center text-sm text-gray-500">
+            CooperBench · Stanford University & SAP Labs
+        </div>
+    </footer>
+
+    <script>
+        const leaderboardData = {
+            coop: [
+                { rank: 1, model: 'GPT-5', fullName: null, score: 27.8, ci: [24.5, 31.3] },
+                { rank: 2, model: 'Claude Sonnet 4.5', fullName: null, score: 25.9, ci: [22.7, 29.4] },
+                { rank: 3, model: 'MiniMax M2', fullName: null, score: 14.0, ci: [11.5, 16.8] },
+                { rank: 4, model: 'Qwen3-Coder-30B', fullName: 'Qwen3-Coder-30B-A3B-Instruct', score: 13.3, ci: [10.9, 16.2] },
+                { rank: 5, model: 'Qwen3-30B', fullName: 'Qwen3-30B-A3B-Instruct-2507', score: 4.6, ci: [3.2, 6.5] },
+            ],
+            solo: [
+                { rank: 1, model: 'GPT-5', fullName: null, score: 52.3, ci: [48.2, 56.4] },
+                { rank: 2, model: 'Claude Sonnet 4.5', fullName: null, score: 49.8, ci: [45.7, 53.9] },
+                { rank: 3, model: 'MiniMax M2', fullName: null, score: 32.1, ci: [28.4, 36.0] },
+                { rank: 4, model: 'Qwen3-Coder-30B', fullName: 'Qwen3-Coder-30B-A3B-Instruct', score: 28.6, ci: [24.9, 32.5] },
+                { rank: 5, model: 'Qwen3-30B', fullName: 'Qwen3-30B-A3B-Instruct-2507', score: 12.4, ci: [9.8, 15.4] },
+            ]
+        };
+
+        let currentView = 'coop';
+
+        function setView(view) {
+            currentView = view;
+            document.getElementById('btn-coop').className = view === 'coop' 
+                ? 'px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-900 text-white'
+                : 'px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
+            document.getElementById('btn-solo').className = view === 'solo'
+                ? 'px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-900 text-white'
+                : 'px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
+            document.getElementById('metric-label').textContent = view === 'coop' 
+                ? 'Cooperative Success Rate' 
+                : 'Solo Success Rate';
+            document.getElementById('legend-bar').className = view === 'coop'
+                ? 'w-3 h-3 bg-gray-900 rounded-sm'
+                : 'w-3 h-3 bg-blue-500 rounded-sm';
+            document.getElementById('legend-ci').className = view === 'coop'
+                ? 'w-8 h-0.5 bg-gray-600'
+                : 'w-8 h-0.5 bg-blue-400';
+            document.getElementById('legend-label').textContent = view === 'coop' ? 'Cooperative' : 'Solo';
+            renderLeaderboard();
+        }
+
+        function renderLeaderboard() {
+            const data = leaderboardData[currentView];
+            const maxScore = 100;
+            const tbody = document.getElementById('leaderboard-body');
+            
+            const barColor = currentView === 'coop' ? 'bg-gray-900' : 'bg-blue-500';
+            const ciColor = currentView === 'coop' ? 'bg-gray-600' : 'bg-blue-400';
+            
+            tbody.innerHTML = data.map(item => {
+                const barWidth = (item.score / maxScore) * 100;
+                const ciLow = (item.ci[0] / maxScore) * 100;
+                const ciHigh = (item.ci[1] / maxScore) * 100;
+                
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-4 text-sm text-gray-500">${item.rank}</td>
+                        <td class="px-4 py-4">
+                            <span class="font-medium text-gray-900">${item.model}</span>
+                            ${item.fullName ? `<div class="text-xs text-gray-400 font-mono">${item.fullName}</div>` : ''}
+                        </td>
+                        <td class="px-4 py-4">
+                            <div class="relative h-5 bg-gray-100 rounded">
+                                <div class="absolute inset-y-0 left-0 ${barColor} rounded" style="width: ${barWidth}%"></div>
+                                <div class="absolute top-1/2 -translate-y-1/2 h-2.5 flex items-center" style="left: ${ciLow}%; width: ${ciHigh - ciLow}%;">
+                                    <div class="w-0.5 h-full ${ciColor}"></div>
+                                    <div class="flex-1 h-0.5 ${ciColor}"></div>
+                                    <div class="w-0.5 h-full ${ciColor}"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 text-right">
+                            <span class="font-semibold text-gray-900 tabular-nums">${item.score.toFixed(1)}%</span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Initial render
+        renderLeaderboard();
+    </script>
+</body>
+</html>

@@ -214,31 +214,21 @@
     <body class="bg-white">
         <!-- Header Navigation Bar -->
         <header
-            class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-100 z-50"
+            class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-200 z-50"
         >
-            <div class="max-w-4xl mx-auto px-6">
+            <div class="max-w-6xl mx-auto px-6">
                 <div class="flex items-center justify-between h-14">
-                    <a
-                        href="index.html"
-                        class="text-lg font-semibold text-gray-900"
-                        >CooperBench</a
-                    >
+                    <a href="index.html" class="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                        <img src="static/images/favicon.svg" alt="" class="w-5 h-5" style="filter: brightness(0);">
+                        CooperBench
+                    </a>
                     <nav class="flex items-center gap-6">
-                        <a
-                            href="index.html"
-                            class="text-sm text-gray-600 hover:text-gray-900"
-                            >Home</a
-                        >
-                        <a
-                            href="blog.html"
-                            class="text-sm text-gray-900 font-medium"
-                            >Blog</a
-                        >
-                        <a
-                            href="viewer.html"
-                            class="text-sm text-gray-600 hover:text-gray-900"
-                            >Trajectories</a
-                        >
+                        <a href="leaderboard.html" class="text-sm text-gray-600 hover:text-gray-900">Leaderboard</a>
+                        <a href="tasks.html" class="text-sm text-gray-600 hover:text-gray-900">Tasks</a>
+                        <a href="viewer.html" class="text-sm text-gray-600 hover:text-gray-900">Trajectories</a>
+                        <a href="blog.html" class="text-sm text-gray-900 font-medium">Blog</a>
+                        <a href="https://arxiv.org/abs/2601.13295" target="_blank" class="text-sm text-gray-600 hover:text-gray-900">Paper <span class="text-xs">↗</span></a>
+                        <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="text-gray-600 hover:text-gray-900"><i class="fab fa-github"></i></a>
                     </nav>
                 </div>
             </div>

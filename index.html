@@ -206,34 +206,21 @@
     <body class="bg-white text-gray-900 font-sans">
         <!-- Header -->
         <header
-            class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-100 z-50"
+            class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-200 z-50"
         >
-            <div class="max-w-4xl mx-auto px-6">
+            <div class="max-w-6xl mx-auto px-6">
                 <div class="flex items-center justify-between h-14">
-                    <a href="index.html" class="text-lg font-semibold text-gray-900"
-                        >CooperBench</a
-                    >
+                    <a href="index.html" class="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                        <img src="static/images/favicon.svg" alt="" class="w-5 h-5" style="filter: brightness(0);">
+                        CooperBench
+                    </a>
                     <nav class="flex items-center gap-6">
-                        <a
-                            href="#leaderboard"
-                            class="text-sm text-gray-600 hover:text-gray-900"
-                            >Leaderboard</a
-                        >
-                        <a
-                            href="blog.html"
-                            class="text-sm text-gray-600 hover:text-gray-900"
-                            >Blog</a
-                        >
-                        <a
-                            href="viewer.html"
-                            class="text-sm text-gray-600 hover:text-gray-900"
-                            >Trajectories</a
-                        >
-                        <a
-                            href="#authors"
-                            class="text-sm text-gray-600 hover:text-gray-900"
-                            >Authors</a
-                        >
+                        <a href="leaderboard.html" class="text-sm text-gray-600 hover:text-gray-900">Leaderboard</a>
+                        <a href="tasks.html" class="text-sm text-gray-600 hover:text-gray-900">Tasks</a>
+                        <a href="viewer.html" class="text-sm text-gray-600 hover:text-gray-900">Trajectories</a>
+                        <a href="blog.html" class="text-sm text-gray-600 hover:text-gray-900">Blog</a>
+                        <a href="https://arxiv.org/abs/2601.13295" target="_blank" class="text-sm text-gray-600 hover:text-gray-900">Paper <span class="text-xs">↗</span></a>
+                        <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="text-gray-600 hover:text-gray-900"><i class="fab fa-github"></i></a>
                     </nav>
                 </div>
             </div>
@@ -803,36 +790,48 @@ pip install -r requirements.txt</code></pre>
                                 Frederic Sadrieh†
                             </div>
                         </a>
-                        <div class="text-center">
-                            <div
-                                class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium"
-                            >
-                                JL
-                            </div>
+                        <a
+                            href="https://www.linkedin.com/in/johann-lieberwirth/"
+                            target="_blank"
+                            class="text-center group"
+                        >
+                            <img
+                                src="static/images/johann.jpeg"
+                                alt="Johann K. Lieberwirth"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
+                            />
                             <div class="text-sm font-medium text-gray-900">
                                 Johann K. Lieberwirth†
                             </div>
-                        </div>
-                        <div class="text-center">
-                            <div
-                                class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium"
-                            >
-                                XY
-                            </div>
+                        </a>
+                        <a
+                            href="https://www.linkedin.com/in/xinkai-colin-yu/"
+                            target="_blank"
+                            class="text-center group"
+                        >
+                            <img
+                                src="static/images/xinkai.png"
+                                alt="Xinkai Yu"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
+                            />
                             <div class="text-sm font-medium text-gray-900">
                                 Xinkai Yu
                             </div>
-                        </div>
-                        <div class="text-center">
-                            <div
-                                class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium"
-                            >
-                                YF
-                            </div>
+                        </a>
+                        <a
+                            href="https://sofyc.github.io/"
+                            target="_blank"
+                            class="text-center group"
+                        >
+                            <img
+                                src="static/images/yicheng.jpeg"
+                                alt="Yicheng Fu"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
+                            />
                             <div class="text-sm font-medium text-gray-900">
                                 Yicheng Fu
                             </div>
-                        </div>
+                        </a>
                         <a
                             href="https://michryan.com/"
                             target="_blank"
@@ -847,16 +846,20 @@ pip install -r requirements.txt</code></pre>
                                 Michael J. Ryan
                             </div>
                         </a>
-                        <div class="text-center">
-                            <div
-                                class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center text-gray-500 text-lg font-medium"
-                            >
-                                JP
-                            </div>
+                        <a
+                            href="https://jiaxin-pei.github.io/"
+                            target="_blank"
+                            class="text-center group"
+                        >
+                            <img
+                                src="static/images/jiaxin_pei.jpeg"
+                                alt="Jiaxin Pei"
+                                class="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
+                            />
                             <div class="text-sm font-medium text-gray-900">
                                 Jiaxin Pei
                             </div>
-                        </div>
+                        </a>
                         <a
                             href="https://cs.stanford.edu/~diyiy/"
                             target="_blank"

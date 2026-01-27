@@ -157,7 +157,8 @@
                 overflow: hidden;
             }
             body,
-            .font-sans {
+            .font-sans,
+            h1, h2, h3, h4, h5, h6 {
                 font-family: "Nebula Sans", system-ui, sans-serif !important;
             }
         </style>
@@ -166,31 +167,21 @@
     <body class="bg-gray-50 text-gray-900 font-sans">
         <!-- Header -->
         <header
-            class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-100 z-50"
+            class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-200 z-50"
         >
-            <div class="max-w-4xl mx-auto px-6">
+            <div class="max-w-6xl mx-auto px-6">
                 <div class="flex items-center justify-between h-14">
-                    <a
-                        href="index.html"
-                        class="text-lg font-semibold text-gray-900"
-                        >CooperBench</a
-                    >
+                    <a href="index.html" class="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                        <img src="static/images/favicon.svg" alt="" class="w-5 h-5" style="filter: brightness(0);">
+                        CooperBench
+                    </a>
                     <nav class="flex items-center gap-6">
-                        <a
-                            href="index.html"
-                            class="text-sm text-gray-600 hover:text-gray-900"
-                            >Home</a
-                        >
-                        <a
-                            href="blog.html"
-                            class="text-sm text-gray-600 hover:text-gray-900"
-                            >Blog</a
-                        >
-                        <a
-                            href="viewer.html"
-                            class="text-sm text-gray-900 font-medium"
-                            >Trajectories</a
-                        >
+                        <a href="leaderboard.html" class="text-sm text-gray-600 hover:text-gray-900">Leaderboard</a>
+                        <a href="tasks.html" class="text-sm text-gray-600 hover:text-gray-900">Tasks</a>
+                        <a href="viewer.html" class="text-sm text-gray-900 font-medium">Trajectories</a>
+                        <a href="blog.html" class="text-sm text-gray-600 hover:text-gray-900">Blog</a>
+                        <a href="https://arxiv.org/abs/2601.13295" target="_blank" class="text-sm text-gray-600 hover:text-gray-900">Paper <span class="text-xs">↗</span></a>
+                        <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="text-gray-600 hover:text-gray-900"><i class="fab fa-github"></i></a>
                     </nav>
                 </div>
             </div>
@@ -756,11 +747,18 @@
                             ((ts - timeRange.start) / timeRange.duration) * 100;
                         const toolType = step.toolType || getToolType(step);
 
+                        // Calculate width: extend to next step's start time (or end of timeline)
+                        let nextTs = timeRange.end;
+                        if (idx < steps.length - 1) {
+                            nextTs = new Date(steps[idx + 1].timestamp || steps[idx + 1].timestampMs).getTime();
+                        }
+                        const widthPct = Math.max(((nextTs - ts) / timeRange.duration) * 100, 0.5);
+
                         const block = document.createElement("div");
-                        block.className = `absolute top-0 h-full ${getToolColor(toolType)} timeline-block cursor-pointer rounded-sm`;
-                        block.style.left = `${Math.min(left, 98)}%`;
-                        block.style.width = "2%";
-                        block.style.minWidth = "6px";
+                        block.className = `absolute top-0 h-full ${getToolColor(toolType)} timeline-block cursor-pointer`;
+                        block.style.left = `${Math.min(left, 99.5)}%`;
+                        block.style.width = `${Math.min(widthPct, 100 - left)}%`;
+                        block.style.minWidth = "2px";
                         block.title = `${formatTimestamp(step.timestamp || step.timestampMs)}: ${getToolLabel(toolType)}`;
 
                         const globalIdx = allSteps.findIndex(
@@ -861,9 +859,9 @@
                         contentHtml = `<div class="text-xs text-gray-600 leading-relaxed mt-1.5">${formatted}</div>`;
                     }
 
-                    // For bash, show command
-                    if (toolType === "bash" && step.args?.command) {
-                        contentHtml = `<div class="mt-1.5 text-xs font-mono bg-gray-900 text-green-400 p-2 rounded whitespace-pre-wrap break-all">${escapeHtml(step.args.command)}</div>`;
+                    // For bash/find_grep, show command (light mode)
+                    if ((toolType === "bash" || toolType === "find_grep") && step.args?.command) {
+                        contentHtml = `<div class="mt-1.5 text-xs font-mono bg-gray-100 text-gray-800 p-2 rounded border border-gray-200 whitespace-pre-wrap break-all">${escapeHtml(step.args.command)}</div>`;
                     }
 
                     // For view, show file path
@@ -871,22 +869,32 @@
                         contentHtml = `<div class="mt-1.5 text-xs text-gray-600"><span class="text-gray-400">file:</span> ${escapeHtml(step.args.path)}</div>`;
                     }
 
-                    // For edit, show file path and changes
+                    // For edit, show file path and changes (git-style diff)
                     if (toolType === "edit" && step.args) {
                         let editContent = "";
                         if (step.args.path) {
-                            editContent += `<div class="text-gray-600"><span class="text-gray-400">file:</span> ${escapeHtml(step.args.path)}</div>`;
+                            editContent += `<div class="text-gray-600 font-mono text-[10px]">${escapeHtml(step.args.path)}</div>`;
                         }
                         if (step.args.old_str || step.args.new_str) {
+                            editContent += `<div class="mt-1.5 font-mono text-[10px] bg-gray-50 border border-gray-200 rounded overflow-hidden leading-tight">`;
                             if (step.args.old_str) {
-                                editContent += `<div class="mt-1"><span class="text-red-500 text-[10px]">- old:</span><pre class="mt-0.5 text-[10px] bg-red-50 text-red-700 p-1.5 rounded whitespace-pre-wrap break-all">${escapeHtml(step.args.old_str.slice(0, 500))}${step.args.old_str.length > 500 ? "..." : ""}</pre></div>`;
+                                const oldLines = escapeHtml(step.args.old_str.slice(0, 500)).split('\n');
+                                editContent += oldLines.map(line => 
+                                    `<div class="px-2 bg-red-50/30"><span class="text-red-500 select-none">-</span> <span class="text-gray-700">${line}</span></div>`
+                                ).join('');
+                                if (step.args.old_str.length > 500) editContent += `<div class="px-2 text-gray-400">...</div>`;
                             }
                             if (step.args.new_str) {
-                                editContent += `<div class="mt-1"><span class="text-green-600 text-[10px]">+ new:</span><pre class="mt-0.5 text-[10px] bg-green-50 text-green-700 p-1.5 rounded whitespace-pre-wrap break-all">${escapeHtml(step.args.new_str.slice(0, 500))}${step.args.new_str.length > 500 ? "..." : ""}</pre></div>`;
+                                const newLines = escapeHtml(step.args.new_str.slice(0, 500)).split('\n');
+                                editContent += newLines.map(line => 
+                                    `<div class="px-2 bg-green-50/30"><span class="text-green-600 select-none">+</span> <span class="text-gray-700">${line}</span></div>`
+                                ).join('');
+                                if (step.args.new_str.length > 500) editContent += `<div class="px-2 text-gray-400">...</div>`;
                             }
+                            editContent += `</div>`;
                         }
                         if (editContent) {
-                            contentHtml = `<div class="mt-1.5 text-xs">${editContent}</div>`;
+                            contentHtml = `<div class="mt-1.5">${editContent}</div>`;
                         }
                     }
 
@@ -905,17 +913,24 @@
                         contentHtml = `<div class="mt-1.5 text-xs text-gray-500 italic">Recalling: ${escapeHtml(step.args.query.slice(0, 200))}...</div>`;
                     }
 
-                    const bgColor = isA
-                        ? "bg-red-50 border-red-100"
-                        : "bg-blue-50 border-blue-100";
-                    const labelColor = isA ? "text-red-600" : "text-blue-600";
+                    // For task_tracking, show task summary
+                    if (toolType === "task_tracking" && step.args?.task_list) {
+                        const tasks = step.args.task_list;
+                        const done = tasks.filter(t => t.status === 'done').length;
+                        const inProgress = tasks.filter(t => t.status === 'in_progress').length;
+                        const todo = tasks.filter(t => t.status === 'todo').length;
+                        contentHtml = `<div class="mt-1.5 text-xs text-gray-500">${tasks.length} tasks: <span class="text-green-600">${done} done</span>, <span class="text-yellow-600">${inProgress} in progress</span>, <span class="text-gray-400">${todo} todo</span></div>`;
+                    }
+
+                    // Clean card styling - neutral colors
+                    const labelColor = isA ? "text-gray-700" : "text-gray-700";
 
                     div.innerHTML = `
                     <div class="max-w-[85%]">
-                        <div class="step-card px-3 py-2 ${bgColor} rounded border">
+                        <div class="step-card px-3 py-2 bg-white rounded border border-gray-200">
                             <div class="flex items-center gap-2 text-[11px]">
                                 <span class="font-medium ${labelColor}">${isA ? "A" : "B"}</span>
-                                <span class="px-1.5 py-0.5 rounded text-white text-[10px] ${getToolColor(toolType)}">${getToolLabel(toolType)}</span>
+                                <span class="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 text-[10px]">${getToolLabel(toolType)}</span>
                                 <span class="text-gray-400 ml-auto">${formatTimestamp(step.timestampMs)}</span>
                             </div>
                             ${contentHtml}
