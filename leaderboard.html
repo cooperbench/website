@@ -480,9 +480,13 @@
             const statusFilter = document.getElementById('panel-filter-status').value;
             const repoFilter = document.getElementById('panel-filter-repo').value;
             
-            // Filter tasks that have results for this model
+            // Filter tasks that have results for this model AND have trajectory files
             let tasks = coopIndex.tasks.filter(task => {
                 if (!task.results[currentModelKey]) return false;
+                
+                // Only show tasks with trajectory files
+                const hasTrajectory = task.hasTrajectory && task.hasTrajectory[currentModelKey];
+                if (!hasTrajectory) return false;
                 
                 const result = task.results[currentModelKey];
                 
