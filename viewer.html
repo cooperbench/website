@@ -187,45 +187,61 @@
             </div>
         </header>
 
-        <main class="max-w-5xl mx-auto px-4 sm:px-6 py-4 pt-20">
-            <!-- Cause Browser Section -->
-            <section class="mb-6">
-                <div class="flex items-center gap-3 flex-wrap">
-                    <span class="text-sm text-gray-500"
-                        >Load random example:</span
-                    >
-                    <button
-                        onclick="loadRandomExample('expectation')"
-                        class="px-3 py-1.5 text-sm font-medium rounded bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
-                    >
-                        Expectation
-                        <span id="count-expectation" class="text-xs opacity-70"
-                            >(0)</span
-                        >
-                    </button>
-                    <button
-                        onclick="loadRandomExample('communication')"
-                        class="px-3 py-1.5 text-sm font-medium rounded bg-orange-100 text-orange-700 hover:bg-orange-200 transition-colors"
-                    >
-                        Communication
-                        <span
-                            id="count-communication"
-                            class="text-xs opacity-70"
-                            >(0)</span
-                        >
-                    </button>
-                    <button
-                        onclick="loadRandomExample('commitment')"
-                        class="px-3 py-1.5 text-sm font-medium rounded bg-purple-100 text-purple-700 hover:bg-purple-200 transition-colors"
-                    >
-                        Commitment
-                        <span id="count-commitment" class="text-xs opacity-70"
-                            >(0)</span
-                        >
-                    </button>
+        <main class="pt-14">
+            <!-- Page Header -->
+            <div class="bg-white border-b border-gray-200">
+                <div class="max-w-7xl mx-auto px-6 py-8">
+                    <div class="text-sm text-gray-500 mb-4">
+                        <a href="index.html" class="hover:text-gray-700">Home</a>
+                        <span class="mx-2">›</span>
+                        <span class="text-gray-900">Trajectories</span>
+                    </div>
+                    
+                    <h1 class="text-2xl font-semibold text-gray-900 mb-2">Trajectory Viewer</h1>
+                    <p class="text-gray-600">Explore multi-agent collaboration failures and coordination breakdowns</p>
                 </div>
-            </section>
+            </div>
 
+            <!-- Filters Bar -->
+            <div class="bg-white border-b border-gray-200 sticky top-14 z-40">
+                <div class="max-w-7xl mx-auto px-6 py-4">
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm text-gray-500">Failure cause:</span>
+                        <div class="flex gap-2">
+                            <button
+                                onclick="loadRandomExample('expectation')"
+                                class="px-3 py-1.5 text-sm rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                            >
+                                Expectation
+                                <span id="count-expectation" class="text-xs text-gray-400">(0)</span>
+                            </button>
+                            <button
+                                onclick="loadRandomExample('communication')"
+                                class="px-3 py-1.5 text-sm rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                            >
+                                Communication
+                                <span id="count-communication" class="text-xs text-gray-400">(0)</span>
+                            </button>
+                            <button
+                                onclick="loadRandomExample('commitment')"
+                                class="px-3 py-1.5 text-sm rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                            >
+                                Commitment
+                                <span id="count-commitment" class="text-xs text-gray-400">(0)</span>
+                            </button>
+                        </div>
+                        <button
+                            onclick="clearViewer()"
+                            class="ml-auto text-sm text-gray-400 hover:text-gray-600"
+                        >
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="max-w-7xl mx-auto px-6 py-6">
             <!-- Hidden file inputs -->
             <input
                 type="file"
@@ -282,12 +298,6 @@
                         ><span class="w-2 h-2 bg-red-500 rounded-sm"></span
                         >Submit</span
                     >
-                    <button
-                        onclick="clearViewer()"
-                        class="ml-auto text-gray-400 hover:text-gray-600"
-                    >
-                        clear
-                    </button>
                 </div>
 
                 <!-- Timeline -->
@@ -404,9 +414,10 @@
             <!-- Empty State -->
             <section id="empty-state" class="text-center py-12">
                 <p class="text-sm text-gray-400">
-                    Click a cause button above to load a trajectory
+                    Loading trajectory...
                 </p>
             </section>
+            </div><!-- Close max-w-7xl container -->
         </main>
 
         <script>
@@ -431,6 +442,9 @@
                         `(${causeIndex.communication?.length || 0})`;
                     document.getElementById("count-commitment").textContent =
                         `(${causeIndex.commitment?.length || 0})`;
+                    
+                    // Auto-load a default trajectory
+                    loadRandomExample('expectation');
                 } catch (e) {
                     console.error("Error loading cause index:", e);
                 }
@@ -482,11 +496,6 @@
                     );
 
                     processAndRender();
-
-                    // Scroll to viewer
-                    document
-                        .getElementById("viewer-section")
-                        .scrollIntoView({ behavior: "smooth" });
                 } catch (e) {
                     console.error("Error loading trajectory:", e);
                     showStatus(
@@ -773,7 +782,13 @@
                 timelineB.innerHTML = "";
 
                 function renderAgent(steps, container, agent) {
-                    steps.forEach((step, idx) => {
+                    // Filter out comm_get steps
+                    const filteredSteps = steps.filter(step => {
+                        const toolName = step.toolName || step.tool_call_metadata?.function_name || "";
+                        return !toolName.includes("comm_get") && !toolName.includes("receive");
+                    });
+                    
+                    filteredSteps.forEach((step, idx) => {
                         const ts = new Date(
                             step.timestamp || step.timestampMs,
                         ).getTime();
@@ -785,8 +800,8 @@
 
                         // Calculate width: extend to next step's start time (or end of timeline)
                         let nextTs = timeRange.end;
-                        if (idx < steps.length - 1) {
-                            nextTs = new Date(steps[idx + 1].timestamp || steps[idx + 1].timestampMs).getTime();
+                        if (idx < filteredSteps.length - 1) {
+                            nextTs = new Date(filteredSteps[idx + 1].timestamp || filteredSteps[idx + 1].timestampMs).getTime();
                         }
                         const widthPct = Math.max(((nextTs - ts) / timeRange.duration) * 100, 0.5);
 
@@ -841,6 +856,10 @@
 
                 allSteps.forEach((step, idx) => {
                     const toolType = step.toolType || getToolType(step);
+
+                    // Skip comm_get (receive) actions - they just check for messages
+                    const toolName = step.toolName || step.tool_call_metadata?.function_name || "";
+                    if (toolName.includes("comm_get") || toolName.includes("receive")) return;
 
                     // Apply filters
                     if (toolType === "communication" && !filters.comm) return;
