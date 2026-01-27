@@ -111,6 +111,15 @@
         body, .font-sans, h1, h2, h3, h4, h5, h6 {
             font-family: "Nebula Sans", system-ui, sans-serif !important;
         }
+        
+        /* Side panel animation */
+        .side-panel { 
+            transform: translateX(calc(100% + 1rem)); 
+            transition: transform 0.25s ease-out; 
+        }
+        .side-panel.open { 
+            transform: translateX(0); 
+        }
     </style>
 </head>
 
@@ -173,6 +182,7 @@
                                 <span id="metric-label">Cooperative Success Rate</span>
                             </th>
                             <th class="text-right text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3">Score</th>
+                            <th class="w-10"></th>
                         </tr>
                     </thead>
                     <tbody id="leaderboard-body" class="divide-y divide-gray-100">
@@ -219,44 +229,38 @@
                                 <th class="text-center font-medium text-gray-700 px-4 py-3">Solo</th>
                                 <th class="text-center font-medium text-gray-700 px-4 py-3">Coop</th>
                                 <th class="text-center font-medium text-gray-700 px-4 py-3">Gap</th>
-                                <th class="text-center font-medium text-gray-700 px-4 py-3">Conflict Rate</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             <tr>
                                 <td class="px-4 py-3 font-medium">GPT-5</td>
-                                <td class="px-4 py-3 text-center">52.3%</td>
-                                <td class="px-4 py-3 text-center">27.8%</td>
-                                <td class="px-4 py-3 text-center text-red-600">-24.5%</td>
-                                <td class="px-4 py-3 text-center">18.2%</td>
+                                <td class="px-4 py-3 text-center">48.31%</td>
+                                <td class="px-4 py-3 text-center">27.95%</td>
+                                <td class="px-4 py-3 text-center text-red-600">-20.36%</td>
                             </tr>
                             <tr>
                                 <td class="px-4 py-3 font-medium">Claude Sonnet 4.5</td>
-                                <td class="px-4 py-3 text-center">49.8%</td>
-                                <td class="px-4 py-3 text-center">25.9%</td>
-                                <td class="px-4 py-3 text-center text-red-600">-23.9%</td>
-                                <td class="px-4 py-3 text-center">16.7%</td>
+                                <td class="px-4 py-3 text-center">47.09%</td>
+                                <td class="px-4 py-3 text-center">25.92%</td>
+                                <td class="px-4 py-3 text-center text-red-600">-21.17%</td>
                             </tr>
                             <tr>
                                 <td class="px-4 py-3 font-medium">MiniMax M2</td>
-                                <td class="px-4 py-3 text-center">32.1%</td>
-                                <td class="px-4 py-3 text-center">14.0%</td>
-                                <td class="px-4 py-3 text-center text-red-600">-18.1%</td>
-                                <td class="px-4 py-3 text-center">22.4%</td>
+                                <td class="px-4 py-3 text-center">36.20%</td>
+                                <td class="px-4 py-3 text-center">13.96%</td>
+                                <td class="px-4 py-3 text-center text-red-600">-22.24%</td>
                             </tr>
                             <tr>
                                 <td class="px-4 py-3 font-medium">Qwen3-Coder-30B</td>
-                                <td class="px-4 py-3 text-center">28.6%</td>
-                                <td class="px-4 py-3 text-center">13.3%</td>
-                                <td class="px-4 py-3 text-center text-red-600">-15.3%</td>
-                                <td class="px-4 py-3 text-center">25.1%</td>
+                                <td class="px-4 py-3 text-center">21.63%</td>
+                                <td class="px-4 py-3 text-center">13.34%</td>
+                                <td class="px-4 py-3 text-center text-red-600">-8.29%</td>
                             </tr>
                             <tr>
                                 <td class="px-4 py-3 font-medium">Qwen3-30B</td>
-                                <td class="px-4 py-3 text-center">12.4%</td>
-                                <td class="px-4 py-3 text-center">4.6%</td>
-                                <td class="px-4 py-3 text-center text-red-600">-7.8%</td>
-                                <td class="px-4 py-3 text-center">31.2%</td>
+                                <td class="px-4 py-3 text-center">6.29%</td>
+                                <td class="px-4 py-3 text-center">4.60%</td>
+                                <td class="px-4 py-3 text-center text-red-600">-1.69%</td>
                             </tr>
                         </tbody>
                     </table>
@@ -272,25 +276,105 @@
         </div>
     </footer>
 
+    <!-- Model Detail Panel -->
+    <div id="panel-backdrop" class="fixed inset-0 bg-black/30 z-[60] opacity-0 pointer-events-none transition-opacity duration-200" onclick="closeModelPanel()"></div>
+    <div id="model-panel" class="side-panel fixed top-4 right-4 bottom-4 w-full max-w-4xl bg-white z-[70] shadow-2xl rounded-xl flex flex-col overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <div>
+                <h2 id="panel-model-name" class="text-lg font-semibold text-gray-900">Model Results</h2>
+                <p id="panel-model-stats" class="text-sm text-gray-500">0/0 tasks passed</p>
+            </div>
+            <button onclick="closeModelPanel()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Filters -->
+        <div class="px-6 py-3 border-b border-gray-100 flex items-center gap-4">
+            <input type="text" id="panel-search" placeholder="Search tasks..." class="flex-1 px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-gray-400" oninput="filterPanelTasks()">
+            <select id="panel-filter-status" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none" onchange="filterPanelTasks()">
+                <option value="">All status</option>
+                <option value="passed">Passed only</option>
+                <option value="failed">Failed only</option>
+            </select>
+            <select id="panel-filter-repo" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none" onchange="filterPanelTasks()">
+                <option value="">All repos</option>
+            </select>
+        </div>
+        
+        <!-- Task count -->
+        <div class="px-6 py-2 text-xs text-gray-500 border-b border-gray-100">
+            <span id="panel-task-count">0 tasks</span>
+        </div>
+        
+        <!-- Task Table -->
+        <div class="flex-1 overflow-y-auto">
+            <table class="w-full text-sm">
+                <thead class="sticky top-0 bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th class="text-left font-medium text-gray-600 px-6 py-2">Repository</th>
+                        <th class="text-left font-medium text-gray-600 px-4 py-2">Task</th>
+                        <th class="text-left font-medium text-gray-600 px-4 py-2">Features</th>
+                        <th class="text-center font-medium text-gray-600 px-4 py-2">Status</th>
+                        <th class="text-center font-medium text-gray-600 px-4 py-2">Trajectory</th>
+                    </tr>
+                </thead>
+                <tbody id="panel-tasks-body" class="divide-y divide-gray-100">
+                    <!-- Rows rendered here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <script>
         const leaderboardData = {
             coop: [
-                { rank: 1, model: 'GPT-5', fullName: null, score: 27.8, ci: [24.5, 31.3] },
-                { rank: 2, model: 'Claude Sonnet 4.5', fullName: null, score: 25.9, ci: [22.7, 29.4] },
-                { rank: 3, model: 'MiniMax M2', fullName: null, score: 14.0, ci: [11.5, 16.8] },
-                { rank: 4, model: 'Qwen3-Coder-30B', fullName: 'Qwen3-Coder-30B-A3B-Instruct', score: 13.3, ci: [10.9, 16.2] },
-                { rank: 5, model: 'Qwen3-30B', fullName: 'Qwen3-30B-A3B-Instruct-2507', score: 4.6, ci: [3.2, 6.5] },
+                { rank: 1, model: 'GPT-5', modelKey: 'gpt5', fullName: null, score: 27.95, ci: [24.5, 31.3] },
+                { rank: 2, model: 'Claude Sonnet 4.5', modelKey: 'claude', fullName: null, score: 25.92, ci: [22.7, 29.4] },
+                { rank: 3, model: 'MiniMax M2', modelKey: 'minimax', fullName: null, score: 13.96, ci: [11.5, 16.8] },
+                { rank: 4, model: 'Qwen3-Coder-30B', modelKey: 'qwen_coder', fullName: 'Qwen3-Coder-30B-A3B-Instruct', score: 13.34, ci: [10.9, 16.2] },
+                { rank: 5, model: 'Qwen3-30B', modelKey: 'qwen', fullName: 'Qwen3-30B-A3B-Instruct-2507', score: 4.60, ci: [3.2, 6.5] },
             ],
             solo: [
-                { rank: 1, model: 'GPT-5', fullName: null, score: 52.3, ci: [48.2, 56.4] },
-                { rank: 2, model: 'Claude Sonnet 4.5', fullName: null, score: 49.8, ci: [45.7, 53.9] },
-                { rank: 3, model: 'MiniMax M2', fullName: null, score: 32.1, ci: [28.4, 36.0] },
-                { rank: 4, model: 'Qwen3-Coder-30B', fullName: 'Qwen3-Coder-30B-A3B-Instruct', score: 28.6, ci: [24.9, 32.5] },
-                { rank: 5, model: 'Qwen3-30B', fullName: 'Qwen3-30B-A3B-Instruct-2507', score: 12.4, ci: [9.8, 15.4] },
+                { rank: 1, model: 'GPT-5', modelKey: 'gpt5', fullName: null, score: 48.31, ci: [44.50, 52.15] },
+                { rank: 2, model: 'Claude Sonnet 4.5', modelKey: 'claude', fullName: null, score: 47.09, ci: [43.28, 50.92] },
+                { rank: 3, model: 'MiniMax M2', modelKey: 'minimax', fullName: null, score: 36.20, ci: [32.60, 39.96] },
+                { rank: 4, model: 'Qwen3-Coder-30B', modelKey: 'qwen_coder', fullName: 'Qwen3-Coder-30B-A3B-Instruct', score: 21.63, ci: [18.64, 24.95] },
+                { rank: 5, model: 'Qwen3-30B', modelKey: 'qwen', fullName: 'Qwen3-30B-A3B-Instruct-2507', score: 6.29, ci: [4.67, 8.42] },
             ]
         };
 
         let currentView = 'coop';
+        let coopIndex = null;
+        let currentModelKey = null;
+
+        // Load coop index on page load
+        async function loadCoopIndex() {
+            try {
+                const response = await fetch('static/data/coop/index.json');
+                coopIndex = await response.json();
+                populateRepoFilter();
+                // Re-render leaderboard to show arrows now that data is loaded
+                renderLeaderboard();
+            } catch (e) {
+                console.error('Error loading coop index:', e);
+            }
+        }
+
+        function populateRepoFilter() {
+            if (!coopIndex) return;
+            const repos = [...new Set(coopIndex.tasks.map(t => t.repo))].sort();
+            const select = document.getElementById('panel-filter-repo');
+            select.innerHTML = '<option value="">All repos</option>';
+            repos.forEach(repo => {
+                const opt = document.createElement('option');
+                opt.value = repo;
+                opt.textContent = repo.replace(/_/g, ' ');
+                select.appendChild(opt);
+            });
+        }
 
         function setView(view) {
             currentView = view;
@@ -325,9 +409,10 @@
                 const barWidth = (item.score / maxScore) * 100;
                 const ciLow = (item.ci[0] / maxScore) * 100;
                 const ciHigh = (item.ci[1] / maxScore) * 100;
+                const clickable = currentView === 'coop' && coopIndex;
                 
                 return `
-                    <tr class="hover:bg-gray-50">
+                    <tr class="hover:bg-gray-50 ${clickable ? 'cursor-pointer' : ''}" ${clickable ? `onclick="openModelPanel('${item.modelKey}')"` : ''}>
                         <td class="px-4 py-4 text-sm text-gray-500">${item.rank}</td>
                         <td class="px-4 py-4">
                             <span class="font-medium text-gray-900">${item.model}</span>
@@ -346,12 +431,113 @@
                         <td class="px-4 py-4 text-right">
                             <span class="font-semibold text-gray-900 tabular-nums">${item.score.toFixed(1)}%</span>
                         </td>
+                        <td class="px-4 py-4 text-center">
+                            ${clickable ? '<span class="text-gray-400">→</span>' : ''}
+                        </td>
                     </tr>
                 `;
             }).join('');
         }
 
-        // Initial render
+        function openModelPanel(modelKey) {
+            if (!coopIndex) return;
+            
+            currentModelKey = modelKey;
+            const modelName = coopIndex.modelDisplayNames[modelKey] || modelKey;
+            const stats = coopIndex.stats[modelKey];
+            
+            document.getElementById('panel-model-name').textContent = `${modelName} Results`;
+            document.getElementById('panel-model-stats').textContent = `${stats.passed}/${stats.total} tasks passed (${stats.rate}%)`;
+            
+            // Reset filters
+            document.getElementById('panel-search').value = '';
+            document.getElementById('panel-filter-status').value = '';
+            document.getElementById('panel-filter-repo').value = '';
+            
+            renderPanelTasks();
+            
+            // Show panel
+            document.getElementById('panel-backdrop').classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('model-panel').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModelPanel() {
+            document.getElementById('panel-backdrop').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('model-panel').classList.remove('open');
+            document.body.style.overflow = '';
+            currentModelKey = null;
+        }
+
+        function filterPanelTasks() {
+            renderPanelTasks();
+        }
+
+        function renderPanelTasks() {
+            if (!coopIndex || !currentModelKey) return;
+            
+            const search = document.getElementById('panel-search').value.toLowerCase();
+            const statusFilter = document.getElementById('panel-filter-status').value;
+            const repoFilter = document.getElementById('panel-filter-repo').value;
+            
+            // Filter tasks that have results for this model
+            let tasks = coopIndex.tasks.filter(task => {
+                if (!task.results[currentModelKey]) return false;
+                
+                const result = task.results[currentModelKey];
+                
+                // Apply filters
+                if (statusFilter === 'passed' && !result.passed) return false;
+                if (statusFilter === 'failed' && result.passed) return false;
+                if (repoFilter && task.repo !== repoFilter) return false;
+                if (search) {
+                    const searchStr = `${task.repo} ${task.taskId} ${task.features}`.toLowerCase();
+                    if (!searchStr.includes(search)) return false;
+                }
+                
+                return true;
+            });
+            
+            document.getElementById('panel-task-count').textContent = `${tasks.length} tasks`;
+            
+            const tbody = document.getElementById('panel-tasks-body');
+            
+            if (tasks.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-400">No tasks match filters</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = tasks.map(task => {
+                const result = task.results[currentModelKey];
+                const hasTrajectory = task.hasTrajectory && task.hasTrajectory[currentModelKey];
+                
+                const statusBadge = result.passed
+                    ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Pass</span>'
+                    : '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Fail</span>';
+                
+                const trajLink = hasTrajectory
+                    ? `<a href="viewer.html?model=${currentModelKey}&repo=${task.repo}&task=${task.taskId}&features=${task.features}" class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded">View →</a>`
+                    : '<span class="text-xs text-gray-400">—</span>';
+                
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-3 text-gray-600 font-mono text-xs">${task.repo.replace(/_/g, ' ')}</td>
+                        <td class="px-4 py-3 text-gray-900 font-medium">${task.taskId}</td>
+                        <td class="px-4 py-3 text-gray-600 text-xs">${task.f1} + ${task.f2}</td>
+                        <td class="px-4 py-3 text-center">${statusBadge}</td>
+                        <td class="px-4 py-3 text-center">${trajLink}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Close panel on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModelPanel();
+        });
+
+        // Initial load
+        loadCoopIndex();
         renderLeaderboard();
     </script>
 </body>

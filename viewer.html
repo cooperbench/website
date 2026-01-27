@@ -443,10 +443,96 @@
                     document.getElementById("count-commitment").textContent =
                         `(${causeIndex.commitment?.length || 0})`;
                     
-                    // Auto-load a default trajectory
-                    loadRandomExample('expectation');
+                    // Check for URL params first
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const model = urlParams.get('model');
+                    const repo = urlParams.get('repo');
+                    const task = urlParams.get('task');
+                    const features = urlParams.get('features');
+                    
+                    if (model && repo && task && features) {
+                        // Load specific trajectory from URL params
+                        loadTrajectoryFromParams(model, repo, task, features);
+                    } else {
+                        // Auto-load a default trajectory
+                        loadRandomExample('expectation');
+                    }
                 } catch (e) {
                     console.error("Error loading cause index:", e);
+                }
+            }
+            
+            async function loadTrajectoryFromParams(model, repo, task, features) {
+                const trajectoryPath = `static/data/coop/trajectories/${model}/${repo}_${task}_${features}.json`;
+                
+                showStatus(`Loading ${model} trajectory for ${repo}/${task}/${features}...`, 'info');
+                
+                try {
+                    const response = await fetch(trajectoryPath);
+                    if (!response.ok) {
+                        throw new Error(`Trajectory not found: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    
+                    // Data is array of steps with agentId field
+                    stepsA = [];
+                    stepsB = [];
+                    
+                    // Filter out system prompt steps
+                    const isSystemPrompt = (step) => {
+                        const content = step.content || step.text || step.message || '';
+                        if (typeof content !== 'string') return false;
+                        
+                        // Skip OpenHands system prompts
+                        if (content.includes('You are OpenHands agent')) return true;
+                        if (content.includes('<ROLE>')) return true;
+                        if (content.includes('You are agent_')) return true;
+                        if (content.includes('**FEATURE DESCRIPTION**')) return true;
+                        if (content.includes('Added workspace context')) return true;
+                        
+                        return false;
+                    };
+                    
+                    data.forEach((step, idx) => {
+                        // Skip system prompts
+                        if (isSystemPrompt(step)) return;
+                        
+                        if (step.agentId === "agent_1" || step.agent === "A") {
+                            stepsA.push({
+                                ...step,
+                                originalIndex: stepsA.length,
+                            });
+                        } else {
+                            stepsB.push({
+                                ...step,
+                                originalIndex: stepsB.length,
+                            });
+                        }
+                    });
+                    
+                    // Update header
+                    const modelNames = {
+                        gpt5: 'GPT-5',
+                        claude: 'Claude Sonnet 4.5',
+                        minimax: 'MiniMax M2',
+                        qwen_coder: 'Qwen3-Coder-30B',
+                        qwen: 'Qwen3-30B'
+                    };
+                    const modelName = modelNames[model] || model;
+                    showStatus(
+                        `${modelName}: ${repo.replace(/_/g, ' ')} / ${task} / ${features} (${stepsA.length + stepsB.length} steps)`,
+                        "success",
+                    );
+                    
+                    processAndRender();
+                } catch (e) {
+                    console.error("Error loading trajectory:", e);
+                    showStatus(
+                        `Trajectory not available: ${repo}/${task}/${features}. Try loading a cause example instead.`,
+                        "error",
+                    );
+                    // Fall back to random example
+                    loadRandomExample('expectation');
                 }
             }
 
@@ -472,8 +558,23 @@
                     // Data is array of steps with agentId field
                     stepsA = [];
                     stepsB = [];
+                    
+                    // Filter out system prompt steps
+                    const isSystemPrompt = (step) => {
+                        const content = step.content || step.text || step.message || '';
+                        if (typeof content !== 'string') return false;
+                        if (content.includes('You are OpenHands agent')) return true;
+                        if (content.includes('<ROLE>')) return true;
+                        if (content.includes('You are agent_')) return true;
+                        if (content.includes('**FEATURE DESCRIPTION**')) return true;
+                        if (content.includes('Added workspace context')) return true;
+                        return false;
+                    };
 
                     data.forEach((step, idx) => {
+                        // Skip system prompts
+                        if (isSystemPrompt(step)) return;
+                        
                         if (step.agentId === "agent_1") {
                             stepsA.push({
                                 ...step,
@@ -644,6 +745,17 @@
             function shouldShowStep(step) {
                 if (step.action === "system" || step.source === "user")
                     return false;
+                
+                // Filter out system prompts
+                const content = step.content || step.text || step.message || '';
+                if (typeof content === 'string') {
+                    if (content.includes('You are OpenHands agent')) return false;
+                    if (content.includes('<ROLE>')) return false;
+                    if (content.includes('You are agent_')) return false;
+                    if (content.includes('**FEATURE DESCRIPTION**')) return false;
+                    if (content.includes('Added workspace context')) return false;
+                }
+                
                 return true;
             }
 
@@ -1065,7 +1177,7 @@
                         <div class="max-w-[85%]">
                             <div class="step-card px-3 py-2 bg-white rounded border border-gray-200">
                                 ${contentHtml}
-                                <div class="text-[10px] text-gray-400 mt-1">${formatTimestamp(step.timestampMs)}</div>
+                                <div class="text-[10px] text-gray-400 mt-1">${formatTimestamp(step.timestamp || step.timestampMs)}</div>
                             </div>
                         </div>
                         `;
@@ -1076,7 +1188,7 @@
                                 <div class="flex items-center gap-2 text-[11px]">
                                     <span class="font-medium ${labelColor}">${isA ? "A" : "B"}</span>
                                     <span class="px-1.5 py-0.5 rounded text-[10px] flex items-center gap-1 ${getPillStyle(toolType)}">${getToolIcon(toolType)}${getToolLabel(toolType)}</span>
-                                    <span class="text-gray-400 ml-auto">${formatTimestamp(step.timestampMs)}</span>
+                                    <span class="text-gray-400 ml-auto">${formatTimestamp(step.timestamp || step.timestampMs)}</span>
                                 </div>
                                 ${contentHtml}
                             </div>
