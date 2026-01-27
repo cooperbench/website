@@ -67,30 +67,104 @@
 
     <main class="pt-14">
         <!-- Page Header -->
-        <div class="bg-white border-b border-gray-200">
+        <div class="bg-white">
             <div class="max-w-7xl mx-auto px-6 py-8">
-                <div class="text-sm text-gray-500 mb-4">
-                    <a href="index.html" class="hover:text-gray-700">Home</a>
-                    <span class="mx-2">›</span>
-                    <span class="text-gray-900">Tasks</span>
-                </div>
-                
                 <h1 class="text-2xl font-semibold text-gray-900 mb-2">CooperBench Tasks</h1>
                 
-                <!-- Run command box -->
+                <!-- Install command box -->
                 <div class="bg-gray-100 border border-gray-200 rounded-lg px-4 py-3 mt-4 flex items-center justify-between">
-                    <code class="text-gray-700 text-sm font-mono">
-                        git clone https://github.com/cooperbench/CooperBench.git && cd CooperBench/dataset
-                    </code>
-                    <button onclick="copyCommand()" class="text-gray-400 hover:text-gray-600 ml-4">
+                    <div class="flex flex-col gap-1">
+                        <code class="text-gray-700 text-sm font-mono">pip install cooperbench</code>
+                        <code class="text-gray-700 text-sm font-mono">uv pip install cooperbench</code>
+                    </div>
+                    <button onclick="copyInstallCommand()" class="text-gray-400 hover:text-gray-600 ml-4" title="Copy install command">
                         <i class="far fa-copy"></i>
                     </button>
                 </div>
             </div>
         </div>
 
+        <!-- Run Your Own Evaluation Section (Collapsible) -->
+        <div class="bg-white">
+            <div class="max-w-7xl mx-auto px-6">
+                <button onclick="toggleRunEval()" class="w-full flex items-center justify-between py-4 text-left hover:bg-gray-50 transition-colors rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-medium text-gray-900">Test Your Own Agents</span>
+                        <span class="text-xs text-gray-400">— generate a command for any task pair</span>
+                    </div>
+                    <i id="run-eval-chevron" class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+                </button>
+                
+                <div id="run-eval-content" class="hidden pb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Repository</label>
+                            <select id="run-repo-select" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-gray-400">
+                                <option value="">Select repository</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Task</label>
+                            <select id="run-task-select" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-gray-400" disabled>
+                                <option value="">Select task</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Feature 1</label>
+                            <select id="run-feature1-select" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-gray-400" disabled>
+                                <option value="">Select feature</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Feature 2</label>
+                            <select id="run-feature2-select" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-gray-400" disabled>
+                                <option value="">Select feature</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Model 1 (Agent 1)</label>
+                            <select id="run-model1-select" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-gray-400">
+                                <option value="anthropic/claude-sonnet-4-5-20250929">Claude Sonnet 4.5</option>
+                                <option value="anthropic/claude-sonnet-4-20250514">Claude Sonnet 4</option>
+                                <option value="openai/gpt-4.1">GPT-4.1</option>
+                                <option value="openai/o3">o3</option>
+                                <option value="openai/o4-mini">o4-mini</option>
+                                <option value="google/gemini-2.5-pro">Gemini 2.5 Pro</option>
+                                <option value="deepseek/deepseek-v3">DeepSeek V3</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Model 2 (Agent 2)</label>
+                            <select id="run-model2-select" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-gray-400">
+                                <option value="anthropic/claude-sonnet-4-5-20250929">Claude Sonnet 4.5</option>
+                                <option value="anthropic/claude-sonnet-4-20250514">Claude Sonnet 4</option>
+                                <option value="openai/gpt-4.1">GPT-4.1</option>
+                                <option value="openai/o3">o3</option>
+                                <option value="openai/o4-mini">o4-mini</option>
+                                <option value="google/gemini-2.5-pro">Gemini 2.5 Pro</option>
+                                <option value="deepseek/deepseek-v3">DeepSeek V3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="run-command-box" class="bg-gray-100 border border-gray-200 rounded-lg p-4 hidden">
+                        <div class="flex items-start justify-between gap-4">
+                            <pre id="run-command-output" class="text-gray-700 text-sm font-mono whitespace-pre-wrap break-all flex-1"></pre>
+                            <button onclick="copyRunCommand()" class="text-gray-400 hover:text-gray-600 text-sm flex items-center gap-1 flex-shrink-0" title="Copy command">
+                                <i class="far fa-copy"></i>
+                                <span id="copy-run-text">Copy</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Filters Bar -->
-        <div class="bg-white border-b border-gray-200 sticky top-14 z-40">
+        <div class="bg-white sticky top-14 z-40">
             <div class="max-w-7xl mx-auto px-6 py-4">
                 <div class="flex items-center justify-between mb-4">
                     <span id="task-count" class="text-sm text-gray-600">Showing 199 features</span>
@@ -168,6 +242,7 @@
                 });
                 
                 populateRepoFilter();
+                populateRunRepoSelect();
                 renderGrid();
             } catch (e) {
                 console.error('Error loading tasks:', e);
@@ -377,9 +452,163 @@
             renderGrid();
         }
 
-        function copyCommand() {
-            navigator.clipboard.writeText('git clone https://github.com/cooperbench/CooperBench.git && cd CooperBench/dataset');
+        function copyInstallCommand() {
+            navigator.clipboard.writeText('pip install cooperbench');
         }
+
+        function toggleRunEval() {
+            const content = document.getElementById('run-eval-content');
+            const chevron = document.getElementById('run-eval-chevron');
+            content.classList.toggle('hidden');
+            chevron.classList.toggle('rotate-180');
+        }
+
+        // Run command generation
+        function populateRunRepoSelect() {
+            const repos = [...new Set(allTasks.map(t => t.repo))].sort();
+            const select = document.getElementById('run-repo-select');
+            select.innerHTML = '<option value="">Select repository</option>';
+            repos.forEach(repo => {
+                const opt = document.createElement('option');
+                opt.value = repo;
+                opt.textContent = repo;
+                select.appendChild(opt);
+            });
+        }
+
+        function onRunRepoChange() {
+            const repo = document.getElementById('run-repo-select').value;
+            const taskSelect = document.getElementById('run-task-select');
+            const feature1Select = document.getElementById('run-feature1-select');
+            const feature2Select = document.getElementById('run-feature2-select');
+            
+            // Reset downstream selects
+            taskSelect.innerHTML = '<option value="">Select task</option>';
+            feature1Select.innerHTML = '<option value="">Select feature</option>';
+            feature2Select.innerHTML = '<option value="">Select feature</option>';
+            feature1Select.disabled = true;
+            feature2Select.disabled = true;
+            
+            if (!repo) {
+                taskSelect.disabled = true;
+                updateRunCommand();
+                return;
+            }
+            
+            // Populate tasks for selected repo
+            const tasks = allTasks.filter(t => t.repo === repo);
+            tasks.forEach(task => {
+                const opt = document.createElement('option');
+                opt.value = task.taskId;
+                opt.textContent = `${task.taskId} (${task.features.length} features)`;
+                taskSelect.appendChild(opt);
+            });
+            taskSelect.disabled = false;
+            updateRunCommand();
+        }
+
+        function onRunTaskChange() {
+            const repo = document.getElementById('run-repo-select').value;
+            const taskId = document.getElementById('run-task-select').value;
+            const feature1Select = document.getElementById('run-feature1-select');
+            const feature2Select = document.getElementById('run-feature2-select');
+            
+            // Reset feature selects
+            feature1Select.innerHTML = '<option value="">Select feature</option>';
+            feature2Select.innerHTML = '<option value="">Select feature</option>';
+            
+            if (!taskId) {
+                feature1Select.disabled = true;
+                feature2Select.disabled = true;
+                updateRunCommand();
+                return;
+            }
+            
+            // Find the task and populate features
+            const task = allTasks.find(t => t.repo === repo && t.taskId === taskId);
+            if (task && task.features.length > 0) {
+                task.features.forEach(feature => {
+                    const opt1 = document.createElement('option');
+                    opt1.value = feature.id;
+                    opt1.textContent = `${feature.id}: ${feature.title.substring(0, 50)}${feature.title.length > 50 ? '...' : ''}`;
+                    feature1Select.appendChild(opt1);
+                    
+                    const opt2 = document.createElement('option');
+                    opt2.value = feature.id;
+                    opt2.textContent = `${feature.id}: ${feature.title.substring(0, 50)}${feature.title.length > 50 ? '...' : ''}`;
+                    feature2Select.appendChild(opt2);
+                });
+                feature1Select.disabled = false;
+                feature2Select.disabled = false;
+            }
+            updateRunCommand();
+        }
+
+        function updateRunCommand() {
+            const repo = document.getElementById('run-repo-select').value;
+            const taskId = document.getElementById('run-task-select').value;
+            const feature1 = document.getElementById('run-feature1-select').value;
+            const feature2 = document.getElementById('run-feature2-select').value;
+            const model1 = document.getElementById('run-model1-select').value;
+            const model2 = document.getElementById('run-model2-select').value;
+            
+            const commandBox = document.getElementById('run-command-box');
+            const commandOutput = document.getElementById('run-command-output');
+            
+            if (!repo || !taskId || !feature1 || !feature2) {
+                commandBox.classList.add('hidden');
+                return;
+            }
+            
+            // Find task to get repoKey
+            const task = allTasks.find(t => t.repo === repo && t.taskId === taskId);
+            if (!task) {
+                commandBox.classList.add('hidden');
+                return;
+            }
+            
+            // Extract numeric IDs from feature IDs (feature1 -> 1, feature2 -> 2)
+            const feature1Id = feature1.replace('feature', '');
+            const feature2Id = feature2.replace('feature', '');
+            
+            // Extract numeric task ID (task1621 -> 1621)
+            const numericTaskId = taskId.replace('task', '');
+            
+            const command = `cooperbench run \\
+    --setting coop \\
+    --repo-name ${task.repoKey} \\
+    --task-id ${numericTaskId} \\
+    --feature1-id ${feature1Id} \\
+    --feature2-id ${feature2Id} \\
+    --model1 ${model1} \\
+    --model2 ${model2}`;
+            
+            commandOutput.textContent = command;
+            commandBox.classList.remove('hidden');
+            
+            // Reset copy button text
+            document.getElementById('copy-run-text').textContent = 'Copy';
+        }
+
+        function copyRunCommand() {
+            const commandOutput = document.getElementById('run-command-output').textContent;
+            // Copy without the backslashes for easier pasting
+            const cleanCommand = commandOutput.replace(/\\\n\s+/g, ' ');
+            navigator.clipboard.writeText(cleanCommand).then(() => {
+                document.getElementById('copy-run-text').textContent = 'Copied!';
+                setTimeout(() => {
+                    document.getElementById('copy-run-text').textContent = 'Copy';
+                }, 2000);
+            });
+        }
+
+        // Add event listeners for run command selects
+        document.getElementById('run-repo-select').addEventListener('change', onRunRepoChange);
+        document.getElementById('run-task-select').addEventListener('change', onRunTaskChange);
+        document.getElementById('run-feature1-select').addEventListener('change', updateRunCommand);
+        document.getElementById('run-feature2-select').addEventListener('change', updateRunCommand);
+        document.getElementById('run-model1-select').addEventListener('change', updateRunCommand);
+        document.getElementById('run-model2-select').addEventListener('change', updateRunCommand);
 
         // Close panel on escape
         document.addEventListener('keydown', (e) => {
