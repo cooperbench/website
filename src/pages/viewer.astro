@@ -118,9 +118,66 @@ const description =
                     id="run-info-panel"
                     class="flex-none bg-white border-b border-gray-200 px-6 py-4 hidden"
                 >
-                    <div
-                        class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl"
-                    >
+                    <!-- Mobile View -->
+                    <div class="md:hidden space-y-3">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div id="run-info-agent-a-mobile" class="hidden">
+                                <div
+                                    class="text-[10px] font-semibold uppercase tracking-wide text-red-500 mb-1"
+                                >
+                                    Agent A
+                                </div>
+                                <div
+                                    id="run-a-model-mobile"
+                                    class="text-xs font-medium text-gray-900 truncate"
+                                >
+                                    —
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    <span id="run-a-steps-mobile">—</span> steps
+                                </div>
+                            </div>
+                            <div id="run-info-agent-b-mobile" class="hidden">
+                                <div
+                                    class="text-[10px] font-semibold uppercase tracking-wide text-blue-500 mb-1"
+                                >
+                                    Agent B
+                                </div>
+                                <div
+                                    id="run-b-model-mobile"
+                                    class="text-xs font-medium text-gray-900 truncate"
+                                >
+                                    —
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    <span id="run-b-steps-mobile">—</span> steps
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center gap-4 text-xs border-t border-gray-100 pt-2"
+                        >
+                            <div>
+                                <span class="text-gray-500">Duration</span>
+                                <span
+                                    id="run-duration-mobile"
+                                    class="font-medium text-gray-900 ml-1"
+                                    >—</span
+                                >
+                            </div>
+                            <div>
+                                <span class="text-gray-500">Total Cost</span>
+                                <span
+                                    id="run-total-cost-mobile"
+                                    class="font-medium text-gray-900 ml-1"
+                                    >—</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Desktop View -->
+                    <div class="hidden md:grid grid-cols-3 gap-6 max-w-5xl">
                         <div id="run-info-agent-a" class="hidden">
                             <div
                                 class="text-[10px] font-semibold uppercase tracking-wide text-red-500 mb-2"
@@ -1064,9 +1121,17 @@ const description =
                     document
                         .getElementById("run-info-agent-a")
                         .classList.remove("hidden");
+                    document
+                        .getElementById("run-info-agent-a-mobile")
+                        ?.classList.remove("hidden");
                     setRun("run-a-model", runMetadata.agent_a.model);
+                    setRun("run-a-model-mobile", runMetadata.agent_a.model);
                     setRun(
                         "run-a-steps",
+                        formatInteger(runMetadata.agent_a.steps),
+                    );
+                    setRun(
+                        "run-a-steps-mobile",
                         formatInteger(runMetadata.agent_a.steps),
                     );
                     setRun(
@@ -1082,14 +1147,25 @@ const description =
                     document
                         .getElementById("run-info-agent-a")
                         .classList.add("hidden");
+                    document
+                        .getElementById("run-info-agent-a-mobile")
+                        ?.classList.add("hidden");
                 }
                 if (runMetadata.agent_b) {
                     document
                         .getElementById("run-info-agent-b")
                         .classList.remove("hidden");
+                    document
+                        .getElementById("run-info-agent-b-mobile")
+                        ?.classList.remove("hidden");
                     setRun("run-b-model", runMetadata.agent_b.model);
+                    setRun("run-b-model-mobile", runMetadata.agent_b.model);
                     setRun(
                         "run-b-steps",
+                        formatInteger(runMetadata.agent_b.steps),
+                    );
+                    setRun(
+                        "run-b-steps-mobile",
                         formatInteger(runMetadata.agent_b.steps),
                     );
                     setRun(
@@ -1105,6 +1181,9 @@ const description =
                     document
                         .getElementById("run-info-agent-b")
                         .classList.add("hidden");
+                    document
+                        .getElementById("run-info-agent-b-mobile")
+                        ?.classList.add("hidden");
                 }
                 const durationStr =
                     runMetadata.duration_seconds != null
@@ -1113,12 +1192,13 @@ const description =
                           ? formatDuration(runMetadata.duration_ms)
                           : formatDuration(timeRange.duration);
                 setRun("run-duration", durationStr);
-                setRun(
-                    "run-total-cost",
+                setRun("run-duration-mobile", durationStr);
+                const totalCostStr =
                     runMetadata.total_cost != null
                         ? formatCost(runMetadata.total_cost)
-                        : formatCost(runMetadata.cost),
-                );
+                        : formatCost(runMetadata.cost);
+                setRun("run-total-cost", totalCostStr);
+                setRun("run-total-cost-mobile", totalCostStr);
                 setRun("run-started", formatStarted(runMetadata.started));
                 const runTaskEl = document.getElementById("run-task");
                 const runTaskRow = document.getElementById("run-task-row");
