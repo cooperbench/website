@@ -2,7 +2,7 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './src/**/*.{ts,tsx}',
+    './src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}',
   ],
   theme: {
     container: {
@@ -13,6 +13,10 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["Nebula Sans", "system-ui", "sans-serif"],
+        mono: ["SF Mono", "Monaco", "Consolas", "monospace"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -55,5 +59,7 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }

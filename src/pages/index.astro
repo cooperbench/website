@@ -1,0 +1,598 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CoopChart } from '../components/CoopChart';
+
+const title = "CooperBench: Why Coding Agents Cannot be Your Teammates Yet";
+const description = "CooperBench is a benchmark of over 600 collaborative coding tasks. We find that agents achieve 30% lower success rates when working together compared to performing both tasks individually.";
+---
+
+<BaseLayout title={title} description={description} activeNav="Home">
+  <style is:inline slot="head">
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 222.2 84% 4.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 222.2 84% 4.9%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 222.2 84% 4.9%;
+      --primary: 222.2 47.4% 11.2%;
+      --primary-foreground: 210 40% 98%;
+      --secondary: 210 40% 96.1%;
+      --secondary-foreground: 222.2 47.4% 11.2%;
+      --muted: 210 40% 96.1%;
+      --muted-foreground: 215.4 16.3% 46.9%;
+      --accent: 210 40% 96.1%;
+      --accent-foreground: 222.2 47.4% 11.2%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 210 40% 98%;
+      --border: 214.3 31.8% 91.4%;
+      --input: 214.3 31.8% 91.4%;
+      --ring: 222.2 84% 4.9%;
+      --radius: 0.5rem;
+    }
+    [data-chart] .recharts-cartesian-axis-tick text { fill: hsl(var(--muted-foreground)); }
+    [data-chart] .recharts-cartesian-grid line[stroke='#ccc'] { stroke: hsl(var(--border) / 0.5); }
+    [data-chart] .recharts-curve.recharts-tooltip-cursor { stroke: hsl(var(--border)); }
+    [data-chart] .recharts-dot[stroke='#fff'] { stroke: transparent; }
+    [data-chart] .recharts-layer { outline: none; }
+    [data-chart] .recharts-surface { outline: none; }
+  </style>
+  <main class="pt-14">
+    <!-- Hero Section -->
+    <section class="relative py-20 px-6 overflow-hidden">
+      <!-- Animated Grid Background -->
+      <div id="animated-grid-container" class="absolute inset-0 text-gray-300"></div>
+
+      <div class="relative max-w-3xl mx-auto text-center z-10">
+        <h1 class="text-3xl md:text-4xl font-semibold text-gray-900 leading-tight mb-6">
+          CooperBench:<br />
+          Benchmarking AI Agents' Cooperation
+        </h1>
+
+        <p class="text-2xl text-gray-500 mb-8">
+          <span class="text-gray-400">Stanford University & SAP Labs US</span>
+        </p>
+
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+          <a href="/blog" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">
+            <i class="fas fa-book-open mr-2 text-xs"></i>Blog
+          </a>
+          <a href="/static/pdfs/main.pdf" target="_blank" class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+            <i class="fas fa-file-pdf mr-2 text-xs"></i>Paper
+          </a>
+          <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+            <i class="fab fa-github mr-2 text-xs"></i>Code
+          </a>
+          <a href="https://huggingface.co/CodeConflict" target="_blank" class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
+            <i class="fas fa-database mr-2 text-xs"></i>Dataset
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TL;DR -->
+    <section class="pb-12 px-6">
+      <div class="max-w-3xl mx-auto">
+        <div class="bg-gray-50 rounded-xl p-6 border border-gray-100">
+          <p class="text-lg text-gray-700 leading-relaxed">
+            Can AI agents work together as teammates? We find that
+            <strong>coordinating agents perform much worse than a single agent</strong>
+            given the same total workload. This coordination deficit presents a fundamental barrier to deploying AI systems that can work alongside humans or other agents.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Figure (The Key Result) -->
+    <section class="py-12 px-6" id="results">
+      <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-xl border border-gray-200 p-6 min-h-[400px]">
+          <CoopChart client:only="react" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Leaderboard Section -->
+    <section class="py-12 px-6 bg-gray-50" id="leaderboard">
+      <div class="max-w-4xl mx-auto">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold text-gray-900">CooperBench Leaderboard</h2>
+          <div class="flex items-center gap-1.5 text-xs">
+            <div class="w-2.5 h-2.5 bg-gray-700 rounded-sm"></div>
+            <span class="text-gray-500">Cooperative Success Rate</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          <div id="leaderboard-container" class="divide-y divide-gray-100">
+            <!-- Leaderboard rows will be rendered here -->
+          </div>
+        </div>
+
+        <p class="text-xs text-gray-400 mt-4 text-center">
+          Success rate on CooperBench across 652 tasks · Error bars show 95% confidence intervals
+        </p>
+      </div>
+    </section>
+
+    <!-- Key Findings (Organized like RQs) -->
+    <section class="py-12 px-6">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-xl font-semibold text-gray-900 mb-8">Key Findings</h2>
+
+        <div class="space-y-8">
+          <!-- Finding 1 -->
+          <div>
+            <h3 class="text-base font-medium text-gray-900 mb-2">
+              1. Agents perform worse together than alone
+            </h3>
+            <p class="text-gray-600 leading-relaxed">
+              GPT-5 and Claude Sonnet 4.5 achieve only 25% success with two-agent cooperation, roughly 50% lower than when a single agent handles both tasks. This gap persists across all models and task difficulties.
+            </p>
+          </div>
+
+          <!-- Finding 2 -->
+          <div>
+            <h3 class="text-base font-medium text-gray-900 mb-2">
+              2. Communication reduces conflicts but not failures
+            </h3>
+            <p class="text-gray-600 leading-relaxed">
+              Agents spend up to 20% of their budget on communication. This reduces merge conflicts but does not improve overall success. The channel is jammed with repetition, unresponsiveness, and hallucination.
+            </p>
+          </div>
+
+          <!-- Finding 3 -->
+          <div>
+            <h3 class="text-base font-medium text-gray-900 mb-2">
+              3. Three capability gaps underlie coordination failures
+            </h3>
+            <p class="text-gray-600 leading-relaxed mb-3">
+              Even when agents communicate well, coordination breaks down due to:
+            </p>
+            <ul class="text-gray-600 space-y-1 ml-4">
+              <li><strong>Expectation failures (42%)</strong> where agents fail to integrate information about partner state</li>
+              <li><strong>Communication failures (26%)</strong> where questions go unanswered, breaking decision loops</li>
+              <li><strong>Commitment failures (32%)</strong> where agents break promises or make unverifiable claims</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Emergent Coordination Patterns with Trajectory Viewer -->
+    <section class="py-12 px-6 bg-gray-50" id="emergent">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">Emergent Coordination Patterns</h2>
+        <p class="text-gray-600 mb-6">
+          Among successful runs, we observe coordination patterns largely absent from failures. These patterns are not prompted or scaffolded.
+        </p>
+
+        <!-- Example Selector -->
+        <div class="flex flex-wrap gap-2 mb-4">
+          <button id="btn-role_division" class="px-4 py-2 text-sm font-medium transition-colors bg-blue-600 text-white rounded-lg">Role Division</button>
+          <button id="btn-resource_division" class="px-4 py-2 text-sm font-medium transition-colors bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">Resource Division</button>
+          <button id="btn-negotiation" class="px-4 py-2 text-sm font-medium transition-colors bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">Negotiation</button>
+        </div>
+
+        <!-- Example Description -->
+        <div id="example-description" class="mb-4 p-4 bg-white rounded-lg border border-gray-200">
+          <p class="text-sm text-gray-700" id="example-text">
+            <span class="font-semibold text-blue-700">Role Division</span> — Agents agree on who handles which part of the task. One agent delegates: "I'll add header + octal_str; you add binary_str between them."
+          </p>
+        </div>
+
+        <!-- Legend -->
+        <div class="flex flex-wrap items-center gap-4 text-xs text-gray-500 mb-3">
+          <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 bg-orange-400 rounded-sm"></div><span>Message</span></div>
+          <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 bg-blue-600 rounded-sm"></div><span>View</span></div>
+          <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 bg-green-500 rounded-sm"></div><span>Edit</span></div>
+          <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 bg-yellow-400 rounded-sm"></div><span>Bash</span></div>
+          <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 bg-sky-400 rounded-sm"></div><span>Search</span></div>
+        </div>
+
+        <!-- Timeline Visualization -->
+        <div class="mb-4 rounded-lg border border-gray-200 bg-white p-4">
+          <div id="timeline-container">
+            <!-- Agent A Timeline -->
+            <div class="mb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-medium text-red-600 w-14">Agent A</span>
+                <div id="timeline-a" class="relative h-3 bg-gray-100 rounded-full flex-1"></div>
+              </div>
+            </div>
+            <!-- Agent B Timeline -->
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-medium text-blue-600 w-14">Agent B</span>
+                <div id="timeline-b" class="relative h-3 bg-gray-100 rounded-full flex-1"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages List -->
+        <div class="rounded-lg border border-gray-200 bg-white">
+          <div class="px-4 py-2 border-b border-gray-100 flex items-center justify-between">
+            <span class="text-sm font-medium text-gray-700">Interaction Log</span>
+            <a href="/viewer" class="text-xs text-gray-500 hover:text-gray-700">Full viewer →</a>
+          </div>
+          <div id="messages-container" class="max-h-64 overflow-y-auto">
+            <div class="text-gray-400 text-center py-6 text-sm">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About CooperBench (Collapsible) -->
+    <section class="py-12 px-6" id="benchmark">
+      <div class="max-w-3xl mx-auto">
+        <button id="benchmark-toggle" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-xl font-semibold text-gray-900">About CooperBench</h2>
+          <i id="benchmark-icon" class="fas fa-chevron-down text-gray-400 text-sm transition-transform"></i>
+        </button>
+
+        <div id="benchmark-content" class="mt-4">
+          <p class="text-gray-600 leading-relaxed mb-6">
+            CooperBench is the first benchmark designed to measure how well AI agents can cooperate when handling individual tasks with potential conflicts. We constructed 652 tasks from 12 popular open-source libraries across Python, TypeScript, Go, and Rust.
+          </p>
+
+          <div class="flex flex-wrap gap-6 text-center mb-6">
+            <div><div class="text-2xl font-semibold text-gray-900">652</div><div class="text-sm text-gray-500">Tasks</div></div>
+            <div><div class="text-2xl font-semibold text-gray-900">12</div><div class="text-sm text-gray-500">Repositories</div></div>
+            <div><div class="text-2xl font-semibold text-gray-900">4</div><div class="text-sm text-gray-500">Languages</div></div>
+            <div><div class="text-2xl font-semibold text-gray-900">8</div><div class="text-sm text-gray-500">Annotators</div></div>
+          </div>
+
+          <p class="text-gray-600 leading-relaxed">
+            Each task assigns two agents different features that can be implemented independently but may conflict without proper coordination. Eight co-authors with real-world software engineering backgrounds created new features, unit tests, and ground-truth code.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Getting Started -->
+    <section class="py-12 px-6 bg-gray-50">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">Getting Started</h2>
+
+        <div class="bg-gray-50 rounded-lg p-4 overflow-x-auto mb-6 border border-gray-200">
+          <pre class="text-gray-700 text-sm font-mono"><code>pip install cooperbench</code></pre>
+          <pre class="text-gray-700 text-sm font-mono mt-2"><code>uv pip install cooperbench</code></pre>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">
+            <i class="fab fa-github mr-2"></i>GitHub
+          </a>
+          <a href="https://huggingface.co/CodeConflict" target="_blank" class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-white">
+            <i class="fas fa-database mr-2"></i>HuggingFace
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- BibTeX -->
+    <section class="py-12 px-6" id="citation">
+      <div class="max-w-3xl mx-auto">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold text-gray-900">Citation</h2>
+          <button id="copy-bibtex-btn" class="text-sm text-gray-500 hover:text-gray-700">
+            <i class="fas fa-copy mr-1"></i>Copy
+          </button>
+        </div>
+        <pre id="bibtex-code" class="bg-gray-50 rounded-lg p-4 text-xs text-gray-600 overflow-x-auto border border-gray-200"><code>@article&#123;cooperbench2026,
+  title=&#123;CooperBench: Why Coding Agents Cannot be Your Teammates Yet&#125;,
+  author=&#123;Khatua*, Arpandeep and Zhu*, Hao and Tran†, Peter and Prabhudesai†, Arya
+          and Sadrieh†, Frederic and Lieberwirth†, Johann K. and Yu, Xinkai
+          and Fu, Yicheng and Ryan, Michael J. and Pei, Jiaxin and Yang, Diyi&#125;,
+  journal=&#123;arXiv preprint&#125;,
+  year=&#123;2026&#125;,
+  url=&#123;https://arxiv.org/abs/2601.13295&#125;,
+  note=&#123;*Equal contribution (Stanford) · †Equal contribution (SAP Labs)&#125;
+&#125;</code></pre>
+      </div>
+    </section>
+
+    <!-- Authors -->
+    <section class="py-12 px-6 bg-gray-50" id="authors">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-xl font-semibold text-gray-900 mb-8 text-center">Authors</h2>
+        <div class="flex flex-wrap justify-center gap-8">
+           <!-- Author list manually copied for now, but could be a data driven component -->
+           <a href="https://arpandeep.com/" target="_blank" class="text-center group">
+               <img src="/static/images/arpan.jpg" alt="Arpandeep Khatua" class="w-16 h-16 rounded-full mx-auto mb-2 object-cover" />
+               <div class="text-sm font-medium text-gray-900">Arpandeep Khatua*</div>
+           </a>
+           <a href="https://hao.computer/" target="_blank" class="text-center group">
+               <img src="/static/images/hao_zhu.png" alt="Hao Zhu" class="w-16 h-16 rounded-full mx-auto mb-2 object-cover" />
+               <div class="text-sm font-medium text-gray-900">Hao Zhu*</div>
+           </a>
+           <a href="https://www.linkedin.com/in/thekiet/" target="_blank" class="text-center group">
+               <img src="/static/images/peter.jpeg" alt="Peter Tran" class="w-16 h-16 rounded-full mx-auto mb-2 object-cover" />
+               <div class="text-sm font-medium text-gray-900">Peter Tran†</div>
+           </a>
+           <a href="https://www.linkedin.com/in/arya-prabhudesai/" target="_blank" class="text-center group">
+               <img src="/static/images/arya.png" alt="Arya Prabhudesai" class="w-16 h-16 rounded-full mx-auto mb-2 object-cover" />
+               <div class="text-sm font-medium text-gray-900">Arya Prabhudesai†</div>
+           </a>
+           <a href="https://fsadrieh.github.io/" target="_blank" class="text-center group">
+               <img src="/static/images/frederic.jpg" alt="Frederic Sadrieh" class="w-16 h-16 rounded-full mx-auto mb-2 object-cover" />
+               <div class="text-sm font-medium text-gray-900">Frederic Sadrieh†</div>
+           </a>
+           <a href="https://www.linkedin.com/in/johann-lieberwirth/" target="_blank" class="text-center group">
+               <img src="/static/images/johann.jpeg" alt="Johann K. Lieberwirth" class="w-16 h-16 rounded-full mx-auto mb-2 object-cover" />
+               <div class="text-sm font-medium text-gray-900">Johann K. Lieberwirth†</div>
+           </a>
+           <a href="https://www.linkedin.com/in/xinkai-colin-yu/" target="_blank" class="text-center group">
+               <img src="/static/images/xinkai.png" alt="Xinkai Yu" class="w-16 h-16 rounded-full mx-auto mb-2 object-cover" />
+               <div class="text-sm font-medium text-gray-900">Xinkai Yu</div>
+           </a>
+           <a href="https://sofyc.github.io/" target="_blank" class="text-center group">
+               <img src="/static/images/yicheng.jpeg" alt="Yicheng Fu" class="w-16 h-16 rounded-full mx-auto mb-2 object-cover" />
+               <div class="text-sm font-medium text-gray-900">Yicheng Fu</div>
+           </a>
+           <a href="https://michryan.com/" target="_blank" class="text-center group">
+               <img src="/static/images/michaelryan.jpg" alt="Michael J. Ryan" class="w-16 h-16 rounded-full mx-auto mb-2 object-cover" />
+               <div class="text-sm font-medium text-gray-900">Michael J. Ryan</div>
+           </a>
+            <a href="https://jiaxin-pei.github.io/" target="_blank" class="text-center group">
+               <img src="/static/images/jiaxin_pei.jpeg" alt="Jiaxin Pei" class="w-16 h-16 rounded-full mx-auto mb-2 object-cover" />
+               <div class="text-sm font-medium text-gray-900">Jiaxin Pei</div>
+           </a>
+           <a href="https://cs.stanford.edu/~diyiy/" target="_blank" class="text-center group">
+               <img src="/static/images/diyi_yang.png" alt="Diyi Yang" class="w-16 h-16 rounded-full mx-auto mb-2 object-cover" />
+               <div class="text-sm font-medium text-gray-900">Diyi Yang</div>
+           </a>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-6">
+            Stanford University & SAP Labs · *Equal contribution (Stanford) · †Equal contribution (SAP Labs)
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 border-t border-gray-100">
+      <div class="max-w-4xl mx-auto text-center text-sm text-gray-400">
+        <p>CooperBench · Stanford University</p>
+      </div>
+    </footer>
+  </main>
+</BaseLayout>
+
+<script is:inline src="/static/js/animated-grid.js"></script>
+
+<script is:inline>
+  // Leaderboard data and rendering
+  const leaderboardData = [
+    { agent: 'GPT-5', fullName: null, coop: 27.8, coopCI: [24.5, 31.3] },
+    { agent: 'Claude Sonnet 4.5', fullName: null, coop: 25.9, coopCI: [22.7, 29.4] },
+    { agent: 'MiniMax M2', fullName: null, coop: 14.0, coopCI: [11.5, 16.8] },
+    { agent: 'Qwen3-Coder-30B', fullName: 'Qwen3-Coder-30B-A3B-Instruct', coop: 13.3, coopCI: [10.9, 16.2] },
+    { agent: 'Qwen3-30B', fullName: 'Qwen3-30B-A3B-Instruct-2507', coop: 4.6, coopCI: [3.2, 6.5] },
+  ];
+
+  function renderLeaderboard() {
+      const container = document.getElementById('leaderboard-container');
+      const maxScore = 100;
+      
+      container.innerHTML = leaderboardData.map((item) => {
+          const coopWidth = (item.coop / maxScore) * 100;
+          const coopCILowPos = (item.coopCI[0] / maxScore) * 100;
+          const coopCIHighPos = (item.coopCI[1] / maxScore) * 100;
+          
+          return `
+              <div class="flex items-center gap-4 px-5 py-3 hover:bg-gray-50 transition-colors">
+                  <div class="w-44 flex-shrink-0">
+                      <span class="text-sm font-medium text-gray-900">${item.agent}</span>
+                      ${item.fullName ? `<div class="text-[10px] font-mono text-gray-400 truncate">${item.fullName}</div>` : ''}
+                  </div>
+                  <div class="flex-1 h-5 bg-gray-100 rounded relative overflow-visible">
+                      <div class="absolute inset-y-0 left-0 bg-gray-700 rounded" style="width: ${coopWidth}%"></div>
+                      <div class="absolute top-1/2 -translate-y-1/2 h-3 flex items-center"
+                           style="left: ${coopCILowPos}%; width: ${coopCIHighPos - coopCILowPos}%;">
+                          <div class="w-0.5 h-full bg-gray-900"></div>
+                          <div class="flex-1 h-0.5 bg-gray-900"></div>
+                          <div class="w-0.5 h-full bg-gray-900"></div>
+                      </div>
+                  </div>
+                  <div class="w-16 text-right flex-shrink-0">
+                      <span class="text-sm font-semibold text-gray-700 tabular-nums">${item.coop.toFixed(1)}%</span>
+                  </div>
+              </div>
+          `;
+      }).join('');
+  }
+
+  // Trajectory Viewer
+  const exampleFiles = {
+      role_division: "delegation_claude_dottxt_ai_outlines_task_task1655_feature2_feature3_k1.json",
+      resource_division: "agency_gpt5_llama_index_task_task17244_feature1_feature5_k1.json",
+      negotiation: "negotiation_claude_samuelcolvin_dirty_equals_task_task43_feature7_feature8_k1.json",
+  };
+
+  const exampleDescriptions = {
+      role_division: '<span class="font-semibold text-blue-700">Role Division</span> — Agents agree on who handles which part of the task. One agent delegates: "I\'ll add header + octal_str; you add binary_str between them."',
+      resource_division: '<span class="font-semibold text-green-700">Resource Division</span> — Agents avoid collisions by partitioning shared resources. One declares: "I will modify ONLY lines 68-84" and the other confirms: "I will NOT edit lines 68-84."',
+      negotiation: '<span class="font-semibold text-amber-700">Negotiation</span> — Agents resolve conflicting approaches by proposing alternatives. They present options ("Option 1 vs Option 2") and reach explicit agreement before acting.',
+  };
+
+  const exampleData = {};
+  let currentExample = "role_division";
+
+  function getToolColor(toolType) {
+      const colors = {
+          communication: "bg-orange-400",
+          view: "bg-blue-600",
+          edit: "bg-green-500",
+          bash: "bg-yellow-400",
+          submit: "bg-red-500",
+          find_grep: "bg-sky-400",
+          search: "bg-sky-400",
+      };
+      return colors[toolType] || "bg-gray-400";
+  }
+
+  function getToolLabel(toolType) {
+      const labels = {
+          communication: { label: "Message", bg: "bg-orange-100", text: "text-orange-700" },
+          view: { label: "View", bg: "bg-blue-100", text: "text-blue-700" },
+          edit: { label: "Edit", bg: "bg-green-100", text: "text-green-700" },
+          bash: { label: "Bash", bg: "bg-yellow-100", text: "text-yellow-700" },
+          submit: { label: "Submit", bg: "bg-red-100", text: "text-red-700" },
+          find_grep: { label: "Search", bg: "bg-sky-100", text: "text-sky-700" },
+          search: { label: "Search", bg: "bg-sky-100", text: "text-sky-700" },
+      };
+      return labels[toolType] || { label: toolType, bg: "bg-gray-100", text: "text-gray-600" };
+  }
+
+  function renderTimeline(data) {
+      const agents = {};
+      data.forEach((step) => {
+          if (!agents[step.agentId]) agents[step.agentId] = [];
+          agents[step.agentId].push(step);
+      });
+
+      const agentIds = Object.keys(agents).sort();
+      const agentA = agentIds[0] || "agent_1";
+      const agentB = agentIds[1] || "agent_2";
+
+      const allTimes = data.map((s) => s.timestampMs);
+      const minTime = Math.min(...allTimes);
+      const maxTime = Math.max(...allTimes);
+      const duration = maxTime - minTime || 1;
+
+      // Render timeline A
+      const timelineA = document.getElementById("timeline-a");
+      timelineA.innerHTML = "";
+      (agents[agentA] || []).forEach((step) => {
+          const left = ((step.timestampMs - minTime) / duration) * 98;
+          const block = document.createElement("div");
+          block.className = `absolute top-0 h-full ${getToolColor(step.toolType)} cursor-pointer hover:opacity-80 transition-opacity rounded-full`;
+          block.style.left = `${left}%`;
+          block.style.width = "2%";
+          block.style.minWidth = "4px";
+          block.onclick = () => scrollToMessage(step.id);
+          timelineA.appendChild(block);
+      });
+
+      // Render timeline B
+      const timelineB = document.getElementById("timeline-b");
+      timelineB.innerHTML = "";
+      (agents[agentB] || []).forEach((step) => {
+          const left = ((step.timestampMs - minTime) / duration) * 98;
+          const block = document.createElement("div");
+          block.className = `absolute top-0 h-full ${getToolColor(step.toolType)} cursor-pointer hover:opacity-80 transition-opacity rounded-full`;
+          block.style.left = `${left}%`;
+          block.style.width = "2%";
+          block.style.minWidth = "4px";
+          block.onclick = () => scrollToMessage(step.id);
+          timelineB.appendChild(block);
+      });
+  }
+
+  function renderMessages(data) {
+      const container = document.getElementById("messages-container");
+      container.innerHTML = "";
+
+      const agentIds = [...new Set(data.map((s) => s.agentId))].sort();
+      const isAgentA = (id) => id === agentIds[0];
+
+      data.forEach((step) => {
+          const isA = isAgentA(step.agentId);
+          const msgEl = document.createElement("div");
+          msgEl.id = `msg-${step.id}`;
+          msgEl.className = `px-4 py-3 border-b border-gray-50 transition-colors ${isA ? "bg-white" : "bg-gray-50/50"}`;
+
+          const toolLabel = getToolLabel(step.toolType);
+          let details = step.details || "";
+          details = details.replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 rounded text-xs">$1</code>').replace(/\n/g, "<br>");
+
+          msgEl.innerHTML = `
+              <div class="flex items-start gap-3">
+                  <div class="flex-shrink-0 w-14 text-xs font-medium ${isA ? "text-red-600" : "text-blue-600"}">
+                      ${isA ? "Agent A" : "Agent B"}
+                  </div>
+                  <div class="flex-1 min-w-0">
+                      <div class="flex items-center gap-2 mb-1">
+                          <span class="text-xs px-1.5 py-0.5 rounded ${toolLabel.bg} ${toolLabel.text}">${toolLabel.label}</span>
+                      </div>
+                      ${details ? `<div class="text-sm text-gray-600 leading-relaxed">${details}</div>` : '<div class="text-sm text-gray-400 italic">No details</div>'}
+                  </div>
+              </div>
+          `;
+          container.appendChild(msgEl);
+      });
+  }
+
+  function scrollToMessage(id) {
+      const el = document.getElementById(`msg-${id}`);
+      if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          el.classList.add("bg-yellow-50");
+          setTimeout(() => el.classList.remove("bg-yellow-50"), 1500);
+      }
+  }
+
+  async function loadExample(type) {
+      currentExample = type;
+
+      // Update button styles
+      const buttonColors = { role_division: "blue", resource_division: "green", negotiation: "amber" };
+      ["role_division", "resource_division", "negotiation"].forEach((btn) => {
+          const el = document.getElementById(`btn-${btn}`);
+          if (el) {
+              if (btn === type) {
+                  const color = buttonColors[btn];
+                  el.className = `px-4 py-2 text-sm font-medium transition-colors bg-${color}-600 text-white rounded-lg`;
+              } else {
+                  el.className = "px-4 py-2 text-sm font-medium transition-colors bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200";
+              }
+          }
+      });
+
+      // Update description
+      document.getElementById("example-text").innerHTML = exampleDescriptions[type];
+
+      try {
+          if (!exampleData[type]) {
+              const response = await fetch(`/static/data/${exampleFiles[type]}`);
+              exampleData[type] = await response.json();
+          }
+          renderTimeline(exampleData[type]);
+          renderMessages(exampleData[type]);
+      } catch (error) {
+          console.error("Error loading example:", error);
+          document.getElementById("messages-container").innerHTML = '<div class="text-gray-400 text-center py-6 text-sm">Error loading trajectory data.</div>';
+      }
+  }
+
+  // Event Listeners
+  document.addEventListener("DOMContentLoaded", () => {
+    // Buttons for viewer
+    document.getElementById('btn-role_division')?.addEventListener('click', () => loadExample('role_division'));
+    document.getElementById('btn-resource_division')?.addEventListener('click', () => loadExample('resource_division'));
+    document.getElementById('btn-negotiation')?.addEventListener('click', () => loadExample('negotiation'));
+
+    // Benchmark toggle
+    document.getElementById('benchmark-toggle')?.addEventListener('click', () => {
+        const content = document.getElementById('benchmark-content');
+        const icon = document.getElementById('benchmark-icon');
+        if (content.classList.contains('hidden')) {
+            content.classList.remove('hidden');
+            icon.style.transform = 'rotate(0deg)';
+        } else {
+            content.classList.add('hidden');
+            icon.style.transform = 'rotate(-90deg)';
+        }
+    });
+
+    // Copy BibTeX
+    document.getElementById('copy-bibtex-btn')?.addEventListener('click', () => {
+        const bibtex = document.getElementById("bibtex-code").textContent;
+        navigator.clipboard.writeText(bibtex);
+    });
+
+    renderLeaderboard();
+    loadExample("role_division");
+  });
+</script>

@@ -1,0 +1,61 @@
+/* CSS variables needed by shadcn chart/card components */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
+}
+
+/* Chart tooltip and legend styles using CSS variables */
+[data-chart] .recharts-cartesian-axis-tick text {
+  fill: hsl(var(--muted-foreground));
+}
+[data-chart] .recharts-cartesian-grid line[stroke='#ccc'] {
+  stroke: hsl(var(--border) / 0.5);
+}
+[data-chart] .recharts-curve.recharts-tooltip-cursor {
+  stroke: hsl(var(--border));
+}
+[data-chart] .recharts-dot[stroke='#fff'] {
+  stroke: transparent;
+}
+[data-chart] .recharts-layer {
+  outline: none;
+}
+[data-chart] .recharts-polar-grid [stroke='#ccc'] {
+  stroke: hsl(var(--border));
+}
+[data-chart] .recharts-radial-bar-background-sector {
+  fill: hsl(var(--muted));
+}
+[data-chart] .recharts-rectangle.recharts-tooltip-cursor {
+  fill: hsl(var(--muted));
+}
+[data-chart] .recharts-reference-line [stroke='#ccc'] {
+  stroke: hsl(var(--border));
+}
+[data-chart] .recharts-sector[stroke='#fff'] {
+  stroke: transparent;
+}
+[data-chart] .recharts-sector {
+  outline: none;
+}
+[data-chart] .recharts-surface {
+  outline: none;
+}

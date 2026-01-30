@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip, Area, ComposedChart, ErrorBar, Scatter, Label } from "recharts"
+import { CartesianGrid, Line, XAxis, YAxis, Tooltip, Area, ComposedChart, ErrorBar, Label } from "recharts"
+import "../chart.css"
 
 import {
   Card,
@@ -11,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
@@ -119,7 +120,7 @@ export function CoopChart() {
               isAnimationActive={false}
               label={({ x, y, value }) => (
                 <text x={x} y={y} dy={-15} fill={chartConfig.solo.color} fontSize={12} textAnchor="middle" fontWeight="bold">
-                  {Math.round(value * 100)}%
+                  {Math.round((value as number) * 100)}%
                 </text>
               )}
             >
@@ -137,14 +138,14 @@ export function CoopChart() {
               isAnimationActive={false}
               label={({ x, y, value }) => (
                 <text x={x} y={y} dy={20} fill={chartConfig.coop.color} fontSize={12} textAnchor="middle" fontWeight="bold">
-                  {Math.round(value * 100)}%
+                  {Math.round((value as number) * 100)}%
                 </text>
               )}
             >
                 <ErrorBar dataKey="coopError" direction="y" width={4} strokeWidth={2} stroke="var(--color-coop)" opacity={0.6} />    
             </Line>
 
-            <ChartLegend verticalAlign="top" align="right" content={<ChartLegendContent />} />
+            <ChartLegend verticalAlign="top" align="right" content={<ChartLegendContent payload={[]} />} />
           </ComposedChart>
         </ChartContainer>
         <p className="text-sm text-gray-500 mt-2 text-center">

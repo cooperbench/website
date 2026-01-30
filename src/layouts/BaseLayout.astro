@@ -1,0 +1,100 @@
+---
+import '../index.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  bodyClass?: string;
+  activeNav?: string;
+  noindex?: boolean;
+  headerMaxWidth?: string;
+  faviconStyle?: string;
+  faviconSize?: string;
+  logoSize?: string;
+  paperLink?: string;
+}
+
+const {
+  title,
+  description = '',
+  bodyClass = 'bg-gray-50 text-gray-900 font-sans',
+  activeNav = '',
+  noindex = false,
+  headerMaxWidth = 'max-w-6xl',
+  faviconStyle = '',
+  faviconSize = 'w-6 h-6',
+  logoSize = 'w-6 h-6',
+  paperLink = '/static/pdfs/main.pdf',
+} = Astro.props;
+
+const navItems = [
+  { label: 'Leaderboard', href: '/leaderboard' },
+  { label: 'Tasks', href: '/tasks' },
+  { label: 'Trajectories', href: '/viewer' },
+  { label: 'Blog', href: '/blog' },
+];
+
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg?v=2" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/devicon.min.css" />
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-gray-200 z-50">
+      <div class={`${headerMaxWidth} mx-auto px-4 md:px-6`}>
+        <div class="flex items-center justify-between h-14">
+          <a href="/" class="flex items-center gap-2 text-base md:text-lg font-semibold text-gray-900">
+            <img src="/static/images/favicon.svg" alt="" class={logoSize} style={faviconStyle}>
+            CooperBench
+          </a>
+          <!-- Desktop Navigation -->
+          <nav class="hidden md:flex items-center gap-6">
+            {navItems.map(item => (
+              <a href={item.href} class={`text-sm ${activeNav === item.label ? 'text-gray-900 font-medium' : 'text-gray-600 hover:text-gray-900'}`}>{item.label}</a>
+            ))}
+            <a href={paperLink} target="_blank" class="text-sm text-gray-600 hover:text-gray-900">Paper <span class="text-xs">&nearr;</span></a>
+            <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="text-gray-600 hover:text-gray-900"><i class="fab fa-github"></i></a>
+          </nav>
+          <!-- Mobile Menu Button -->
+          <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-600 hover:text-gray-900" onclick="toggleMobileMenu()">
+            <i id="menu-icon" class="fas fa-bars text-lg"></i>
+          </button>
+        </div>
+        <!-- Mobile Navigation -->
+        <nav id="mobile-menu" class="hidden md:hidden border-t border-gray-100 py-3">
+          <div class="flex flex-col gap-3">
+            {navItems.map(item => (
+              <a href={item.href} class={`text-sm ${activeNav === item.label ? 'text-gray-900 font-medium' : 'text-gray-600 hover:text-gray-900'} py-1`}>{item.label}</a>
+            ))}
+            <a href={paperLink} target="_blank" class="text-sm text-gray-600 hover:text-gray-900 py-1">Paper <span class="text-xs">&nearr;</span></a>
+            <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="text-sm text-gray-600 hover:text-gray-900 py-1"><i class="fab fa-github mr-2"></i>GitHub</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <slot />
+
+    <slot name="after-body" />
+
+    <script is:inline>
+      function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        const icon = document.getElementById('menu-icon');
+        menu.classList.toggle('hidden');
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-times');
+      }
+    </script>
+  </body>
+</html>
