@@ -1,904 +1,1407 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
 
 const title = "Trajectory Viewer · CooperBench";
-const description = "Explore multi-agent collaboration failures in CooperBench tasks";
+const description =
+    "Explore multi-agent collaboration failures in CooperBench tasks";
 ---
 
 <BaseLayout title={title} description={description} activeNav="Trajectories">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" slot="head" />
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        slot="head"
+    />
 
-  
-  <style is:inline>
-      .timeline-block:hover { z-index: 10; transform: scaleY(1.2); }
-      .step-card { transition: all 0.2s; }
-      .step-card:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-      .highlight-ring { ring-width: 2px; ring-color: #fbbf24; }
-      #run-info-panel {
-          max-height: 28rem;
-          transition: max-height 0.25s ease-out, opacity 0.2s ease-out, padding 0.25s ease-out, border-width 0.2s ease-out;
-      }
-      #run-info-panel.run-info-folded {
-          max-height: 0;
-          overflow: hidden;
-          opacity: 0;
-          padding-top: 0;
-          padding-bottom: 0;
-          border-bottom-width: 0;
-      }
-  </style>
+    <style is:inline>
+        .timeline-block:hover {
+            z-index: 10;
+            transform: scaleY(1.2);
+        }
+        .step-card {
+            transition: all 0.2s;
+        }
+        .step-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .highlight-ring {
+            ring-width: 2px;
+            ring-color: #fbbf24;
+        }
+        #run-info-panel {
+            max-height: 28rem;
+            transition:
+                max-height 0.25s ease-out,
+                opacity 0.2s ease-out,
+                padding 0.25s ease-out,
+                border-width 0.2s ease-out;
+        }
+        #run-info-panel.run-info-folded {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-bottom-width: 0;
+        }
+    </style>
 
-  <main class="pt-14 h-screen flex flex-col bg-gray-50">
-      <!-- Header / Control Bar -->
-      <div class="bg-white border-b border-gray-200 px-6 py-4 flex-shrink-0 z-40 shadow-sm">
-          <div class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-              <div class="flex items-center gap-4">
-                  <h1 class="text-xl font-semibold text-gray-900">Trajectory Viewer</h1>
-                  <div class="h-6 w-px bg-gray-200 hidden lg:block"></div>
-                  
-                  <!-- File Input Removed as requested -->
+    <main class="pt-14 h-screen flex flex-col bg-gray-50">
+        <!-- Header / Control Bar -->
+        <div
+            class="bg-white border-b border-gray-200 px-6 py-4 flex-shrink-0 z-40 shadow-sm hidden"
+        >
+            <div
+                class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+            >
+                <div class="flex items-center gap-4">
+                    <h1 class="text-xl font-semibold text-gray-900">
+                        Trajectory Viewer
+                    </h1>
+                    <div class="h-6 w-px bg-gray-200 hidden lg:block"></div>
 
-              </div>
+                    <!-- File Input Removed as requested -->
+                </div>
 
-              <!-- Example Buttons -->
-              <div class="flex items-center gap-2 text-sm">
-                  <span class="text-gray-500">Examples:</span>
-                  <button onclick="loadRandomExample('expectation')" class="text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded">Expectation</button>
-                  <button onclick="loadRandomExample('communication')" class="text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded">Communication</button>
-                  <button onclick="loadRandomExample('commitment')" class="text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded">Commitment</button>
-              </div>
-          </div>
-          
-          <div id="load-status" class="hidden mt-2 text-sm text-center"></div>
-      </div>
+                <!-- Example Buttons -->
+            </div>
 
-      <!-- Main Viewer Area -->
-      <div id="viewer-container" class="flex-1 overflow-hidden relative flex flex-col max-w-7xl mx-auto w-full">
-          <!-- Empty State -->
-          <div id="empty-state" class="absolute inset-0 flex items-center justify-center bg-gray-50 z-10">
-              <div class="text-center text-gray-500 max-w-md px-6">
-                  <i class="fas fa-code-branch text-4xl mb-4 text-gray-300"></i>
-                  <h3 class="text-lg font-medium text-gray-900 mb-2">No trajectory loaded</h3>
-                  <p class="text-sm">Upload JSON trajectory files or select an example above to visualize the collaboration process.</p>
-                  
-                  <div class="mt-6 p-4 bg-white rounded-lg border border-gray-200 shadow-sm text-left">
-                      <p class="text-xs font-mono text-gray-500 mb-2">Or paste JSON directly:</p>
-                      <textarea id="json-input" class="w-full h-24 text-xs font-mono border border-gray-200 rounded p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder='{"stepsA": [...], "stepsB": [...]} or [...]'></textarea>
-                      <button onclick="loadFromPaste()" class="mt-2 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium py-1.5 rounded transition-colors">Load from Text</button>
-                  </div>
-              </div>
-          </div>
+            <div id="load-status" class="hidden mt-2 text-sm text-center"></div>
+        </div>
 
-          <!-- Viewer Content (Hidden initially) -->
-          <div id="viewer-section" class="flex-1 flex flex-col h-full hidden">
-              <!-- Run info panel (full metadata when available) -->
-              <div id="run-info-panel" class="flex-none bg-white border-b border-gray-200 px-6 py-4 hidden">
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl">
-                      <div id="run-info-agent-a" class="hidden">
-                          <div class="text-[10px] font-semibold uppercase tracking-wide text-red-500 mb-2">Agent A</div>
-                          <dl class="space-y-1 text-xs text-gray-600">
-                              <div class="flex justify-between"><dt>Model</dt><dd id="run-a-model" class="font-medium text-gray-900 text-right">—</dd></div>
-                              <div class="flex justify-between"><dt>Steps</dt><dd id="run-a-steps" class="font-medium text-gray-900">—</dd></div>
-                              <div class="flex justify-between"><dt>Input Tokens</dt><dd id="run-a-input-tokens" class="font-medium text-gray-900">—</dd></div>
-                              <div class="flex justify-between"><dt>Output Tokens</dt><dd id="run-a-output-tokens" class="font-medium text-gray-900">—</dd></div>
-                              <div class="flex justify-between"><dt>Cost</dt><dd id="run-a-cost" class="font-medium text-gray-900">—</dd></div>
-                          </dl>
-                      </div>
-                      <div id="run-info-agent-b" class="hidden">
-                          <div class="text-[10px] font-semibold uppercase tracking-wide text-blue-500 mb-2">Agent B</div>
-                          <dl class="space-y-1 text-xs text-gray-600">
-                              <div class="flex justify-between"><dt>Model</dt><dd id="run-b-model" class="font-medium text-gray-900 text-right">—</dd></div>
-                              <div class="flex justify-between"><dt>Steps</dt><dd id="run-b-steps" class="font-medium text-gray-900">—</dd></div>
-                              <div class="flex justify-between"><dt>Input Tokens</dt><dd id="run-b-input-tokens" class="font-medium text-gray-900">—</dd></div>
-                              <div class="flex justify-between"><dt>Output Tokens</dt><dd id="run-b-output-tokens" class="font-medium text-gray-900">—</dd></div>
-                              <div class="flex justify-between"><dt>Cost</dt><dd id="run-b-cost" class="font-medium text-gray-900">—</dd></div>
-                          </dl>
-                      </div>
-                      <div id="run-info-global">
-                          <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500 mb-2">Run</div>
-                          <dl class="space-y-1 text-xs text-gray-600">
-                              <div class="flex justify-between"><dt>Duration</dt><dd id="run-duration" class="font-medium text-gray-900">—</dd></div>
-                              <div class="flex justify-between"><dt>Total Cost</dt><dd id="run-total-cost" class="font-medium text-gray-900">—</dd></div>
-                              <div class="flex justify-between"><dt>Started</dt><dd id="run-started" class="font-medium text-gray-900">—</dd></div>
-                              <div id="run-task-row" class="hidden flex justify-between"><dt>Task</dt><dd id="run-task" class="font-medium text-gray-900 text-right">—</dd></div>
-                          </dl>
-                      </div>
-                  </div>
-              </div>
-              <!-- Stats Bar (compact when no full metadata) -->
-              <div id="stats-bar" class="flex-none bg-white border-b border-gray-200 px-6 py-2 flex items-center justify-between text-xs text-gray-500">
-                  <div class="flex flex-wrap gap-x-6 gap-y-1 items-center">
-                      <div>Agent A: <span id="stats-agent-a" class="font-medium text-gray-900">0</span> steps</div>
-                      <div>Agent B: <span id="stats-agent-b" class="font-medium text-gray-900">0</span> steps</div>
-                      <div>Duration: <span id="stats-duration" class="font-medium text-gray-900">0s</span></div>
-                      <div id="stats-cost-wrap" class="hidden">Cost: <span id="stats-cost" class="font-medium text-gray-900">—</span></div>
-                      <div id="stats-task-wrap" class="hidden">Task: <span id="stats-task" class="font-medium text-gray-900">—</span></div>
-                  </div>
-                  
-                  <div class="flex items-center gap-3">
-                      <label class="flex items-center gap-1.5 cursor-pointer">
-                          <input type="checkbox" id="filter-comm" checked onchange="applyFilters()" class="rounded text-blue-600 focus:ring-blue-500">
-                          <span>Communication</span>
-                      </label>
-                      <label class="flex items-center gap-1.5 cursor-pointer">
-                          <input type="checkbox" id="filter-edit" checked onchange="applyFilters()" class="rounded text-blue-600 focus:ring-blue-500">
-                          <span>Edits</span>
-                      </label>
-                      <label class="flex items-center gap-1.5 cursor-pointer">
-                          <input type="checkbox" id="filter-view" checked onchange="applyFilters()" class="rounded text-blue-600 focus:ring-blue-500">
-                          <span>File View</span>
-                      </label>
-                      <label class="flex items-center gap-1.5 cursor-pointer">
-                          <input type="checkbox" id="filter-bash" onchange="applyFilters()" class="rounded text-blue-600 focus:ring-blue-500">
-                          <span>Terminal</span>
-                      </label>
-                      <label class="flex items-center gap-1.5 cursor-pointer">
-                          <input type="checkbox" id="filter-other" onchange="applyFilters()" class="rounded text-blue-600 focus:ring-blue-500">
-                          <span>Other</span>
-                      </label>
-                  </div>
-              </div>
+        <!-- Main Viewer Area -->
+        <div
+            id="viewer-container"
+            class="flex-1 overflow-hidden relative flex flex-col max-w-7xl mx-auto w-full"
+        >
+            <!-- Empty State -->
+            <div
+                id="empty-state"
+                class="absolute inset-0 flex items-center justify-center bg-gray-50 z-10"
+            >
+                <div class="text-center text-gray-500 max-w-md px-6">
+                    <i class="fas fa-code-branch text-4xl mb-4 text-gray-300"
+                    ></i>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">
+                        No trajectory loaded
+                    </h3>
+                    <p class="text-sm">
+                        Upload JSON trajectory files or select an example above
+                        to visualize the collaboration process.
+                    </p>
 
-              <!-- Timeline -->
-              <div class="flex-none bg-white border-b border-gray-200 px-6 py-4">
-                  <div class="relative h-16 w-full mb-2 select-none">
-                      <!-- Agent A Timeline -->
-                      <div class="absolute top-0 left-0 right-0 h-6 bg-red-50 rounded overflow-hidden" id="timeline-a-bg">
-                          <div id="timeline-a" class="relative w-full h-full"></div>
-                      </div>
-                      <div class="absolute top-1 left-2 text-[10px] font-bold text-red-300 pointer-events-none">A</div>
-                      
-                      <!-- Mid Spacer -->
-                      <div class="absolute top-6 left-0 right-0 h-4 flex items-center justify-between text-[10px] text-gray-400 px-1" id="time-markers">
-                          <span>00:00</span>
-                          <span>End</span>
-                      </div>
+                    <div
+                        class="mt-6 p-4 bg-white rounded-lg border border-gray-200 shadow-sm text-left"
+                    >
+                        <p class="text-xs font-mono text-gray-500 mb-2">
+                            Or paste JSON directly:
+                        </p>
+                        <textarea
+                            id="json-input"
+                            class="w-full h-24 text-xs font-mono border border-gray-200 rounded p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            placeholder='{"stepsA": [...], "stepsB": [...]} or [...]'
+                        ></textarea>
+                        <button
+                            onclick="loadFromPaste()"
+                            class="mt-2 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium py-1.5 rounded transition-colors"
+                            >Load from Text</button
+                        >
+                    </div>
+                </div>
+            </div>
 
-                      <!-- Agent B Timeline -->
-                      <div class="absolute top-10 left-0 right-0 h-6 bg-blue-50 rounded overflow-hidden" id="timeline-b-bg">
-                          <div id="timeline-b" class="relative w-full h-full"></div>
-                      </div>
-                      <div class="absolute top-11 left-2 text-[10px] font-bold text-blue-300 pointer-events-none">B</div>
-                  </div>
-              </div>
+            <!-- Viewer Content (Hidden initially) -->
+            <div id="viewer-section" class="flex-1 flex flex-col h-full hidden">
+                <!-- Run info panel (full metadata when available) -->
+                <div
+                    id="run-info-panel"
+                    class="flex-none bg-white border-b border-gray-200 px-6 py-4 hidden"
+                >
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl"
+                    >
+                        <div id="run-info-agent-a" class="hidden">
+                            <div
+                                class="text-[10px] font-semibold uppercase tracking-wide text-red-500 mb-2"
+                            >
+                                Agent A
+                            </div>
+                            <dl class="space-y-1 text-xs text-gray-600">
+                                <div class="flex justify-between">
+                                    <dt>Model</dt><dd
+                                        id="run-a-model"
+                                        class="font-medium text-gray-900 text-right"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt>Steps</dt><dd
+                                        id="run-a-steps"
+                                        class="font-medium text-gray-900"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt>Input Tokens</dt><dd
+                                        id="run-a-input-tokens"
+                                        class="font-medium text-gray-900"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt>Output Tokens</dt><dd
+                                        id="run-a-output-tokens"
+                                        class="font-medium text-gray-900"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt>Cost</dt><dd
+                                        id="run-a-cost"
+                                        class="font-medium text-gray-900"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div id="run-info-agent-b" class="hidden">
+                            <div
+                                class="text-[10px] font-semibold uppercase tracking-wide text-blue-500 mb-2"
+                            >
+                                Agent B
+                            </div>
+                            <dl class="space-y-1 text-xs text-gray-600">
+                                <div class="flex justify-between">
+                                    <dt>Model</dt><dd
+                                        id="run-b-model"
+                                        class="font-medium text-gray-900 text-right"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt>Steps</dt><dd
+                                        id="run-b-steps"
+                                        class="font-medium text-gray-900"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt>Input Tokens</dt><dd
+                                        id="run-b-input-tokens"
+                                        class="font-medium text-gray-900"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt>Output Tokens</dt><dd
+                                        id="run-b-output-tokens"
+                                        class="font-medium text-gray-900"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt>Cost</dt><dd
+                                        id="run-b-cost"
+                                        class="font-medium text-gray-900"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div id="run-info-global">
+                            <div
+                                class="text-[10px] font-semibold uppercase tracking-wide text-gray-500 mb-2"
+                            >
+                                Run
+                            </div>
+                            <dl class="space-y-1 text-xs text-gray-600">
+                                <div class="flex justify-between">
+                                    <dt>Duration</dt><dd
+                                        id="run-duration"
+                                        class="font-medium text-gray-900"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt>Total Cost</dt><dd
+                                        id="run-total-cost"
+                                        class="font-medium text-gray-900"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt>Started</dt><dd
+                                        id="run-started"
+                                        class="font-medium text-gray-900"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                                <div
+                                    id="run-task-row"
+                                    class="hidden flex justify-between"
+                                >
+                                    <dt>Task</dt><dd
+                                        id="run-task"
+                                        class="font-medium text-gray-900 text-right"
+                                    >
+                                        —
+                                    </dd>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm">
+                                    <span class="text-gray-500">Examples:</span>
+                                    <button
+                                        onclick="loadRandomExample('expectation')"
+                                        class="text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded"
+                                        >Expectation</button
+                                    >
+                                    <button
+                                        onclick="loadRandomExample('communication')"
+                                        class="text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded"
+                                        >Communication</button
+                                    >
+                                    <button
+                                        onclick="loadRandomExample('commitment')"
+                                        class="text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded"
+                                        >Commitment</button
+                                    >
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <!-- Stats Bar (compact when no full metadata) -->
+                <div
+                    id="stats-bar"
+                    class="flex-none bg-white border-b border-gray-200 px-6 py-2 flex items-center justify-between text-xs text-gray-500"
+                >
+                    <div class="flex flex-wrap gap-x-6 gap-y-1 items-center">
+                        <div>
+                            Agent A: <span
+                                id="stats-agent-a"
+                                class="font-medium text-gray-900">0</span
+                            > steps
+                        </div>
+                        <div>
+                            Agent B: <span
+                                id="stats-agent-b"
+                                class="font-medium text-gray-900">0</span
+                            > steps
+                        </div>
+                        <div>
+                            Duration: <span
+                                id="stats-duration"
+                                class="font-medium text-gray-900">0s</span
+                            >
+                        </div>
+                        <div id="stats-cost-wrap" class="hidden">
+                            Cost: <span
+                                id="stats-cost"
+                                class="font-medium text-gray-900">—</span
+                            >
+                        </div>
+                        <div id="stats-task-wrap" class="hidden">
+                            Task: <span
+                                id="stats-task"
+                                class="font-medium text-gray-900">—</span
+                            >
+                        </div>
+                    </div>
 
-              <!-- Steps List -->
-              <div class="flex-1 overflow-y-auto bg-gray-50 px-6 py-6" id="scroll-container">
-                  <div class="max-w-4xl mx-auto space-y-4" id="steps-container">
-                      <!-- Steps rendered here -->
-                  </div>
-                  <div class="text-center text-xs text-gray-400 mt-8 mb-4">
-                      <span id="step-count">0 steps</span>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </main>
+                    <div class="flex items-center gap-3">
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                id="filter-comm"
+                                checked
+                                onchange="applyFilters()"
+                                class="rounded text-blue-600 focus:ring-blue-500"
+                            />
+                            <span>Communication</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                id="filter-edit"
+                                checked
+                                onchange="applyFilters()"
+                                class="rounded text-blue-600 focus:ring-blue-500"
+                            />
+                            <span>Edits</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                id="filter-view"
+                                checked
+                                onchange="applyFilters()"
+                                class="rounded text-blue-600 focus:ring-blue-500"
+                            />
+                            <span>File View</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                id="filter-bash"
+                                onchange="applyFilters()"
+                                class="rounded text-blue-600 focus:ring-blue-500"
+                            />
+                            <span>Terminal</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                id="filter-other"
+                                onchange="applyFilters()"
+                                class="rounded text-blue-600 focus:ring-blue-500"
+                            />
+                            <span>Other</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Timeline -->
+                <div
+                    class="flex-none bg-white border-b border-gray-200 px-6 py-4"
+                >
+                    <div class="relative h-16 w-full mb-2 select-none">
+                        <!-- Agent A Timeline -->
+                        <div
+                            class="absolute top-0 left-0 right-0 h-6 bg-red-50 rounded overflow-hidden"
+                            id="timeline-a-bg"
+                        >
+                            <div id="timeline-a" class="relative w-full h-full">
+                            </div>
+                        </div>
+                        <div
+                            class="absolute top-1 -left-4 text-[10px] font-bold text-red-300 pointer-events-none"
+                        >
+                            A
+                        </div>
+
+                        <!-- Mid Spacer -->
+                        <div
+                            class="absolute top-6 left-0 right-0 h-4 flex items-center justify-between text-[10px] text-gray-400 px-1"
+                            id="time-markers"
+                        >
+                            <span>00:00</span>
+                            <span>End</span>
+                        </div>
+
+                        <!-- Agent B Timine -->
+                        <div
+                            class="absolute top-10 left-0 right-0 h-6 bg-blue-50 rounded overflow-hidden"
+                            id="timeline-b-bg"
+                        >
+                            <div id="timeline-b" class="relative w-full h-full">
+                            </div>
+                        </div>
+                        <div
+                            class="absolute top-11 -left-4 text-[10px] font-bold text-blue-300 pointer-events-none"
+                        >
+                            B
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Steps List -->
+                <div
+                    class="flex-1 overflow-y-auto bg-gray-50 px-6 py-6"
+                    id="scroll-container"
+                >
+                    <div
+                        class="max-w-4xl mx-auto space-y-4"
+                        id="steps-container"
+                    >
+                        <!-- Steps rendered here -->
+                    </div>
+                    <div class="text-center text-xs text-gray-400 mt-8 mb-4">
+                        <span id="step-count">0 steps</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </BaseLayout>
 
 <script>
-  import pako from 'pako';
-
-  let stepsA = [];
-  let stepsB = [];
-  let allSteps = [];
-  let timeRange = { start: 0, end: 0, duration: 0 };
-  let causeIndex = null;
-  /** Run metadata (cost, repo, task, features) when available */
-  let runMetadata = {};
-  /** Raw steps array (before system-prompt filter) for extracting run info from step fields */
-  let rawStepsForRunInfo = [];
-
-  // Filter out system prompt steps
-  const isSystemPrompt = (step) => {
-      const content = step.content || step.text || step.message || '';
-      if (typeof content !== 'string') return false;
-      if (content.includes('You are OpenHands agent')) return true;
-      if (content.includes('<ROLE>')) return true;
-      if (content.includes('You are agent_')) return true;
-      if (content.includes('**FEATURE DESCRIPTION**')) return true;
-      if (content.includes('Added workspace context')) return true;
-      return false;
-  };
-
-  // Pick first defined from multiple keys (for snake_case / camelCase)
-  function pick(obj, ...keys) {
-      if (obj == null) return undefined;
-      for (const k of keys) {
-          if (obj[k] != null && obj[k] !== "") return obj[k];
-      }
-      return undefined;
-  }
-
-  // Normalize one agent block from metadata (agent_a, agent_1, etc.)
-  function normalizeAgentMeta(meta) {
-      if (!meta || typeof meta !== "object") return null;
-      const model = pick(meta, "model", "model_name");
-      const steps = pick(meta, "steps", "step_count");
-      const inputTokens = pick(meta, "input_tokens", "inputTokens");
-      const outputTokens = pick(meta, "output_tokens", "outputTokens");
-      const cost = pick(meta, "cost", "cost_usd", "total_cost");
-      if (model == null && steps == null && inputTokens == null && outputTokens == null && cost == null) return null;
-      return { model, steps, inputTokens, outputTokens, cost };
-  }
-
-  // Normalize trajectory data: may be array of steps or { steps, metadata?, run_metadata? }
-  function normalizeTrajectoryData(data) {
-      if (Array.isArray(data)) {
-          runMetadata = {};
-          return data;
-      }
-      if (data && Array.isArray(data.steps)) {
-          const meta = data.metadata || data.run_metadata || {};
-          const agentA = normalizeAgentMeta(meta.agent_a ?? meta.agent_1 ?? meta.agentA);
-          const agentB = normalizeAgentMeta(meta.agent_b ?? meta.agent_2 ?? meta.agentB);
-          runMetadata = {
-              agent_a: agentA,
-              agent_b: agentB,
-              total_cost: pick(meta, "total_cost", "totalCost", "total_cost_usd") ?? pick(data, "total_cost", "totalCost"),
-              duration_seconds: pick(meta, "duration_seconds", "durationSeconds"),
-              duration_ms: pick(meta, "duration_ms", "durationMs"),
-              started: pick(meta, "started", "started_at", "startTime") ?? pick(data, "started", "started_at"),
-              repo: meta.repo ?? data.repo,
-              task: meta.task ?? meta.task_id ?? data.task ?? data.taskId,
-              features: meta.features ?? data.features,
-              cost: meta.total_cost ?? meta.total_cost_usd ?? meta.cost_usd ?? data.total_cost ?? data.cost_usd,
-          };
-          return data.steps;
-      }
-      return null;
-  }
-
-  // Split a flat array of steps (with agentId) into stepsA/stepsB
-  function splitStepsByAgent(data) {
-      stepsA = [];
-      stepsB = [];
-      const steps = normalizeTrajectoryData(data);
-      if (!steps) return;
-      rawStepsForRunInfo = Array.isArray(steps) ? steps : [];
-      steps.forEach((step) => {
-          if (isSystemPrompt(step)) return;
-          if (step.agentId === "agent_1" || step.agent === "A") {
-              stepsA.push({ ...step, originalIndex: stepsA.length });
-          } else {
-              stepsB.push({ ...step, originalIndex: stepsB.length });
-          }
-      });
-  }
-
-  // Clean model names e.g. "global.anthropic.claude-sonnet-4-5-20250929-v1:0" → "claude-sonnet-4-5@20250929"
-  function cleanModelName(model) {
-      if (model == null || model === "") return null;
-      let cleaned = String(model).replace(/^global\.\w+\./, "");
-      cleaned = cleaned.replace(/-(\d{8})-v\d+:\d+$/, "@$1");
-      cleaned = cleaned.replace(/-v\d+:\d+$/, "");
-      return cleaned;
-  }
-
-  // Extract run info from raw steps (same logic as main branch coop-trajectory.html)
-  function extractRunInfoFromSteps(rawSteps) {
-      if (!rawSteps?.length) return;
-      const agent1Steps = rawSteps.filter((s) => s.agentId === "agent_1" || s.agent === "A");
-      const agent2Steps = rawSteps.filter((s) => s.agentId === "agent_2" || s.agent === "B");
-
-      function getAgentInfo(steps) {
-          let model = null;
-          let finalMetrics = null;
-          for (const step of steps) {
-              if (!model && step.tool_call_metadata?.model_response?.model) {
-                  model = step.tool_call_metadata.model_response.model;
-              }
-          }
-          for (let i = steps.length - 1; i >= 0; i--) {
-              if (steps[i].llm_metrics) {
-                  finalMetrics = steps[i].llm_metrics;
-                  break;
-              }
-          }
-          const usage = finalMetrics?.accumulated_token_usage || {};
-          return {
-              model: cleanModelName(model),
-              steps: steps.length,
-              inputTokens: usage.prompt_tokens ?? usage.input_tokens ?? 0,
-              outputTokens: usage.completion_tokens ?? usage.output_tokens ?? 0,
-              cost: finalMetrics?.accumulated_cost,
-          };
-      }
-
-      const infoA = getAgentInfo(agent1Steps);
-      const infoB = getAgentInfo(agent2Steps);
-      if (infoA.model != null || infoA.cost != null || infoA.inputTokens > 0 || infoA.outputTokens > 0 || infoA.steps > 0) {
-          runMetadata.agent_a = {
-              model: infoA.model ?? "—",
-              steps: infoA.steps,
-              inputTokens: infoA.inputTokens,
-              outputTokens: infoA.outputTokens,
-              cost: infoA.cost,
-          };
-      }
-      if (infoB.model != null || infoB.cost != null || infoB.inputTokens > 0 || infoB.outputTokens > 0 || infoB.steps > 0) {
-          runMetadata.agent_b = {
-              model: infoB.model ?? "—",
-              steps: infoB.steps,
-              inputTokens: infoB.inputTokens,
-              outputTokens: infoB.outputTokens,
-              cost: infoB.cost,
-          };
-      }
-      const totalCost = (infoA.cost ?? 0) + (infoB.cost ?? 0);
-      if (totalCost > 0) runMetadata.total_cost = totalCost;
-
-      const timestamps = rawSteps
-          .map((s) => new Date(s.timestamp || s.timestampMs).getTime())
-          .filter((t) => !isNaN(t));
-      if (timestamps.length > 0) {
-          runMetadata.started = Math.min(...timestamps);
-          runMetadata.duration_ms = Math.max(...timestamps) - runMetadata.started;
-      }
-  }
-
-  // Decompress .gz response, handling both pre-decompressed (dev server) and raw gzip
-  async function decompressResponse(response) {
-      const arrayBuffer = await response.arrayBuffer();
-      const bytes = new Uint8Array(arrayBuffer);
-      // Check for gzip magic number (0x1f 0x8b)
-      if (bytes.length >= 2 && bytes[0] === 0x1f && bytes[1] === 0x8b) {
-          const inflated = pako.ungzip(bytes, { to: 'string' });
-          return JSON.parse(inflated);
-      }
-      // Already decompressed by the server
-      const text = new TextDecoder().decode(bytes);
-      return JSON.parse(text);
-  }
-
-  // Load cause index on page load
-  async function initCauseIndex() {
-      try {
-          const response = await fetch('/static/data/causes/index.json');
-          causeIndex = await response.json();
-
-          // Check for URL params first
-          const urlParams = new URLSearchParams(window.location.search);
-          const model = urlParams.get('model');
-          const repo = urlParams.get('repo');
-          const task = urlParams.get('task');
-          const features = urlParams.get('features');
-
-          if (model && repo && task && features) {
-              loadTrajectoryFromParams(model, repo, task, features);
-          } else {
-              // Auto-load a default trajectory
-              loadRandomExample('expectation');
-          }
-      } catch (e) {
-          console.error("Error loading cause index:", e);
-      }
-  }
-
-  async function loadTrajectoryFromParams(model, repo, task, features) {
-      const trajectoryPath = `/static/data/coop/trajectories/${model}/${repo}_${task}_${features}.json.gz`;
-      showStatus(`Loading ${model} trajectory for ${repo}/${task}/${features}...`, 'info');
-
-      try {
-          const response = await fetch(trajectoryPath);
-          if (!response.ok) throw new Error(`Trajectory not found: ${response.status}`);
-
-          const data = await decompressResponse(response);
-          splitStepsByAgent(data);
-          // Set run context from URL params when not present in trajectory data
-          if (runMetadata.repo == null) runMetadata.repo = repo;
-          if (runMetadata.task == null) runMetadata.task = task;
-          if (runMetadata.features == null) runMetadata.features = features;
-
-          const modelNames = {
-              gpt5: 'GPT-5', claude: 'Claude Sonnet 4.5', minimax: 'MiniMax M2',
-              qwen_coder: 'Qwen3-Coder-30B', qwen: 'Qwen3-30B'
-          };
-          const modelName = modelNames[model] || model;
-          showStatus(
-              `${modelName}: ${repo.replace(/_/g, ' ')} / ${task} / ${features} (${stepsA.length + stepsB.length} steps)`,
-              "success"
-          );
-          processAndRender();
-      } catch (e) {
-          console.error("Error loading trajectory:", e);
-          showStatus(`Trajectory not available. Try loading a cause example instead.`, "error");
-          loadRandomExample('expectation');
-      }
-  }
-
-  async function loadRandomExample(cause) {
-      const examples = causeIndex?.[cause] || [];
-      if (examples.length === 0) {
-          showStatus("No examples available for this cause", "error");
-          return;
-      }
-
-      const example = examples[Math.floor(Math.random() * examples.length)];
-      if (!example.trajectory_url) {
-          showStatus("Trajectory file not found", "error");
-          return;
-      }
-
-      try {
-          const response = await fetch('/' + example.trajectory_url);
-          const data = await response.json();
-
-          splitStepsByAgent(data);
-          // Set run context from cause example when not in trajectory data
-          if (runMetadata.repo == null) runMetadata.repo = example.project;
-          if (runMetadata.task == null) runMetadata.task = example.task_id;
-          if (runMetadata.features == null) runMetadata.features = example.features;
-
-          const causeLabel = cause.charAt(0).toUpperCase() + cause.slice(1);
-          showStatus(
-              `${causeLabel}: ${example.project.replace(/_/g, " ")} (${stepsA.length + stepsB.length} steps)`,
-              "success"
-          );
-          processAndRender();
-      } catch (e) {
-          console.error("Error loading trajectory:", e);
-          showStatus("Error loading trajectory: " + e.message, "error");
-      }
-  }
-
-  const RUN_INFO_FOLD_SCROLL_THRESHOLD = 80;
-
-  function setupRunInfoFoldOnScroll() {
-      const scrollContainer = document.getElementById("scroll-container");
-      const runInfoPanel = document.getElementById("run-info-panel");
-      if (!scrollContainer || !runInfoPanel) return;
-      scrollContainer.addEventListener("scroll", () => {
-          if (runInfoPanel.classList.contains("hidden")) return;
-          if (scrollContainer.scrollTop > RUN_INFO_FOLD_SCROLL_THRESHOLD) {
-              runInfoPanel.classList.add("run-info-folded");
-          } else {
-              runInfoPanel.classList.remove("run-info-folded");
-          }
-      }, { passive: true });
-  }
-
-  window.addEventListener("load", () => {
-      initCauseIndex();
-      setupRunInfoFoldOnScroll();
-  });
-
-  function getToolType(step) {
-      const toolName = step.tool_call_metadata?.function_name || step.toolName || "";
-      const args = step.args || {};
-
-      if (toolName === "finish") return "submit";
-      if (toolName === "openhands_comm_send" || toolName === "openhands_comm_get") return "communication";
-      if (toolName === "task_tracker") return "task_tracking";
-      if (toolName === "think") return "think";
-
-      if (toolName === "execute_bash") {
-          const cmd = (args.command || "").toLowerCase();
-          if (cmd.includes("grep") || cmd.includes("find ") || cmd.includes("locate")) {
-              return "find_grep";
-          }
-          return "bash";
-      }
-
-      if (toolName === "str_replace_editor") {
-          const cmd = args.command;
-          if (cmd === "view") return "view";
-          if (cmd === "create") return "create";
-          return "edit";
-      }
-
-      return "other";
-  }
-  
-  function getToolColor(toolType) {
-      const colors = {
-          bash: "bg-yellow-400", find_grep: "bg-sky-300", view: "bg-blue-600",
-          edit: "bg-green-500", create: "bg-green-700", communication: "bg-orange-400",
-          task_tracking: "bg-purple-400", submit: "bg-red-500", think: "bg-gray-400",
-          recall: "bg-indigo-400", condensation: "bg-pink-400", message: "bg-teal-400",
-          other: "bg-gray-300",
-      };
-      return colors[toolType] || "bg-gray-300";
-  }
-
-  function getToolIcon(toolType) {
-      const icons = {
-          bash: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>`,
-          find_grep: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>`,
-          view: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>`,
-          edit: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>`,
-          create: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>`,
-          communication: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>`,
-          task_tracking: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>`,
-          think: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>`,
-          recall: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path></svg>`,
-          other: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>`,
-      };
-      return icons[toolType] || icons.other;
-  }
-
-  function getToolLabel(toolType) {
-      const labels = {
-          bash: "Bash", find_grep: "Find", view: "View", edit: "Edit",
-          create: "Create", communication: "Comm", task_tracking: "Task",
-          submit: "Submit", think: "Think", recall: "Recall",
-          condensation: "Condense", message: "Msg", other: "Other",
-      };
-      return labels[toolType] || "Unknown";
-  }
-
-  function getPillStyle(toolType) {
-      const styles = {
-          bash: "bg-amber-50 text-amber-700", find_grep: "bg-sky-50 text-sky-700",
-          view: "bg-blue-50 text-blue-700", edit: "bg-emerald-50 text-emerald-700",
-          create: "bg-emerald-50 text-emerald-700", communication: "bg-orange-50 text-orange-700",
-          task_tracking: "bg-violet-50 text-violet-700", submit: "bg-rose-50 text-rose-700",
-          think: "bg-gray-100 text-gray-600", recall: "bg-indigo-50 text-indigo-700",
-          condensation: "bg-pink-50 text-pink-700", message: "bg-teal-50 text-teal-700",
-          other: "bg-gray-100 text-gray-600",
-      };
-      return styles[toolType] || "bg-gray-100 text-gray-600";
-  }
-
-  function formatTimestamp(ts) {
-      if (!ts) return '';
-      const date = new Date(ts);
-      return date.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second:'2-digit' }) + '.' + String(date.getMilliseconds()).padStart(3, '0');
-  }
-  
-  function formatDuration(ms) {
-      const sec = Math.floor(ms / 1000);
-      const min = Math.floor(sec / 60);
-      return `${min}m ${sec % 60}s`;
-  }
-
-  function formatInteger(n) {
-      if (n == null || n === "") return "—";
-      const num = Number(n);
-      if (isNaN(num)) return String(n);
-      return num.toLocaleString();
-  }
-
-  function formatCost(val) {
-      if (val == null || val === "") return "—";
-      const num = Number(val);
-      if (isNaN(num)) return String(val);
-      if (num === 0) return "N/A";
-      return "$" + num.toFixed(4);
-  }
-
-  function formatStarted(val) {
-      if (val == null || val === "") return "—";
-      const date = new Date(val);
-      if (isNaN(date.getTime())) return String(val);
-      return date.toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" });
-  }
-
-  function shouldShowStep(step) {
-      if (step.action === "system" || step.source === "user") return false;
-      return !isSystemPrompt(step);
-  }
-
-  window.loadFromPaste = function() {
-      const input = document.getElementById("json-input")?.value?.trim();
-      if (!input) {
-          showStatus("Please paste JSON data", "error");
-          return;
-      }
-
-      try {
-          const data = JSON.parse(input);
-
-          if (Array.isArray(data)) {
-              splitStepsByAgent(data);
-          } else if (data.stepsA && data.stepsB) {
-              runMetadata = {};
-              rawStepsForRunInfo = [];
-              stepsA = data.stepsA.filter(shouldShowStep);
-              stepsB = data.stepsB.filter(shouldShowStep);
-          } else if (data.steps && Array.isArray(data.steps)) {
-              splitStepsByAgent(data);
-          } else {
-              throw new Error("Invalid format. Expected array with agentId or {stepsA, stepsB} or {steps, metadata?}");
-          }
-
-          processAndRender();
-          showStatus(`Loaded ${stepsA.length} + ${stepsB.length} steps`, "success");
-      } catch (e) {
-          showStatus("Error parsing JSON: " + e.message, "error");
-      }
-  }
-
-  function processAndRender() {
-      // Extract run info from raw steps (model, tokens, cost, duration, started) when available
-      if (rawStepsForRunInfo?.length) {
-          extractRunInfoFromSteps(rawStepsForRunInfo);
-      }
-
-      // Combine and sort steps
-      allSteps = [
-          ...stepsA.map((s, i) => ({ ...s, agent: "A", originalIndex: i })),
-          ...stepsB.map((s, i) => ({ ...s, agent: "B", originalIndex: i })),
-      ];
-
-      // Sort by timestamp
-      allSteps.sort((a, b) => {
-          const tA = new Date(a.timestamp || a.timestampMs).getTime();
-          const tB = new Date(b.timestamp || b.timestampMs).getTime();
-          return tA - tB;
-      });
-
-      // Calculate time range
-      if (allSteps.length > 0) {
-          const times = allSteps
-              .map((s) => new Date(s.timestamp || s.timestampMs).getTime())
-              .filter((t) => !isNaN(t));
-          timeRange.start = Math.min(...times);
-          timeRange.end = Math.max(...times);
-          timeRange.duration = timeRange.end - timeRange.start || 1;
-      }
-
-      // Update stats
-      document.getElementById("stats-agent-a").textContent = stepsA.length;
-      document.getElementById("stats-agent-b").textContent = stepsB.length;
-      document.getElementById("stats-duration").textContent = formatDuration(timeRange.duration);
-
-      const costEl = document.getElementById("stats-cost-wrap");
-      const costVal = document.getElementById("stats-cost");
-      if (runMetadata.cost != null && runMetadata.cost !== "") {
-          const costNum = Number(runMetadata.cost);
-          costVal.textContent = isNaN(costNum) ? String(runMetadata.cost) : `$${costNum.toFixed(2)}`;
-          costEl.classList.remove("hidden");
-      } else {
-          costEl.classList.add("hidden");
-      }
-
-      const taskParts = [runMetadata.repo, runMetadata.task, runMetadata.features].filter(Boolean);
-      const taskLabel = taskParts.length > 0 ? taskParts.map((p) => String(p).replace(/_/g, " ")).join(" / ") : "";
-
-      const taskWrap = document.getElementById("stats-task-wrap");
-      const taskVal = document.getElementById("stats-task");
-      if (taskLabel) {
-          if (taskVal) taskVal.textContent = taskLabel;
-          if (taskWrap) taskWrap.classList.remove("hidden");
-      } else {
-          if (taskWrap) taskWrap.classList.add("hidden");
-      }
-
-      // Full run info panel (when per-agent or total metadata exists)
-      const runInfoPanel = document.getElementById("run-info-panel");
-      const hasFullMeta = runMetadata.agent_a || runMetadata.agent_b || runMetadata.total_cost != null || runMetadata.started != null;
-      if (runInfoPanel) {
-          if (hasFullMeta) {
-              runInfoPanel.classList.remove("hidden");
-              runInfoPanel.classList.remove("run-info-folded");
-              const setRun = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text ?? "—"; };
-              if (runMetadata.agent_a) {
-                  document.getElementById("run-info-agent-a").classList.remove("hidden");
-                  setRun("run-a-model", runMetadata.agent_a.model);
-                  setRun("run-a-steps", formatInteger(runMetadata.agent_a.steps));
-                  setRun("run-a-input-tokens", formatInteger(runMetadata.agent_a.inputTokens));
-                  setRun("run-a-output-tokens", formatInteger(runMetadata.agent_a.outputTokens));
-                  setRun("run-a-cost", formatCost(runMetadata.agent_a.cost));
-              } else {
-                  document.getElementById("run-info-agent-a").classList.add("hidden");
-              }
-              if (runMetadata.agent_b) {
-                  document.getElementById("run-info-agent-b").classList.remove("hidden");
-                  setRun("run-b-model", runMetadata.agent_b.model);
-                  setRun("run-b-steps", formatInteger(runMetadata.agent_b.steps));
-                  setRun("run-b-input-tokens", formatInteger(runMetadata.agent_b.inputTokens));
-                  setRun("run-b-output-tokens", formatInteger(runMetadata.agent_b.outputTokens));
-                  setRun("run-b-cost", formatCost(runMetadata.agent_b.cost));
-              } else {
-                  document.getElementById("run-info-agent-b").classList.add("hidden");
-              }
-              const durationStr = runMetadata.duration_seconds != null
-                  ? formatDuration(runMetadata.duration_seconds * 1000)
-                  : runMetadata.duration_ms != null
-                      ? formatDuration(runMetadata.duration_ms)
-                      : formatDuration(timeRange.duration);
-              setRun("run-duration", durationStr);
-              setRun("run-total-cost", runMetadata.total_cost != null ? formatCost(runMetadata.total_cost) : formatCost(runMetadata.cost));
-              setRun("run-started", formatStarted(runMetadata.started));
-              const runTaskEl = document.getElementById("run-task");
-              const runTaskRow = document.getElementById("run-task-row");
-              if (runTaskRow) {
-                  if (taskLabel) {
-                      runTaskRow.classList.remove("hidden");
-                      if (runTaskEl) runTaskEl.textContent = taskLabel;
-                  } else {
-                      runTaskRow.classList.add("hidden");
-                  }
-              }
-          } else {
-              runInfoPanel.classList.add("hidden");
-          }
-      }
-
-      // Show viewer
-      document.getElementById("viewer-section").classList.remove("hidden");
-      document.getElementById("empty-state").classList.add("hidden");
-
-      renderTimeline();
-      renderSteps();
-  }
-
-  function renderTimeline() {
-      const timelineA = document.getElementById("timeline-a");
-      const timelineB = document.getElementById("timeline-b");
-      timelineA.innerHTML = "";
-      timelineB.innerHTML = "";
-
-      function renderAgent(steps, container, agent) {
-          const filteredSteps = steps.filter(step => {
-               const toolName = step.toolName || step.tool_call_metadata?.function_name || "";
-               return !toolName.includes("comm_get") && !toolName.includes("receive");
-          });
-          
-          filteredSteps.forEach((step, idx) => {
-               const ts = new Date(step.timestamp || step.timestampMs).getTime();
-               if (isNaN(ts)) return;
-
-               const left = ((ts - timeRange.start) / timeRange.duration) * 100;
-               const toolType = step.toolType || getToolType(step);
-
-               let nextTs = timeRange.end;
-               if (idx < filteredSteps.length - 1) {
-                   nextTs = new Date(filteredSteps[idx + 1].timestamp || filteredSteps[idx + 1].timestampMs).getTime();
-               }
-               const widthPct = Math.max(((nextTs - ts) / timeRange.duration) * 100, 0.5);
-
-               const block = document.createElement("div");
-               block.className = `absolute top-0 h-full ${getToolColor(toolType)} timeline-block cursor-pointer`;
-               block.style.left = `${Math.min(left, 99.5)}%`;
-               block.style.width = `${Math.min(widthPct, 100 - left)}%`;
-               block.style.minWidth = "2px";
-               block.title = `${formatTimestamp(step.timestamp || step.timestampMs)}: ${getToolLabel(toolType)}`;
-
-               const globalIdx = allSteps.findIndex((s) => s.agent === agent && s.originalIndex === idx);
-               block.onclick = () => scrollToStep(globalIdx);
-
-               container.appendChild(block);
-          });
-      }
-
-      renderAgent(stepsA, timelineA, "A");
-      renderAgent(stepsB, timelineB, "B");
-
-      const markers = document.getElementById("time-markers");
-      markers.innerHTML = "";
-      if (timeRange.duration > 0) {
-          [0, 25, 50, 75, 100].forEach((pct) => {
-              const t = timeRange.start + (timeRange.duration * pct) / 100;
-              const span = document.createElement("span");
-              span.textContent = formatTimestamp(new Date(t).toISOString());
-              markers.appendChild(span);
-          });
-      }
-  }
-  
-  window.applyFilters = function() {
-    renderSteps();
-  }
-
-  function renderSteps() {
-      const container = document.getElementById("steps-container");
-      container.innerHTML = "";
-
-      const filters = {
-          comm: document.getElementById("filter-comm").checked,
-          edit: document.getElementById("filter-edit").checked,
-          view: document.getElementById("filter-view").checked,
-          bash: document.getElementById("filter-bash").checked,
-          other: document.getElementById("filter-other").checked,
-      };
-
-      let visibleCount = 0;
-
-      allSteps.forEach((step, idx) => {
-          const toolType = step.toolType || getToolType(step);
-          const toolName = step.toolName || step.tool_call_metadata?.function_name || "";
-          if (toolName.includes("comm_get") || toolName.includes("receive")) return;
-
-          if (toolType === "communication" && !filters.comm) return;
-          if ((toolType === "edit" || toolType === "create") && !filters.edit) return;
-          if (toolType === "view" && !filters.view) return;
-          if ((toolType === "bash" || toolType === "find_grep") && !filters.bash) return;
-          if (["submit","task_tracking","think","ipython","other","recall","condensation","message"].includes(toolType) && !filters.other) return;
-
-          visibleCount++;
-          const isA = step.agent === "A";
-
-          const div = document.createElement("div");
-          div.id = `step-${idx}`;
-          div.className = `flex ${isA ? "justify-start" : "justify-end"} scroll-mt-32`;
-
-          let contentHtml = "";
-
-          const commMessage = step.details || step.args?.message || step.args?.content || step.message || step.result || step.observation || step.response || step.received || "";
-          
-          if (toolType === "communication" && commMessage) {
-               let formatted = escapeHtml(commMessage);
-               formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-               formatted = formatted.replace(/`([^`]+)`/g, '<code class="bg-gray-200 px-1 rounded text-xs">$1</code>');
-               formatted = formatted.replace(/\n/g, "<br>");
-               const isLong = commMessage.length > 300;
-               const contentId = `content-${idx}`;
-               contentHtml = `
+    import pako from "pako";
+
+    let stepsA = [];
+    let stepsB = [];
+    let allSteps = [];
+    let timeRange = { start: 0, end: 0, duration: 0 };
+    let causeIndex = null;
+    /** Run metadata (cost, repo, task, features) when available */
+    let runMetadata = {};
+    /** Raw steps array (before system-prompt filter) for extracting run info from step fields */
+    let rawStepsForRunInfo = [];
+
+    // Filter out system prompt steps
+    const isSystemPrompt = (step) => {
+        const content = step.content || step.text || step.message || "";
+        if (typeof content !== "string") return false;
+        if (content.includes("You are OpenHands agent")) return true;
+        if (content.includes("<ROLE>")) return true;
+        if (content.includes("You are agent_")) return true;
+        if (content.includes("**FEATURE DESCRIPTION**")) return true;
+        if (content.includes("Added workspace context")) return true;
+        return false;
+    };
+
+    // Pick first defined from multiple keys (for snake_case / camelCase)
+    function pick(obj, ...keys) {
+        if (obj == null) return undefined;
+        for (const k of keys) {
+            if (obj[k] != null && obj[k] !== "") return obj[k];
+        }
+        return undefined;
+    }
+
+    // Normalize one agent block from metadata (agent_a, agent_1, etc.)
+    function normalizeAgentMeta(meta) {
+        if (!meta || typeof meta !== "object") return null;
+        const model = pick(meta, "model", "model_name");
+        const steps = pick(meta, "steps", "step_count");
+        const inputTokens = pick(meta, "input_tokens", "inputTokens");
+        const outputTokens = pick(meta, "output_tokens", "outputTokens");
+        const cost = pick(meta, "cost", "cost_usd", "total_cost");
+        if (
+            model == null &&
+            steps == null &&
+            inputTokens == null &&
+            outputTokens == null &&
+            cost == null
+        )
+            return null;
+        return { model, steps, inputTokens, outputTokens, cost };
+    }
+
+    // Normalize trajectory data: may be array of steps or { steps, metadata?, run_metadata? }
+    function normalizeTrajectoryData(data) {
+        if (Array.isArray(data)) {
+            runMetadata = {};
+            return data;
+        }
+        if (data && Array.isArray(data.steps)) {
+            const meta = data.metadata || data.run_metadata || {};
+            const agentA = normalizeAgentMeta(
+                meta.agent_a ?? meta.agent_1 ?? meta.agentA,
+            );
+            const agentB = normalizeAgentMeta(
+                meta.agent_b ?? meta.agent_2 ?? meta.agentB,
+            );
+            runMetadata = {
+                agent_a: agentA,
+                agent_b: agentB,
+                total_cost:
+                    pick(meta, "total_cost", "totalCost", "total_cost_usd") ??
+                    pick(data, "total_cost", "totalCost"),
+                duration_seconds: pick(
+                    meta,
+                    "duration_seconds",
+                    "durationSeconds",
+                ),
+                duration_ms: pick(meta, "duration_ms", "durationMs"),
+                started:
+                    pick(meta, "started", "started_at", "startTime") ??
+                    pick(data, "started", "started_at"),
+                repo: meta.repo ?? data.repo,
+                task: meta.task ?? meta.task_id ?? data.task ?? data.taskId,
+                features: meta.features ?? data.features,
+                cost:
+                    meta.total_cost ??
+                    meta.total_cost_usd ??
+                    meta.cost_usd ??
+                    data.total_cost ??
+                    data.cost_usd,
+            };
+            return data.steps;
+        }
+        return null;
+    }
+
+    // Split a flat array of steps (with agentId) into stepsA/stepsB
+    function splitStepsByAgent(data) {
+        stepsA = [];
+        stepsB = [];
+        const steps = normalizeTrajectoryData(data);
+        if (!steps) return;
+        rawStepsForRunInfo = Array.isArray(steps) ? steps : [];
+        steps.forEach((step) => {
+            if (isSystemPrompt(step)) return;
+            if (step.agentId === "agent_1" || step.agent === "A") {
+                stepsA.push({ ...step, originalIndex: stepsA.length });
+            } else {
+                stepsB.push({ ...step, originalIndex: stepsB.length });
+            }
+        });
+    }
+
+    // Clean model names e.g. "global.anthropic.claude-sonnet-4-5-20250929-v1:0" → "claude-sonnet-4-5@20250929"
+    function cleanModelName(model) {
+        if (model == null || model === "") return null;
+        let cleaned = String(model).replace(/^global\.\w+\./, "");
+        cleaned = cleaned.replace(/-(\d{8})-v\d+:\d+$/, "@$1");
+        cleaned = cleaned.replace(/-v\d+:\d+$/, "");
+        return cleaned;
+    }
+
+    // Extract run info from raw steps (same logic as main branch coop-trajectory.html)
+    function extractRunInfoFromSteps(rawSteps) {
+        if (!rawSteps?.length) return;
+        const agent1Steps = rawSteps.filter(
+            (s) => s.agentId === "agent_1" || s.agent === "A",
+        );
+        const agent2Steps = rawSteps.filter(
+            (s) => s.agentId === "agent_2" || s.agent === "B",
+        );
+
+        function getAgentInfo(steps) {
+            let model = null;
+            let finalMetrics = null;
+            for (const step of steps) {
+                if (!model && step.tool_call_metadata?.model_response?.model) {
+                    model = step.tool_call_metadata.model_response.model;
+                }
+            }
+            for (let i = steps.length - 1; i >= 0; i--) {
+                if (steps[i].llm_metrics) {
+                    finalMetrics = steps[i].llm_metrics;
+                    break;
+                }
+            }
+            const usage = finalMetrics?.accumulated_token_usage || {};
+            return {
+                model: cleanModelName(model),
+                steps: steps.length,
+                inputTokens: usage.prompt_tokens ?? usage.input_tokens ?? 0,
+                outputTokens:
+                    usage.completion_tokens ?? usage.output_tokens ?? 0,
+                cost: finalMetrics?.accumulated_cost,
+            };
+        }
+
+        const infoA = getAgentInfo(agent1Steps);
+        const infoB = getAgentInfo(agent2Steps);
+        if (
+            infoA.model != null ||
+            infoA.cost != null ||
+            infoA.inputTokens > 0 ||
+            infoA.outputTokens > 0 ||
+            infoA.steps > 0
+        ) {
+            runMetadata.agent_a = {
+                model: infoA.model ?? "—",
+                steps: infoA.steps,
+                inputTokens: infoA.inputTokens,
+                outputTokens: infoA.outputTokens,
+                cost: infoA.cost,
+            };
+        }
+        if (
+            infoB.model != null ||
+            infoB.cost != null ||
+            infoB.inputTokens > 0 ||
+            infoB.outputTokens > 0 ||
+            infoB.steps > 0
+        ) {
+            runMetadata.agent_b = {
+                model: infoB.model ?? "—",
+                steps: infoB.steps,
+                inputTokens: infoB.inputTokens,
+                outputTokens: infoB.outputTokens,
+                cost: infoB.cost,
+            };
+        }
+        const totalCost = (infoA.cost ?? 0) + (infoB.cost ?? 0);
+        if (totalCost > 0) runMetadata.total_cost = totalCost;
+
+        const timestamps = rawSteps
+            .map((s) => new Date(s.timestamp || s.timestampMs).getTime())
+            .filter((t) => !isNaN(t));
+        if (timestamps.length > 0) {
+            runMetadata.started = Math.min(...timestamps);
+            runMetadata.duration_ms =
+                Math.max(...timestamps) - runMetadata.started;
+        }
+    }
+
+    // Decompress .gz response, handling both pre-decompressed (dev server) and raw gzip
+    async function decompressResponse(response) {
+        const arrayBuffer = await response.arrayBuffer();
+        const bytes = new Uint8Array(arrayBuffer);
+        // Check for gzip magic number (0x1f 0x8b)
+        if (bytes.length >= 2 && bytes[0] === 0x1f && bytes[1] === 0x8b) {
+            const inflated = pako.ungzip(bytes, { to: "string" });
+            return JSON.parse(inflated);
+        }
+        // Already decompressed by the server
+        const text = new TextDecoder().decode(bytes);
+        return JSON.parse(text);
+    }
+
+    // Load cause index on page load
+    async function initCauseIndex() {
+        try {
+            const response = await fetch("/static/data/causes/index.json");
+            causeIndex = await response.json();
+
+            // Check for URL params first
+            const urlParams = new URLSearchParams(window.location.search);
+            const model = urlParams.get("model");
+            const repo = urlParams.get("repo");
+            const task = urlParams.get("task");
+            const features = urlParams.get("features");
+
+            if (model && repo && task && features) {
+                loadTrajectoryFromParams(model, repo, task, features);
+            } else {
+                // Auto-load a default trajectory
+                loadRandomExample("expectation");
+            }
+        } catch (e) {
+            console.error("Error loading cause index:", e);
+        }
+    }
+
+    async function loadTrajectoryFromParams(model, repo, task, features) {
+        const trajectoryPath = `/static/data/coop/trajectories/${model}/${repo}_${task}_${features}.json.gz`;
+        showStatus(
+            `Loading ${model} trajectory for ${repo}/${task}/${features}...`,
+            "info",
+        );
+
+        try {
+            const response = await fetch(trajectoryPath);
+            if (!response.ok)
+                throw new Error(`Trajectory not found: ${response.status}`);
+
+            const data = await decompressResponse(response);
+            splitStepsByAgent(data);
+            // Set run context from URL params when not present in trajectory data
+            if (runMetadata.repo == null) runMetadata.repo = repo;
+            if (runMetadata.task == null) runMetadata.task = task;
+            if (runMetadata.features == null) runMetadata.features = features;
+
+            const modelNames = {
+                gpt5: "GPT-5",
+                claude: "Claude Sonnet 4.5",
+                minimax: "MiniMax M2",
+                qwen_coder: "Qwen3-Coder-30B",
+                qwen: "Qwen3-30B",
+            };
+            const modelName = modelNames[model] || model;
+            showStatus(
+                `${modelName}: ${repo.replace(/_/g, " ")} / ${task} / ${features} (${stepsA.length + stepsB.length} steps)`,
+                "success",
+            );
+            processAndRender();
+        } catch (e) {
+            console.error("Error loading trajectory:", e);
+            showStatus(
+                `Trajectory not available. Try loading a cause example instead.`,
+                "error",
+            );
+            loadRandomExample("expectation");
+        }
+    }
+
+    async function loadRandomExample(cause) {
+        const examples = causeIndex?.[cause] || [];
+        if (examples.length === 0) {
+            showStatus("No examples available for this cause", "error");
+            return;
+        }
+
+        const example = examples[Math.floor(Math.random() * examples.length)];
+        if (!example.trajectory_url) {
+            showStatus("Trajectory file not found", "error");
+            return;
+        }
+
+        try {
+            const response = await fetch("/" + example.trajectory_url);
+            const data = await response.json();
+
+            splitStepsByAgent(data);
+            // Set run context from cause example when not in trajectory data
+            if (runMetadata.repo == null) runMetadata.repo = example.project;
+            if (runMetadata.task == null) runMetadata.task = example.task_id;
+            if (runMetadata.features == null)
+                runMetadata.features = example.features;
+
+            const causeLabel = cause.charAt(0).toUpperCase() + cause.slice(1);
+            showStatus(
+                `${causeLabel}: ${example.project.replace(/_/g, " ")} (${stepsA.length + stepsB.length} steps)`,
+                "success",
+            );
+            processAndRender();
+        } catch (e) {
+            console.error("Error loading trajectory:", e);
+            showStatus("Error loading trajectory: " + e.message, "error");
+        }
+    }
+
+    const RUN_INFO_FOLD_SCROLL_THRESHOLD = 80;
+
+    function setupRunInfoFoldOnScroll() {
+        const scrollContainer = document.getElementById("scroll-container");
+        const runInfoPanel = document.getElementById("run-info-panel");
+        if (!scrollContainer || !runInfoPanel) return;
+        scrollContainer.addEventListener(
+            "scroll",
+            () => {
+                if (runInfoPanel.classList.contains("hidden")) return;
+                if (
+                    scrollContainer.scrollTop > RUN_INFO_FOLD_SCROLL_THRESHOLD
+                ) {
+                    runInfoPanel.classList.add("run-info-folded");
+                } else {
+                    runInfoPanel.classList.remove("run-info-folded");
+                }
+            },
+            { passive: true },
+        );
+    }
+
+    window.addEventListener("load", () => {
+        initCauseIndex();
+        setupRunInfoFoldOnScroll();
+    });
+
+    function getToolType(step) {
+        const toolName =
+            step.tool_call_metadata?.function_name || step.toolName || "";
+        const args = step.args || {};
+
+        if (toolName === "finish") return "submit";
+        if (
+            toolName === "openhands_comm_send" ||
+            toolName === "openhands_comm_get"
+        )
+            return "communication";
+        if (toolName === "task_tracker") return "task_tracking";
+        if (toolName === "think") return "think";
+
+        if (toolName === "execute_bash") {
+            const cmd = (args.command || "").toLowerCase();
+            if (
+                cmd.includes("grep") ||
+                cmd.includes("find ") ||
+                cmd.includes("locate")
+            ) {
+                return "find_grep";
+            }
+            return "bash";
+        }
+
+        if (toolName === "str_replace_editor") {
+            const cmd = args.command;
+            if (cmd === "view") return "view";
+            if (cmd === "create") return "create";
+            return "edit";
+        }
+
+        return "other";
+    }
+
+    function getToolColor(toolType) {
+        const colors = {
+            bash: "bg-yellow-400",
+            find_grep: "bg-sky-300",
+            view: "bg-blue-600",
+            edit: "bg-green-500",
+            create: "bg-green-700",
+            communication: "bg-orange-400",
+            task_tracking: "bg-purple-400",
+            submit: "bg-red-500",
+            think: "bg-gray-400",
+            recall: "bg-indigo-400",
+            condensation: "bg-pink-400",
+            message: "bg-teal-400",
+            other: "bg-gray-300",
+        };
+        return colors[toolType] || "bg-gray-300";
+    }
+
+    function getToolIcon(toolType) {
+        const icons = {
+            bash: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>`,
+            find_grep: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>`,
+            view: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>`,
+            edit: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>`,
+            create: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>`,
+            communication: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>`,
+            task_tracking: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>`,
+            think: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>`,
+            recall: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path></svg>`,
+            other: `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>`,
+        };
+        return icons[toolType] || icons.other;
+    }
+
+    function getToolLabel(toolType) {
+        const labels = {
+            bash: "Bash",
+            find_grep: "Find",
+            view: "View",
+            edit: "Edit",
+            create: "Create",
+            communication: "Comm",
+            task_tracking: "Task",
+            submit: "Submit",
+            think: "Think",
+            recall: "Recall",
+            condensation: "Condense",
+            message: "Msg",
+            other: "Other",
+        };
+        return labels[toolType] || "Unknown";
+    }
+
+    function getPillStyle(toolType) {
+        const styles = {
+            bash: "bg-amber-50 text-amber-700",
+            find_grep: "bg-sky-50 text-sky-700",
+            view: "bg-blue-50 text-blue-700",
+            edit: "bg-emerald-50 text-emerald-700",
+            create: "bg-emerald-50 text-emerald-700",
+            communication: "bg-orange-50 text-orange-700",
+            task_tracking: "bg-violet-50 text-violet-700",
+            submit: "bg-rose-50 text-rose-700",
+            think: "bg-gray-100 text-gray-600",
+            recall: "bg-indigo-50 text-indigo-700",
+            condensation: "bg-pink-50 text-pink-700",
+            message: "bg-teal-50 text-teal-700",
+            other: "bg-gray-100 text-gray-600",
+        };
+        return styles[toolType] || "bg-gray-100 text-gray-600";
+    }
+
+    function formatTimestamp(ts) {
+        if (!ts) return "";
+        const date = new Date(ts);
+        return (
+            date.toLocaleTimeString([], {
+                hour12: false,
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+            }) +
+            "." +
+            String(date.getMilliseconds()).padStart(3, "0")
+        );
+    }
+
+    function formatDuration(ms) {
+        const sec = Math.floor(ms / 1000);
+        const min = Math.floor(sec / 60);
+        return `${min}m ${sec % 60}s`;
+    }
+
+    function formatInteger(n) {
+        if (n == null || n === "") return "—";
+        const num = Number(n);
+        if (isNaN(num)) return String(n);
+        return num.toLocaleString();
+    }
+
+    function formatCost(val) {
+        if (val == null || val === "") return "—";
+        const num = Number(val);
+        if (isNaN(num)) return String(val);
+        if (num === 0) return "N/A";
+        return "$" + num.toFixed(4);
+    }
+
+    function formatStarted(val) {
+        if (val == null || val === "") return "—";
+        const date = new Date(val);
+        if (isNaN(date.getTime())) return String(val);
+        return date.toLocaleString(undefined, {
+            dateStyle: "short",
+            timeStyle: "short",
+        });
+    }
+
+    function shouldShowStep(step) {
+        if (step.action === "system" || step.source === "user") return false;
+        return !isSystemPrompt(step);
+    }
+
+    window.loadFromPaste = function () {
+        const input = document.getElementById("json-input")?.value?.trim();
+        if (!input) {
+            showStatus("Please paste JSON data", "error");
+            return;
+        }
+
+        try {
+            const data = JSON.parse(input);
+
+            if (Array.isArray(data)) {
+                splitStepsByAgent(data);
+            } else if (data.stepsA && data.stepsB) {
+                runMetadata = {};
+                rawStepsForRunInfo = [];
+                stepsA = data.stepsA.filter(shouldShowStep);
+                stepsB = data.stepsB.filter(shouldShowStep);
+            } else if (data.steps && Array.isArray(data.steps)) {
+                splitStepsByAgent(data);
+            } else {
+                throw new Error(
+                    "Invalid format. Expected array with agentId or {stepsA, stepsB} or {steps, metadata?}",
+                );
+            }
+
+            processAndRender();
+            showStatus(
+                `Loaded ${stepsA.length} + ${stepsB.length} steps`,
+                "success",
+            );
+        } catch (e) {
+            showStatus("Error parsing JSON: " + e.message, "error");
+        }
+    };
+
+    function processAndRender() {
+        // Extract run info from raw steps (model, tokens, cost, duration, started) when available
+        if (rawStepsForRunInfo?.length) {
+            extractRunInfoFromSteps(rawStepsForRunInfo);
+        }
+
+        // Combine and sort steps
+        allSteps = [
+            ...stepsA.map((s, i) => ({ ...s, agent: "A", originalIndex: i })),
+            ...stepsB.map((s, i) => ({ ...s, agent: "B", originalIndex: i })),
+        ];
+
+        // Sort by timestamp
+        allSteps.sort((a, b) => {
+            const tA = new Date(a.timestamp || a.timestampMs).getTime();
+            const tB = new Date(b.timestamp || b.timestampMs).getTime();
+            return tA - tB;
+        });
+
+        // Calculate time range
+        if (allSteps.length > 0) {
+            const times = allSteps
+                .map((s) => new Date(s.timestamp || s.timestampMs).getTime())
+                .filter((t) => !isNaN(t));
+            timeRange.start = Math.min(...times);
+            timeRange.end = Math.max(...times);
+            timeRange.duration = timeRange.end - timeRange.start || 1;
+        }
+
+        // Update stats
+        document.getElementById("stats-agent-a").textContent = stepsA.length;
+        document.getElementById("stats-agent-b").textContent = stepsB.length;
+        document.getElementById("stats-duration").textContent = formatDuration(
+            timeRange.duration,
+        );
+
+        const costEl = document.getElementById("stats-cost-wrap");
+        const costVal = document.getElementById("stats-cost");
+        if (runMetadata.cost != null && runMetadata.cost !== "") {
+            const costNum = Number(runMetadata.cost);
+            costVal.textContent = isNaN(costNum)
+                ? String(runMetadata.cost)
+                : `$${costNum.toFixed(2)}`;
+            costEl.classList.remove("hidden");
+        } else {
+            costEl.classList.add("hidden");
+        }
+
+        const taskParts = [
+            runMetadata.repo,
+            runMetadata.task,
+            runMetadata.features,
+        ].filter(Boolean);
+        const taskLabel =
+            taskParts.length > 0
+                ? taskParts.map((p) => String(p).replace(/_/g, " ")).join(" / ")
+                : "";
+
+        const taskWrap = document.getElementById("stats-task-wrap");
+        const taskVal = document.getElementById("stats-task");
+        if (taskLabel) {
+            if (taskVal) taskVal.textContent = taskLabel;
+            if (taskWrap) taskWrap.classList.remove("hidden");
+        } else {
+            if (taskWrap) taskWrap.classList.add("hidden");
+        }
+
+        // Full run info panel (when per-agent or total metadata exists)
+        const runInfoPanel = document.getElementById("run-info-panel");
+        const hasFullMeta =
+            runMetadata.agent_a ||
+            runMetadata.agent_b ||
+            runMetadata.total_cost != null ||
+            runMetadata.started != null;
+        if (runInfoPanel) {
+            if (hasFullMeta) {
+                runInfoPanel.classList.remove("hidden");
+                runInfoPanel.classList.remove("run-info-folded");
+                const setRun = (id, text) => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = text ?? "—";
+                };
+                if (runMetadata.agent_a) {
+                    document
+                        .getElementById("run-info-agent-a")
+                        .classList.remove("hidden");
+                    setRun("run-a-model", runMetadata.agent_a.model);
+                    setRun(
+                        "run-a-steps",
+                        formatInteger(runMetadata.agent_a.steps),
+                    );
+                    setRun(
+                        "run-a-input-tokens",
+                        formatInteger(runMetadata.agent_a.inputTokens),
+                    );
+                    setRun(
+                        "run-a-output-tokens",
+                        formatInteger(runMetadata.agent_a.outputTokens),
+                    );
+                    setRun("run-a-cost", formatCost(runMetadata.agent_a.cost));
+                } else {
+                    document
+                        .getElementById("run-info-agent-a")
+                        .classList.add("hidden");
+                }
+                if (runMetadata.agent_b) {
+                    document
+                        .getElementById("run-info-agent-b")
+                        .classList.remove("hidden");
+                    setRun("run-b-model", runMetadata.agent_b.model);
+                    setRun(
+                        "run-b-steps",
+                        formatInteger(runMetadata.agent_b.steps),
+                    );
+                    setRun(
+                        "run-b-input-tokens",
+                        formatInteger(runMetadata.agent_b.inputTokens),
+                    );
+                    setRun(
+                        "run-b-output-tokens",
+                        formatInteger(runMetadata.agent_b.outputTokens),
+                    );
+                    setRun("run-b-cost", formatCost(runMetadata.agent_b.cost));
+                } else {
+                    document
+                        .getElementById("run-info-agent-b")
+                        .classList.add("hidden");
+                }
+                const durationStr =
+                    runMetadata.duration_seconds != null
+                        ? formatDuration(runMetadata.duration_seconds * 1000)
+                        : runMetadata.duration_ms != null
+                          ? formatDuration(runMetadata.duration_ms)
+                          : formatDuration(timeRange.duration);
+                setRun("run-duration", durationStr);
+                setRun(
+                    "run-total-cost",
+                    runMetadata.total_cost != null
+                        ? formatCost(runMetadata.total_cost)
+                        : formatCost(runMetadata.cost),
+                );
+                setRun("run-started", formatStarted(runMetadata.started));
+                const runTaskEl = document.getElementById("run-task");
+                const runTaskRow = document.getElementById("run-task-row");
+                if (runTaskRow) {
+                    if (taskLabel) {
+                        runTaskRow.classList.remove("hidden");
+                        if (runTaskEl) runTaskEl.textContent = taskLabel;
+                    } else {
+                        runTaskRow.classList.add("hidden");
+                    }
+                }
+            } else {
+                runInfoPanel.classList.add("hidden");
+            }
+        }
+
+        // Show viewer
+        document.getElementById("viewer-section").classList.remove("hidden");
+        document.getElementById("empty-state").classList.add("hidden");
+
+        renderTimeline();
+        renderSteps();
+    }
+
+    function renderTimeline() {
+        const timelineA = document.getElementById("timeline-a");
+        const timelineB = document.getElementById("timeline-b");
+        timelineA.innerHTML = "";
+        timelineB.innerHTML = "";
+
+        function renderAgent(steps, container, agent) {
+            const filteredSteps = steps.filter((step) => {
+                const toolName =
+                    step.toolName ||
+                    step.tool_call_metadata?.function_name ||
+                    "";
+                return (
+                    !toolName.includes("comm_get") &&
+                    !toolName.includes("receive")
+                );
+            });
+
+            filteredSteps.forEach((step, idx) => {
+                const ts = new Date(
+                    step.timestamp || step.timestampMs,
+                ).getTime();
+                if (isNaN(ts)) return;
+
+                const left =
+                    ((ts - timeRange.start) / timeRange.duration) * 100;
+                const toolType = step.toolType || getToolType(step);
+
+                let nextTs = timeRange.end;
+                if (idx < filteredSteps.length - 1) {
+                    nextTs = new Date(
+                        filteredSteps[idx + 1].timestamp ||
+                            filteredSteps[idx + 1].timestampMs,
+                    ).getTime();
+                }
+                const widthPct = Math.max(
+                    ((nextTs - ts) / timeRange.duration) * 100,
+                    0.5,
+                );
+
+                const block = document.createElement("div");
+                block.className = `absolute top-0 h-full ${getToolColor(toolType)} timeline-block cursor-pointer`;
+                block.style.left = `${Math.min(left, 99.5)}%`;
+                block.style.width = `${Math.min(widthPct, 100 - left)}%`;
+                block.style.minWidth = "2px";
+                block.title = `${formatTimestamp(step.timestamp || step.timestampMs)}: ${getToolLabel(toolType)}`;
+
+                const globalIdx = allSteps.findIndex(
+                    (s) => s.agent === agent && s.originalIndex === idx,
+                );
+                block.onclick = () => scrollToStep(globalIdx);
+
+                container.appendChild(block);
+            });
+        }
+
+        renderAgent(stepsA, timelineA, "A");
+        renderAgent(stepsB, timelineB, "B");
+
+        const markers = document.getElementById("time-markers");
+        markers.innerHTML = "";
+        if (timeRange.duration > 0) {
+            [0, 25, 50, 75, 100].forEach((pct) => {
+                const t = timeRange.start + (timeRange.duration * pct) / 100;
+                const span = document.createElement("span");
+                span.textContent = formatTimestamp(new Date(t).toISOString());
+                markers.appendChild(span);
+            });
+        }
+    }
+
+    window.applyFilters = function () {
+        renderSteps();
+    };
+
+    function renderSteps() {
+        const container = document.getElementById("steps-container");
+        container.innerHTML = "";
+
+        const filters = {
+            comm: document.getElementById("filter-comm").checked,
+            edit: document.getElementById("filter-edit").checked,
+            view: document.getElementById("filter-view").checked,
+            bash: document.getElementById("filter-bash").checked,
+            other: document.getElementById("filter-other").checked,
+        };
+
+        let visibleCount = 0;
+
+        allSteps.forEach((step, idx) => {
+            const toolType = step.toolType || getToolType(step);
+            const toolName =
+                step.toolName || step.tool_call_metadata?.function_name || "";
+            if (toolName.includes("comm_get") || toolName.includes("receive"))
+                return;
+
+            if (toolType === "communication" && !filters.comm) return;
+            if ((toolType === "edit" || toolType === "create") && !filters.edit)
+                return;
+            if (toolType === "view" && !filters.view) return;
+            if (
+                (toolType === "bash" || toolType === "find_grep") &&
+                !filters.bash
+            )
+                return;
+            if (
+                [
+                    "submit",
+                    "task_tracking",
+                    "think",
+                    "ipython",
+                    "other",
+                    "recall",
+                    "condensation",
+                    "message",
+                ].includes(toolType) &&
+                !filters.other
+            )
+                return;
+
+            visibleCount++;
+            const isA = step.agent === "A";
+
+            const div = document.createElement("div");
+            div.id = `step-${idx}`;
+            div.className = `flex ${isA ? "justify-start" : "justify-end"} scroll-mt-32`;
+
+            let contentHtml = "";
+
+            const commMessage =
+                step.details ||
+                step.args?.message ||
+                step.args?.content ||
+                step.message ||
+                step.result ||
+                step.observation ||
+                step.response ||
+                step.received ||
+                "";
+
+            if (toolType === "communication" && commMessage) {
+                let formatted = escapeHtml(commMessage);
+                formatted = formatted.replace(
+                    /\*\*(.*?)\*\*/g,
+                    "<strong>$1</strong>",
+                );
+                formatted = formatted.replace(
+                    /`([^`]+)`/g,
+                    '<code class="bg-gray-200 px-1 rounded text-xs">$1</code>',
+                );
+                formatted = formatted.replace(/\n/g, "<br>");
+                const isLong = commMessage.length > 300;
+                const contentId = `content-${idx}`;
+                contentHtml = `
                    <div class="text-xs text-gray-600 leading-relaxed mt-1.5 break-words">
-                       <div id="${contentId}" class="${isLong ? 'max-h-24 overflow-hidden' : ''}">${formatted}</div>
-                       ${isLong ? `<button onclick="toggleExpand('${contentId}', this)" class="text-gray-400 hover:text-gray-600 text-[10px] mt-1">Show more ↓</button>` : ''}
+                       <div id="${contentId}" class="${isLong ? "max-h-24 overflow-hidden" : ""}">${formatted}</div>
+                       ${isLong ? `<button onclick="toggleExpand('${contentId}', this)" class="text-gray-400 hover:text-gray-600 text-[10px] mt-1">Show more ↓</button>` : ""}
                    </div>`;
-          } else if (toolType === "communication") {
-             if (toolName.includes("get") || toolName.includes("receive")) {
-                 contentHtml = `<div class="text-xs text-gray-400 italic mt-1.5">Checked for messages</div>`;
-             } else {
-                 contentHtml = `<div class="text-xs text-gray-400 italic mt-1.5">(message content not available)</div>`;
-             }
-          }
+            } else if (toolType === "communication") {
+                if (toolName.includes("get") || toolName.includes("receive")) {
+                    contentHtml = `<div class="text-xs text-gray-400 italic mt-1.5">Checked for messages</div>`;
+                } else {
+                    contentHtml = `<div class="text-xs text-gray-400 italic mt-1.5">(message content not available)</div>`;
+                }
+            }
 
-          if ((toolType === "bash" || toolType === "find_grep") && step.args?.command) {
-              contentHtml = `<div class="mt-1.5 text-xs font-mono bg-gray-100 text-gray-800 p-2 rounded border border-gray-200 whitespace-pre-wrap break-all">${escapeHtml(step.args.command)}</div>`;
-          }
+            if (
+                (toolType === "bash" || toolType === "find_grep") &&
+                step.args?.command
+            ) {
+                contentHtml = `<div class="mt-1.5 text-xs font-mono bg-gray-100 text-gray-800 p-2 rounded border border-gray-200 whitespace-pre-wrap break-all">${escapeHtml(step.args.command)}</div>`;
+            }
 
-          if (toolType === "view" && step.args?.path) {
-              contentHtml = `<div class="mt-1.5 text-xs text-gray-600 break-all"><span class="text-gray-400">file:</span> ${escapeHtml(step.args.path)}</div>`;
-          }
+            if (toolType === "view" && step.args?.path) {
+                contentHtml = `<div class="mt-1.5 text-xs text-gray-600 break-all"><span class="text-gray-400">file:</span> ${escapeHtml(step.args.path)}</div>`;
+            }
 
-          if (toolType === "edit" && step.args) {
-              let editContent = "";
-              if (step.args.path) {
-                  editContent += `<div class="text-gray-600 font-mono text-[10px] break-all">${escapeHtml(step.args.path)}</div>`;
-              }
-              if (step.args.old_str || step.args.new_str) {
-                  const totalLines = (step.args.old_str?.split('\n').length || 0) + (step.args.new_str?.split('\n').length || 0);
-                  const isLong = totalLines > 15;
-                  const contentId = `diff-${idx}`;
-                  
-                  editContent += `<div id="${contentId}" class="mt-1.5 font-mono text-[10px] bg-gray-50 border border-gray-200 rounded overflow-hidden leading-tight ${isLong ? 'max-h-48' : ''}">`;
-                  if (step.args.old_str) {
-                      const oldLines = escapeHtml(step.args.old_str.slice(0, 1000)).split('\n');
-                      editContent += oldLines.map(line => `<div class="px-2 bg-red-50/30"><span class="text-red-500 select-none">-</span> <span class="text-gray-700">${line}</span></div>`).join('');
-                      if (step.args.old_str.length > 1000) editContent += `<div class="px-2 text-gray-400">...</div>`;
-                  }
-                  if (step.args.new_str) {
-                      const newLines = escapeHtml(step.args.new_str.slice(0, 1000)).split('\n');
-                      editContent += newLines.map(line => `<div class="px-2 bg-green-50/30"><span class="text-green-600 select-none">+</span> <span class="text-gray-700">${line}</span></div>`).join('');
-                      if (step.args.new_str.length > 1000) editContent += `<div class="px-2 text-gray-400">...</div>`;
-                  }
-                  editContent += `</div>`;
-                  if (isLong) {
-                      editContent += `<button onclick="toggleExpand('${contentId}', this)" class="text-gray-400 hover:text-gray-600 text-[10px] mt-1">Show more ↓</button>`;
-                  }
-              }
-              if (editContent) {
-                  contentHtml = `<div class="mt-1.5">${editContent}</div>`;
-              }
-          }
+            if (toolType === "edit" && step.args) {
+                let editContent = "";
+                if (step.args.path) {
+                    editContent += `<div class="text-gray-600 font-mono text-[10px] break-all">${escapeHtml(step.args.path)}</div>`;
+                }
+                if (step.args.old_str || step.args.new_str) {
+                    const totalLines =
+                        (step.args.old_str?.split("\n").length || 0) +
+                        (step.args.new_str?.split("\n").length || 0);
+                    const isLong = totalLines > 15;
+                    const contentId = `diff-${idx}`;
 
-          if (toolType === "task_tracking" && step.args?.task_list?.length) {
-              const taskList = step.args.task_list;
-              contentHtml = `
+                    editContent += `<div id="${contentId}" class="mt-1.5 font-mono text-[10px] bg-gray-50 border border-gray-200 rounded overflow-hidden leading-tight ${isLong ? "max-h-48" : ""}">`;
+                    if (step.args.old_str) {
+                        const oldLines = escapeHtml(
+                            step.args.old_str.slice(0, 1000),
+                        ).split("\n");
+                        editContent += oldLines
+                            .map(
+                                (line) =>
+                                    `<div class="px-2 bg-red-50/30"><span class="text-red-500 select-none">-</span> <span class="text-gray-700">${line}</span></div>`,
+                            )
+                            .join("");
+                        if (step.args.old_str.length > 1000)
+                            editContent += `<div class="px-2 text-gray-400">...</div>`;
+                    }
+                    if (step.args.new_str) {
+                        const newLines = escapeHtml(
+                            step.args.new_str.slice(0, 1000),
+                        ).split("\n");
+                        editContent += newLines
+                            .map(
+                                (line) =>
+                                    `<div class="px-2 bg-green-50/30"><span class="text-green-600 select-none">+</span> <span class="text-gray-700">${line}</span></div>`,
+                            )
+                            .join("");
+                        if (step.args.new_str.length > 1000)
+                            editContent += `<div class="px-2 text-gray-400">...</div>`;
+                    }
+                    editContent += `</div>`;
+                    if (isLong) {
+                        editContent += `<button onclick="toggleExpand('${contentId}', this)" class="text-gray-400 hover:text-gray-600 text-[10px] mt-1">Show more ↓</button>`;
+                    }
+                }
+                if (editContent) {
+                    contentHtml = `<div class="mt-1.5">${editContent}</div>`;
+                }
+            }
+
+            if (toolType === "task_tracking" && step.args?.task_list?.length) {
+                const taskList = step.args.task_list;
+                contentHtml = `
                   <div class="mt-1.5 space-y-1">
                       <div class="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Tasks</div>
                       <ul class="space-y-1 text-xs text-gray-700">
-                          ${taskList.map((t) => {
-                              const title = escapeHtml((t.title || t.notes || "").slice(0, 120));
-                              const status = (t.status || "").toLowerCase();
-                              const dotClass = status === "done" || status === "completed" ? "bg-emerald-500" : status === "in_progress" ? "bg-amber-500" : "bg-gray-300";
-                              return `<li class="flex items-start gap-2">
+                          ${taskList
+                              .map((t) => {
+                                  const title = escapeHtml(
+                                      (t.title || t.notes || "").slice(0, 120),
+                                  );
+                                  const status = (t.status || "").toLowerCase();
+                                  const dotClass =
+                                      status === "done" ||
+                                      status === "completed"
+                                          ? "bg-emerald-500"
+                                          : status === "in_progress"
+                                            ? "bg-amber-500"
+                                            : "bg-gray-300";
+                                  return `<li class="flex items-start gap-2">
                                   <span class="flex-shrink-0 w-1.5 h-1.5 mt-1.5 rounded-full ${dotClass}" title="${escapeHtml(status)}"></span>
                                   <span class="text-gray-700 break-words">${title}${(t.title || t.notes || "").length > 120 ? "…" : ""}</span>
                               </li>`;
-                          }).join("")}
+                              })
+                              .join("")}
                       </ul>
                   </div>`;
-          }
+            }
 
-          if (toolType === "submit") {
-               const submitMsg = step.args?.message || step.args?.final_thought || "";
-               contentHtml = `
+            if (toolType === "submit") {
+                const submitMsg =
+                    step.args?.message || step.args?.final_thought || "";
+                contentHtml = `
                    <div class="mt-1.5 flex items-start gap-2">
                        <div class="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center">
                            <svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -910,20 +1413,20 @@ const description = "Explore multi-agent collaboration failures in CooperBench t
                            ${submitMsg ? `<p class="mt-0.5 text-gray-500">${escapeHtml(submitMsg.slice(0, 200))}${submitMsg.length > 200 ? "..." : ""}</p>` : ""}
                        </div>
                    </div>`;
-           }
+            }
 
-           const labelColor = isA ? "text-red-400" : "text-blue-400";
-           
-           if (toolType === "submit") {
-               div.innerHTML = `
+            const labelColor = isA ? "text-red-400" : "text-blue-400";
+
+            if (toolType === "submit") {
+                div.innerHTML = `
                <div class="max-w-[85%]">
                    <div class="step-card px-3 py-2 bg-white rounded border border-gray-200">
                        ${contentHtml}
                        <div class="text-[10px] text-gray-400 mt-1">${formatTimestamp(step.timestamp || step.timestampMs)}</div>
                    </div>
                </div>`;
-           } else {
-               div.innerHTML = `
+            } else {
+                div.innerHTML = `
                <div class="max-w-[85%]">
                    <div class="step-card px-3 py-2 bg-white rounded border border-gray-200">
                        <div class="flex items-center gap-2 text-[11px]">
@@ -934,68 +1437,75 @@ const description = "Explore multi-agent collaboration failures in CooperBench t
                        ${contentHtml}
                    </div>
                </div>`;
-           }
+            }
 
-           container.appendChild(div);
-      });
+            container.appendChild(div);
+        });
 
-      document.getElementById("step-count").textContent = `${visibleCount} of ${allSteps.length}`;
-      if (visibleCount === 0) {
-          container.innerHTML = '<div class="text-gray-400 text-center py-8 text-sm">No steps match filters</div>';
-      }
-  }
+        document.getElementById("step-count").textContent =
+            `${visibleCount} of ${allSteps.length}`;
+        if (visibleCount === 0) {
+            container.innerHTML =
+                '<div class="text-gray-400 text-center py-8 text-sm">No steps match filters</div>';
+        }
+    }
 
-  function scrollToStep(idx) {
-      const el = document.getElementById(`step-${idx}`);
-      if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "center" });
-          el.classList.add("highlight-ring", "bg-yellow-50");
-          setTimeout(() => {
-              el.classList.remove("highlight-ring", "bg-yellow-50");
-          }, 1500);
-      }
-  }
+    function scrollToStep(idx) {
+        const el = document.getElementById(`step-${idx}`);
+        if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+            el.classList.add("highlight-ring", "bg-yellow-50");
+            setTimeout(() => {
+                el.classList.remove("highlight-ring", "bg-yellow-50");
+            }, 1500);
+        }
+    }
 
-  function clearViewer() {
-      stepsA = [];
-      stepsB = [];
-      allSteps = [];
-      runMetadata = {};
-      rawStepsForRunInfo = [];
-      document.getElementById("viewer-section").classList.add("hidden");
-      document.getElementById("empty-state").classList.remove("hidden");
-      document.getElementById("json-input").value = "";
-      document.getElementById("load-status").classList.add("hidden");
-  }
+    function clearViewer() {
+        stepsA = [];
+        stepsB = [];
+        allSteps = [];
+        runMetadata = {};
+        rawStepsForRunInfo = [];
+        document.getElementById("viewer-section").classList.add("hidden");
+        document.getElementById("empty-state").classList.remove("hidden");
+        document.getElementById("json-input").value = "";
+        document.getElementById("load-status").classList.add("hidden");
+    }
 
-  function showStatus(msg, type) {
-      const el = document.getElementById("load-status");
-      el.textContent = msg;
-      el.className = `mt-4 text-sm ${type === "error" ? "text-red-600" : "text-green-600"}`;
-      el.classList.remove("hidden");
-  }
+    function showStatus(msg, type) {
+        const el = document.getElementById("load-status");
+        el.textContent = msg;
+        el.className = `mt-4 text-sm ${type === "error" ? "text-red-600" : "text-green-600"}`;
+        el.classList.remove("hidden");
+    }
 
-  function escapeHtml(str) {
-      if (str == null) return '';
-      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  }
+    function escapeHtml(str) {
+        if (str == null) return "";
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+    }
 
-  // @ts-ignore
-  window.loadRandomExample = loadRandomExample;
-  // @ts-ignore
-  window.toggleExpand = function(contentId, btn) {
-      const el = document.getElementById(contentId);
-      if (el.classList.contains('max-h-24') || el.classList.contains('max-h-48')) {
-          el.classList.remove('max-h-24', 'max-h-48');
-          btn.textContent = 'Show less ↑';
-      } else {
-          if (contentId.startsWith('diff-')) {
-              el.classList.add('max-h-48');
-          } else {
-              el.classList.add('max-h-24');
-          }
-          btn.textContent = 'Show more ↓';
-      }
-  }
-
+    // @ts-ignore
+    window.loadRandomExample = loadRandomExample;
+    // @ts-ignore
+    window.toggleExpand = function (contentId, btn) {
+        const el = document.getElementById(contentId);
+        if (
+            el.classList.contains("max-h-24") ||
+            el.classList.contains("max-h-48")
+        ) {
+            el.classList.remove("max-h-24", "max-h-48");
+            btn.textContent = "Show less ↑";
+        } else {
+            if (contentId.startsWith("diff-")) {
+                el.classList.add("max-h-48");
+            } else {
+                el.classList.add("max-h-24");
+            }
+            btn.textContent = "Show more ↓";
+        }
+    };
 </script>
