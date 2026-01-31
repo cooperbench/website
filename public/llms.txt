@@ -1,9 +1,10 @@
 # The Curse of Coordination: Why Agents Cannot be Your Teammates Yet
 
-> Project URL: https://cotomata.com/
-> Research Paper: https://arxiv.org/pdf/COMING_SOON.pdf
+> Project URL: https://cooperbench.com/
+> Research Paper: https://arxiv.org/abs/2601.13295
 > GitHub Repository: https://github.com/cooperbench/CooperBench
 > Dataset: https://huggingface.co/CodeConflict
+> Announcement: https://x.com/_Hao_Zhu/status/2016541779236184397
 
 ## Overview
 
@@ -59,7 +60,7 @@ Through large-scale simulation, we uncover three major categories of successful 
   author={Khatua, Arpandeep and Zhu, Hao and Tran, Peter and Prabhudesai, Arya and Sadrieh, Frederic and Lieberwirth, Johann K. and Yu, Xinkai and Fu, Yicheng and Ryan, Michael J. and Pei, Jiaxin and Yang, Diyi},
   journal={arXiv preprint},
   year={2025},
-  url={https://cotomata.com/}
+  url={https://arxiv.org/abs/2601.13295}
 }
 ```
 
