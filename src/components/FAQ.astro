@@ -1,0 +1,11 @@
+---
+export interface Props {
+    className?: string;
+}
+
+const { className = "" } = Astro.props;
+---
+
+<div class={`space-y-3 mb-8 not-prose ${className}`}>
+    <slot />
+</div>

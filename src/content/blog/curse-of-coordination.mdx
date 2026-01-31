@@ -9,6 +9,9 @@ authors:
     image: "/static/images/hao_zhu.png"
 ---
 
+import FAQ from '../../components/FAQ.astro';
+import FAQItem from '../../components/FAQItem.astro';
+
 {/* TL;DR */}
 <div className="mb-10 not-prose py-6 px-6 bg-blue-50 rounded-xl">
     <p className="text-xs font-semibold text-blue-900 uppercase tracking-wider mb-3">
@@ -222,67 +225,24 @@ The bottleneck for multi-agent systems isn't raw ability. It's social intelligen
 
 ## FAQ
 
-<div className="space-y-3 mb-8 not-prose">
-    <details className="group bg-stone-100 rounded-2xl overflow-hidden border border-stone-200" open>
-        <summary className="flex items-center gap-4 p-5 cursor-pointer hover:bg-stone-150 transition-colors">
-            <svg className="w-4 h-4 text-stone-400 group-open:rotate-90 transition-transform flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
-            <svg className="w-5 h-5 text-stone-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" /></svg>
-            <span className="font-semibold text-stone-900">Wouldn't better orchestration solve this?</span>
-        </summary>
-        <div className="px-5 pb-5 pl-14 text-stone-600">
-            <p className="mb-3">
-                Yes. And that's exactly what we're measuring.
-            </p>
-            <p className="mb-3">
-                Scaffolding works, but it requires domain experts to design the right structure, trial and error to get it working, and maintenance as requirements change. You need someone who deeply understands the problem to decompose it correctly.
-            </p>
-            <p className="mb-3">
-                That's fine for well-understood domains. But what about scientific discovery, where the right decomposition isn't known? Business strategy, where priorities shift weekly? Creative projects, where the work reshapes itself as you go?
-            </p>
-            <p>
-                Native coordination requires what linguists call <em>pragmatic competence</em>: the ability to use language not just to describe, but to act. Making commitments, establishing common ground, updating shared beliefs. Scaffolding encodes these pragmatics externally. We're testing whether models can handle them internally.
-            </p>
-        </div>
-    </details>
-    
-    <details className="group bg-stone-100 rounded-2xl overflow-hidden border border-stone-200">
-        <summary className="flex items-center gap-4 p-5 cursor-pointer hover:bg-stone-150 transition-colors">
-            <svg className="w-4 h-4 text-stone-400 group-open:rotate-90 transition-transform flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
-            <svg className="w-5 h-5 text-stone-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605" /></svg>
-            <span className="font-semibold text-stone-900">Why measure native ability if scaffolding exists?</span>
-        </summary>
-        <div className="px-5 pb-5 pl-14 text-stone-600">
-            <p className="mb-3">
-                Because scaffolding is the ceiling, not the floor.
-            </p>
-            <p className="mb-3">
-                Human collaboration depends on <em>grounding</em>: the ongoing process of establishing mutual understanding. We check comprehension, repair misunderstandings, update our models of what others know. This happens fluidly, without external structure.
-            </p>
-            <p className="mb-3">
-                If models can't ground natively, every new domain requires human architects to design the coordination layer. The promise of general-purpose AI agents depends on them figuring out coordination themselves.
-            </p>
-            <p>
-                We're measuring this gap so the field can close it.
-            </p>
-        </div>
-    </details>
-    
-    <details className="group bg-stone-100 rounded-2xl overflow-hidden border border-stone-200">
-        <summary className="flex items-center gap-4 p-5 cursor-pointer hover:bg-stone-150 transition-colors">
-            <svg className="w-4 h-4 text-stone-400 group-open:rotate-90 transition-transform flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
-            <svg className="w-5 h-5 text-stone-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" /></svg>
-            <span className="font-semibold text-stone-900">Can this actually be improved?</span>
-        </summary>
-        <div className="px-5 pb-5 pl-14 text-stone-600">
-            <p className="mb-3">
-                We think so. In successful traces, agents spontaneously developed coordination strategies: dividing roles, claiming resources, negotiating before acting. These behaviors emerged without prompting.
-            </p>
-            <p className="mb-3">
-                What's missing is reliability. Effective coordination requires <em>theory of mind</em>: tracking what your partner knows, believes, and intends. Current models struggle to maintain these partner models across extended interactions.
-            </p>
-            <p>
-                CooperBench provides hundreds of examples where coordination succeeds and fails. That's a training signal for the pragmatic and social reasoning that collaboration requires.
-            </p>
-        </div>
-    </details>
-</div>
+<FAQ>
+    <FAQItem question="Wouldn't better orchestration solve this?" icon="wrench" defaultOpen>
+        <p>Yes. And that's exactly what we're measuring.</p>
+        <p>Scaffolding works, but it requires domain experts to design the right structure, trial and error to get it working, and maintenance as requirements change. You need someone who deeply understands the problem to decompose it correctly.</p>
+        <p>That's fine for well-understood domains. But what about scientific discovery, where the right decomposition isn't known? Business strategy, where priorities shift weekly? Creative projects, where the work reshapes itself as you go?</p>
+        <p>Native coordination requires what linguists call <em>pragmatic competence</em>: the ability to use language not just to describe, but to act. Making commitments, establishing common ground, updating shared beliefs. Scaffolding encodes these pragmatics externally. We're testing whether models can handle them internally.</p>
+    </FAQItem>
+
+    <FAQItem question="Why measure native ability if scaffolding exists?" icon="chart">
+        <p>Because scaffolding is the ceiling, not the floor.</p>
+        <p>Human collaboration depends on <em>grounding</em>: the ongoing process of establishing mutual understanding. We check comprehension, repair misunderstandings, update our models of what others know. This happens fluidly, without external structure.</p>
+        <p>If models can't ground natively, every new domain requires human architects to design the coordination layer. The promise of general-purpose AI agents depends on them figuring out coordination themselves.</p>
+        <p>We're measuring this gap so the field can close it.</p>
+    </FAQItem>
+
+    <FAQItem question="Can this actually be improved?" icon="sparkles">
+        <p>We think so. In successful traces, agents spontaneously developed coordination strategies: dividing roles, claiming resources, negotiating before acting. These behaviors emerged without prompting.</p>
+        <p>What's missing is reliability. Effective coordination requires <em>theory of mind</em>: tracking what your partner knows, believes, and intends. Current models struggle to maintain these partner models across extended interactions.</p>
+        <p>CooperBench provides hundreds of examples where coordination succeeds and fails. That's a training signal for the pragmatic and social reasoning that collaboration requires.</p>
+    </FAQItem>
+</FAQ>
