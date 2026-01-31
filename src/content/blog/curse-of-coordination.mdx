@@ -9,6 +9,9 @@ authors:
     image: "/static/images/hao_zhu.png"
 ---
 
+import FAQ from '../../components/FAQ.astro';
+import FAQItem from '../../components/FAQItem.astro';
+
 {/* TL;DR */}
 <div className="mb-10 not-prose py-6 px-6 bg-blue-50 rounded-xl">
     <p className="text-xs font-semibold text-blue-900 uppercase tracking-wider mb-3">
@@ -219,3 +222,20 @@ And that's what makes us hopeful. These emergent coordination behaviors give us 
 Even better, CooperBench isn't just a dataset. It's a live environment. You can drop models in, pair them up, and let them learn to work together through trial and error. The same tasks that expose failures today can be the training ground that fixes them.
 
 The bottleneck for multi-agent systems isn't raw ability. It's social intelligence. But social intelligence can be taught. And now we have a place to teach it.
+
+## FAQ
+
+<FAQ>
+    <FAQItem question="Wouldn't better orchestration solve this?" icon="wrench">
+        <p>CooperBench is a general evaluation benchmark for evaluating agent cooperation when they each have an individual task.</p>
+        <p>We can definitely see how clever orchestration techniques can help agent perform better on CooperBench. If you are interested in submitting to our benchmark, let us know.</p>
+        <p>However, our bet is in the long run, agents' native ability to coordinate will be more important than any external scaffolding. Scaffolding requires human architects to design the right structures for each new domain. Native ability lets agents figure it out themselves.</p>
+        <p>We are happy to be proven wrong though!</p>
+    </FAQItem>
+
+    <FAQItem question="Can this actually be improved?" icon="sparkles">
+        <p>We think so. In successful traces, agents spontaneously developed coordination strategies: dividing roles, claiming resources, negotiating before acting. These behaviors emerged without prompting.</p>
+        <p>What's missing is reliability. Effective coordination requires <em>theory of mind</em>: tracking what your partner knows, believes, and intends. Current models struggle to maintain these partner models across extended interactions.</p>
+        <p>CooperBench provides hundreds of examples where coordination succeeds and fails. That's a training signal for the pragmatic and social reasoning that collaboration requires.</p>
+    </FAQItem>
+</FAQ>
