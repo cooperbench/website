@@ -1,0 +1,101 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+const { frontmatter } = Astro.props;
+---
+
+<BaseLayout title={frontmatter.title} description={frontmatter.description} activeNav="Blog">
+  <main class="pt-24 pb-20">
+    <article class="max-w-3xl mx-auto px-6">
+        <!-- Article Header -->
+        <header class="mb-12">
+            <p class="text-sm text-gray-500 mb-4">{frontmatter.pubDate}</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
+                {frontmatter.title}
+            </h1>
+            <p class="text-xl text-gray-600 leading-relaxed">
+                {frontmatter.description}
+            </p>
+        </header>
+
+        <!-- Author Info -->
+        <div class="flex items-center gap-4 mb-12 pb-8 border-b border-gray-200">
+            <div class="flex -space-x-2">
+                {frontmatter.authors.map((author: any) => (
+                    <img src={author.image} alt={author.name} class="w-10 h-10 rounded-full border-2 border-white" />
+                ))}
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-900">
+                    {frontmatter.authors.map((author: any) => author.name).join(', ')}
+                </p>
+            </div>
+        </div>
+
+        <!-- Article Body -->
+        <div class="prose prose-lg max-w-none">
+            <slot />
+        </div>
+
+        <!-- Call to Action -->
+        <div class="mt-16 pt-8 border-t border-gray-200">
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="/static/pdfs/main.pdf" target="_blank" class="inline-flex items-center px-5 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
+                    <i class="fas fa-file-pdf mr-2"></i>
+                    Read the Paper
+                </a>
+                <a href="https://github.com/cooperbench/CooperBench" target="_blank" class="inline-flex items-center px-5 py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-colors">
+                    <i class="fab fa-github mr-2"></i>
+                    View Code
+                </a>
+                <a href="https://huggingface.co/CodeConflict" target="_blank" class="inline-flex items-center px-5 py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-colors">
+                    <i class="fas fa-database mr-2"></i>
+                    Dataset
+                </a>
+            </div>
+        </div>
+
+        <!-- Citation -->
+        <div class="mt-12 p-6 bg-gray-50 rounded-xl border border-gray-200">
+            <h3 class="text-sm font-semibold text-gray-900 mb-3">Cite this work</h3>
+            <pre class="text-xs text-gray-600 overflow-x-auto"><code>@article&#123;cooperbench2026,
+  title=&#123;CooperBench: Why Coding Agents Cannot be Your Teammates Yet&#125;,
+  author=&#123;Khatua*, Arpandeep and Zhu*, Hao and Tran†, Peter and Prabhudesai†, Arya
+          and Sadrieh†, Frederic and Lieberwirth†, Johann K. and Yu, Xinkai
+          and Fu, Yicheng and Ryan, Michael J. and Pei, Jiaxin and Yang, Diyi&#125;,
+  journal=&#123;arXiv preprint&#125;,
+  year=&#123;2026&#125;,
+  url=&#123;https://cooperbench.com/&#125;,
+  note=&#123;*Equal contribution (Stanford) · †Equal contribution (SAP Labs)&#125;
+&#125;</code></pre>
+        </div>
+    </article>
+
+    <!-- Scroll to Top Button -->
+    <button
+        class="fixed bottom-8 right-8 w-10 h-10 bg-gray-900 text-white rounded-full opacity-0 invisible transition-all duration-300 z-50 flex items-center justify-center text-sm shadow-lg hover:bg-gray-800 scroll-to-top"
+        title="Scroll to top"
+    >
+        <i class="fas fa-chevron-up"></i>
+    </button>
+  </main>
+</BaseLayout>
+
+<script>
+    const scrollBtn = document.querySelector(".scroll-to-top");
+    if (scrollBtn) {
+        scrollBtn.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        window.addEventListener("scroll", function () {
+            if (window.pageYOffset > 400) {
+                scrollBtn.classList.remove("opacity-0", "invisible");
+                scrollBtn.classList.add("opacity-100", "visible");
+            } else {
+                scrollBtn.classList.remove("opacity-100", "visible");
+                scrollBtn.classList.add("opacity-0", "invisible");
+            }
+        });
+    }
+</script>
