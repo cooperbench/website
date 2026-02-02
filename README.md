@@ -2,8 +2,6 @@
 
 Project website for "The Curse of Coordination: Why Agents Cannot be Your Teammates Yet"
 
-<!-- Force rebuild -->
-
 **Website URL**: https://cooperbench.com
 
 ## About
