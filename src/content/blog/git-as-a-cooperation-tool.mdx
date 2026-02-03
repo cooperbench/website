@@ -1,0 +1,22 @@
+---
+title: "When Agents Cannot Coordinate, Git Won't Save the Team"
+description: "We gave agents every tool engineers use. They still perform 50% worse in teams. The curse of coordination runs deeper than infrastructure."
+pubDate: "Feburary 2026"
+authors:
+  - name: "Arpandeep Khatua"
+    image: "/static/images/arpan.jpg"
+  - name: "Hao Zhu"
+    image: "/static/images/hao_zhu.png"
+---
+
+import FAQ from '../../components/FAQ.astro';
+import FAQItem from '../../components/FAQItem.astro';
+import QuickSummary from '../../components/QuickSummary.astro';
+
+<QuickSummary>
+    `Git` is the backbone of modern software collaboration. It lets multiple engineers work on the same codebase without stepping on each other's toes. Giving AI agents access to `git` should let them coordinate effectively, right? Not so fast.
+</QuickSummary>
+
+Previously on this blog, we showed that AI agents struggle to coordinate on shared tasks. When two agents work together, they perform 50% worse than one agent working alone. We called this the *curse of coordination*. Check out the [original post](curse-of-coordination) for details.
+
+In our original setup, the only way agents communicate with each other is by sending real-time messages. Although we do allow agents to share arbitrary text through this channel, a reasonable hypothesis arises: maybe the curse of coordination is just a lack of proper tools. After all, human engineers don't just chat to coordinate. They use `git`.
