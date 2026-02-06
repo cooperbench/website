@@ -12,6 +12,7 @@ authors:
 import FAQ from '../../components/FAQ.astro';
 import FAQItem from '../../components/FAQItem.astro';
 import QuickSummary from '../../components/QuickSummary.astro';
+import FailureViewer from '../../components/FailureViewer.astro';
 
 <QuickSummary>
     `Git` is the backbone of modern software collaboration. It lets multiple engineers work on the same codebase without stepping on each other's toes. Giving AI agents access to `git` should let them coordinate effectively, right? Not so fast.
@@ -20,3 +21,10 @@ import QuickSummary from '../../components/QuickSummary.astro';
 Previously on this blog, we showed that AI agents struggle to coordinate on shared tasks. When two agents work together, they perform 50% worse than one agent working alone. We called this the *curse of coordination*. Check out the [original post](curse-of-coordination) for details.
 
 In our original setup, the only way agents communicate with each other is by sending real-time messages. Although we do allow agents to share arbitrary text through this channel, a reasonable hypothesis arises: maybe the curse of coordination is just a lack of proper tools. After all, human engineers don't just chat to coordinate. They use `git`.
+
+
+<FailureViewer 
+    id="git-failures"
+    title="Git Collaboration Failures"
+    description="We gave agents full access to `git` — branching, merging, pushing, pulling. The conversations that followed are... illuminating. Here are real excerpts from agent collaboration sessions."
+/>
