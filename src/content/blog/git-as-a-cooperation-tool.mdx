@@ -1,5 +1,5 @@
 ---
-title: "When Agents Cannot Coordinate, Git Won't Save the Team"
+title: "Cooperation Tools for AI Agents: Does Git Help?"
 description: "We gave agents every tool engineers use. They still perform 50% worse in teams. The curse of coordination runs deeper than infrastructure."
 pubDate: "Feburary 2026"
 authors:
@@ -20,3 +20,10 @@ import QuickSummary from '../../components/QuickSummary.astro';
 Previously on this blog, we showed that AI agents struggle to coordinate on shared tasks. When two agents work together, they perform 50% worse than one agent working alone. We called this the *curse of coordination*. Check out the [original post](curse-of-coordination) for details.
 
 In our original setup, the only way agents communicate with each other is by sending real-time messages. Although we do allow agents to share arbitrary text through this channel, a reasonable hypothesis arises: maybe the curse of coordination is just a lack of proper tools. After all, human engineers don't just chat to coordinate. They use `git`.
+
+To test this hypothesis, we gave our agents access to a `git` repository. Each agent can clone the repo, make changes, commit them, push them, and pull changes from the other agent. This way, agents can coordinate through code changes rather than just text messages.
+
+# Self-hosted Git for Agents
+
+CooperBench runs agents in virtual machines (VMs), supporting both Google Cloud and Modal containers. To provide `git` functionality, we set up a self-hosted `git` server for each
+pair of agents, thus ensuring isolation between different agent teams. Agents can interact with the `git` server using standard `git` commands, through which they can look at each other's code changes before finalizing their own work.
