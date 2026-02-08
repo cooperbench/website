@@ -231,48 +231,43 @@ const description =
                 <div
                     class="bg-white rounded-xl border border-gray-200 overflow-hidden"
                 >
-                    <!-- Column Headers (hidden on mobile) -->
-                    <div
-                        class="hidden md:flex items-center gap-3 px-5 py-2 bg-gray-50 border-b border-gray-200"
-                    >
-                        <div class="w-40 flex-shrink-0">
-                            <span
-                                class="text-xs font-medium text-gray-500 uppercase"
-                                >Model</span
-                            >
-                        </div>
-                        <div class="w-28 flex-shrink-0">
-                            <span
-                                class="text-xs font-medium text-gray-500 uppercase"
-                                >Framework</span
-                            >
-                        </div>
-                        <div class="w-12 flex-shrink-0 text-center">
-                            <span
-                                class="text-xs font-medium text-gray-500 uppercase"
-                                >Git</span
-                            >
-                        </div>
-                        <div class="flex-1">
-                            <span
-                                class="text-xs font-medium text-gray-500 uppercase"
-                                >Success Rate</span
-                            >
-                        </div>
-                        <div class="w-16 text-right flex-shrink-0">
-                            <span
-                                class="text-xs font-medium text-gray-500 uppercase"
-                                >Score</span
-                            >
-                        </div>
-                    </div>
-
-                    <div
-                        id="leaderboard-container"
-                        class="divide-y divide-gray-100"
-                    >
-                        <!-- Leaderboard rows will be rendered here -->
-                    </div>
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200 bg-gray-50">
+                                <th
+                                    class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-2 md:px-4 py-3"
+                                    >Rank</th
+                                >
+                                <th
+                                    class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-2 md:px-4 py-3"
+                                    >Model</th
+                                >
+                                <th
+                                    class="hidden md:table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3"
+                                    >Framework</th
+                                >
+                                <th
+                                    class="hidden md:table-cell text-center text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3"
+                                    >Git</th
+                                >
+                                <th
+                                    class="hidden md:table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3"
+                                >
+                                    Cooperative Success Rate
+                                </th>
+                                <th
+                                    class="text-right text-xs font-medium text-gray-500 uppercase tracking-wider px-2 md:px-4 py-3"
+                                    >Score</th
+                                >
+                            </tr>
+                        </thead>
+                        <tbody
+                            id="leaderboard-container"
+                            class="divide-y divide-gray-100"
+                        >
+                            <!-- Leaderboard rows will be rendered here -->
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="flex items-center justify-between mt-4">
@@ -805,40 +800,40 @@ const description =
         {
             agent: "GPT-5",
             fullName: "GPT-5 (openhands)",
-            coop: 27.8,
-            coopCI: [24.5, 31.3],
+            coop: 27.95,
+            coopCI: [24.48, 31.65],
             framework: "OpenHands",
             git: false,
         },
         {
-            agent: "Gemini 3 Flash",
-            fullName: "gemini-3-flash-preview (openhands-sdk)",
-            coop: 27.8,
-            coopCI: [24.4, 31.3],
+            agent: "Gemini 3 Flash + Git",
+            fullName: "gemini-3-flash-preview (openhands-sdk) + Git",
+            coop: 27.76,
+            coopCI: [24.37, 31.35],
             framework: "OpenHands SDK",
             git: true,
         },
         {
             agent: "Gemini 3 Flash",
             fullName: "gemini-3-flash-preview (openhands-sdk)",
-            coop: 26.2,
-            coopCI: [22.9, 29.7],
+            coop: 26.23,
+            coopCI: [22.89, 29.77],
             framework: "OpenHands SDK",
             git: false,
         },
         {
             agent: "Claude Sonnet 4.5",
             fullName: "Claude Sonnet 4.5 (openhands)",
-            coop: 25.9,
-            coopCI: [22.7, 29.4],
+            coop: 25.92,
+            coopCI: [22.66, 29.37],
             framework: "OpenHands",
             git: false,
         },
         {
-            agent: "Gemini 3 Pro",
-            fullName: "gemini-3-pro-preview (mini-swe-agent)",
-            coop: 21.8,
-            coopCI: [18.7, 25.2],
+            agent: "Gemini 3 Pro + Git",
+            fullName: "gemini-3-pro-preview (mini-swe-agent) + Git",
+            coop: 21.78,
+            coopCI: [18.72, 25.13],
             framework: "Mini-SWE",
             git: true,
         },
@@ -846,22 +841,22 @@ const description =
             agent: "Gemini 3 Pro",
             fullName: "gemini-3-pro-preview (mini-swe-agent)",
             coop: 20.4,
-            coopCI: [17.4, 23.8],
+            coopCI: [17.39, 23.75],
             framework: "Mini-SWE",
             git: false,
         },
         {
-            agent: "Gemini 3 Flash (Mini-SWE)",
-            fullName: "gemini-3-flash-preview (mini-swe-agent)",
-            coop: 15.2,
-            coopCI: [12.6, 18.2],
+            agent: "Gemini 3 Flash (Mini-SWE) + Git",
+            fullName: "gemini-3-flash-preview (mini-swe-agent) + Git",
+            coop: 15.18,
+            coopCI: [12.56, 18.19],
             framework: "Mini-SWE",
             git: true,
         },
         {
             agent: "MiniMax M2",
             fullName: "MiniMax M2 (openhands)",
-            coop: 14.0,
+            coop: 13.96,
             coopCI: [11.5, 16.8],
             framework: "OpenHands",
             git: false,
@@ -869,16 +864,16 @@ const description =
         {
             agent: "Qwen3-Coder-30B",
             fullName: "Qwen3-Coder-30B-A3B-Instruct (openhands)",
-            coop: 13.3,
-            coopCI: [10.9, 16.2],
+            coop: 13.34,
+            coopCI: [10.88, 16.18],
             framework: "OpenHands",
             git: false,
         },
         {
             agent: "Gemini 3 Flash (Mini-SWE)",
             fullName: "gemini-3-flash-preview (mini-swe-agent)",
-            coop: 12.3,
-            coopCI: [9.9, 15.1],
+            coop: 12.27,
+            coopCI: [9.86, 15.08],
             framework: "Mini-SWE",
             git: false,
         },
@@ -886,7 +881,7 @@ const description =
             agent: "Qwen3-30B",
             fullName: "Qwen3-30B-A3B-Instruct-2507 (openhands)",
             coop: 4.6,
-            coopCI: [3.2, 6.5],
+            coopCI: [3.23, 6.46],
             framework: "OpenHands",
             git: false,
         },
@@ -898,48 +893,43 @@ const description =
 
         container.innerHTML = leaderboardData
             .slice(0, 5)
-            .map((item) => {
-                const coopWidth = (item.coop / maxScore) * 100;
-                const coopCILowPos = (item.coopCI[0] / maxScore) * 100;
-                const coopCIHighPos = (item.coopCI[1] / maxScore) * 100;
+            .map((item, index) => {
+                const barWidth = (item.coop / maxScore) * 100;
+                const ciLow = (item.coopCI[0] / maxScore) * 100;
+                const ciHigh = (item.coopCI[1] / maxScore) * 100;
 
                 return `
-              <div class="flex items-center gap-3 px-4 md:px-5 py-3 hover:bg-gray-50 transition-colors">
-                  <!-- Model info (mobile: flex-1, desktop: fixed width) -->
-                  <div class="flex-1 md:w-40 md:flex-shrink-0">
-                      <span class="text-sm font-medium text-gray-900">${item.agent}</span>
-                      ${item.fullName ? `<div class="hidden md:block text-[10px] font-mono text-gray-400 truncate">${item.fullName}</div>` : ""}
-                      <!-- Mobile: Framework and Git under model name -->
-                      <div class="md:hidden flex items-center gap-2 mt-1">
-                          <span class="text-xs text-gray-600">${item.framework || "—"}</span>
-                          <span class="text-gray-300">•</span>
-                          ${item.git ? '<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800">Git</span>' : '<span class="text-[10px] text-gray-400">No Git</span>'}
-                      </div>
-                  </div>
-                  <!-- Desktop: Framework column -->
-                  <div class="hidden md:block w-28 flex-shrink-0">
-                      <span class="text-xs text-gray-600">${item.framework || "—"}</span>
-                  </div>
-                  <!-- Desktop: Git column -->
-                  <div class="hidden md:block w-12 flex-shrink-0 text-center">
-                      ${item.git ? '<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800">Yes</span>' : '<span class="text-[10px] text-gray-400">No</span>'}
-                  </div>
-                  <!-- Desktop: Success rate bar -->
-                  <div class="hidden md:block flex-1 h-5 bg-gray-100 rounded relative overflow-visible">
-                      <div class="absolute inset-y-0 left-0 bg-gray-700 rounded" style="width: ${coopWidth}%"></div>
-                      <div class="absolute top-1/2 -translate-y-1/2 h-3 flex items-center"
-                           style="left: ${coopCILowPos}%; width: ${coopCIHighPos - coopCILowPos}%;">
-                          <div class="w-0.5 h-full bg-gray-900"></div>
-                          <div class="flex-1 h-0.5 bg-gray-900"></div>
-                          <div class="w-0.5 h-full bg-gray-900"></div>
-                      </div>
-                  </div>
-                  <!-- Score (always visible) -->
-                  <div class="w-16 text-right flex-shrink-0">
-                      <span class="text-sm font-semibold text-gray-700 tabular-nums">${item.coop.toFixed(1)}%</span>
-                  </div>
-              </div>
-          `;
+                <tr class="hover:bg-gray-50">
+                    <td class="px-2 md:px-4 py-3 md:py-4 text-sm text-gray-500">${index + 1}</td>
+                    <td class="px-2 md:px-4 py-3 md:py-4">
+                        <span class="font-medium text-gray-900 text-sm md:text-base">${item.agent}</span>
+                        ${item.fullName ? `<div class="hidden md:block text-xs text-gray-400 font-mono">${item.fullName}</div>` : ""}
+                        <!-- Mobile: Framework and Git under model name -->
+                        <div class="md:hidden flex items-center gap-2 mt-1">
+                            <span class="text-xs text-gray-600">${item.framework || "—"}</span>
+                            <span class="text-gray-300">•</span>
+                            ${item.git ? '<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800">Git</span>' : '<span class="text-[10px] text-gray-400">No Git</span>'}
+                        </div>
+                    </td>
+                    <td class="hidden md:table-cell px-4 py-4 text-sm text-gray-600">${item.framework || "—"}</td>
+                    <td class="hidden md:table-cell px-4 py-4 text-center">
+                        ${item.git ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Yes</span>' : '<span class="text-xs text-gray-400">No</span>'}
+                    </td>
+                    <td class="hidden md:table-cell px-4 py-4">
+                        <div class="relative h-5 bg-gray-100 rounded">
+                            <div class="absolute inset-y-0 left-0 bg-gray-700 rounded" style="width: ${barWidth}%"></div>
+                            <div class="absolute top-1/2 -translate-y-1/2 h-2.5 flex items-center" style="left: ${ciLow}%; width: ${ciHigh - ciLow}%;">
+                                <div class="w-0.5 h-full bg-gray-900"></div>
+                                <div class="flex-1 h-0.5 bg-gray-900"></div>
+                                <div class="w-0.5 h-full bg-gray-900"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-2 md:px-4 py-3 md:py-4 text-right">
+                        <span class="font-semibold text-gray-900 tabular-nums text-sm md:text-base">${item.coop.toFixed(2)}%</span>
+                    </td>
+                </tr>
+            `;
             })
             .join("");
     }
