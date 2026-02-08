@@ -1,254 +1,656 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
 
 const title = "Leaderboard · CooperBench";
-const description = "Model performance on CooperBench collaborative coding tasks";
+const description =
+    "Model performance on CooperBench collaborative coding tasks";
 ---
 
 <BaseLayout title={title} description={description} activeNav="Leaderboard">
-  <main class="pt-14">
-    <!-- Page Header -->
-    <div class="bg-white">
+    <main class="pt-14">
+        <!-- Announcement Banner -->
+        <div
+            class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6"
+        >
+            <div
+                class="max-w-4xl mx-auto flex items-center justify-center gap-3 text-sm"
+            >
+                <i class="fas fa-sparkles"></i>
+                <span
+                    ><strong>New Results:</strong> Leaderboard updated with Mini-SWE
+                    Agent, Software Agent SDK frameworks, and Git access experiments!</span
+                >
+            </div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="bg-white">
+            <div class="max-w-4xl mx-auto px-6 py-8">
+                <h1 class="text-2xl font-semibold text-gray-900 mb-2">
+                    Leaderboard
+                </h1>
+                <p class="text-gray-600">
+                    Model performance on 652 collaborative coding tasks
+                </p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
         <div class="max-w-4xl mx-auto px-6 py-8">
-            <h1 class="text-2xl font-semibold text-gray-900 mb-2">Leaderboard</h1>
-            <p class="text-gray-600">Model performance on 652 collaborative coding tasks</p>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="max-w-4xl mx-auto px-6 py-8">
-        <!-- View Toggle -->
-        <div class="flex items-center gap-4 mb-6">
-            <button id="btn-coop" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-900 text-white">
-                Cooperative
-            </button>
-            <button id="btn-solo" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
-                Solo
-            </button>
-        </div>
-
-        <!-- Leaderboard Table -->
-        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            <table class="w-full">
-                <thead>
-                    <tr class="border-b border-gray-200 bg-gray-50">
-                        <th class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-2 md:px-4 py-3">Rank</th>
-                        <th class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-2 md:px-4 py-3">Model</th>
-                        <th class="hidden md:table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3 w-1/2">
-                            <span id="metric-label">Cooperative Success Rate</span>
-                        </th>
-                        <th class="text-right text-xs font-medium text-gray-500 uppercase tracking-wider px-2 md:px-4 py-3">Score</th>
-                        <th class="hidden md:table-cell w-10"></th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboard-body" class="divide-y divide-gray-100">
-                    <!-- Rows will be rendered here -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Legend (hidden on mobile since bar chart is hidden) -->
-        <div id="legend" class="hidden md:flex mt-4 items-center gap-6 text-xs text-gray-500">
-            <div class="flex items-center gap-2">
-                <div id="legend-bar" class="w-3 h-3 bg-gray-900 rounded-sm"></div>
-                <span id="legend-label">Cooperative</span>
+            <!-- View Toggle -->
+            <div class="flex items-center gap-4 mb-6">
+                <button
+                    id="btn-coop"
+                    class="px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-900 text-white"
+                >
+                    Cooperative
+                </button>
+                <button
+                    id="btn-solo"
+                    class="px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200"
+                >
+                    Solo
+                </button>
             </div>
-            <div class="flex items-center gap-2">
-                <div id="legend-ci" class="w-8 h-0.5 bg-gray-600"></div>
-                <span>95% CI</span>
-            </div>
-        </div>
 
-        <!-- Methodology Note -->
-        <div class="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <h3 class="text-sm font-medium text-gray-900 mb-2">Methodology</h3>
-            <p class="text-sm text-gray-600 leading-relaxed">
-                <strong>Cooperative:</strong> Two agents work on separate features that may conflict. Success requires both features to pass tests after merging.
-            </p>
-            <p class="text-sm text-gray-600 leading-relaxed mt-2">
-                <strong>Solo:</strong> A single agent implements both features. This serves as the upper bound for what agents can achieve.
-            </p>
-            <p class="text-sm text-gray-500 mt-3">
-                All models evaluated on the same 652 tasks with identical prompts and tool access.
-            </p>
-        </div>
-
-        <!-- Detailed Results -->
-        <div class="mt-8">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Detailed Results</h2>
-            
-            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <table class="w-full text-xs md:text-sm">
+            <!-- Leaderboard Table -->
+            <div
+                class="bg-white rounded-lg border border-gray-200 overflow-hidden"
+            >
+                <table class="w-full">
                     <thead>
                         <tr class="border-b border-gray-200 bg-gray-50">
-                            <th class="text-left font-medium text-gray-700 px-2 md:px-4 py-3">Model</th>
-                            <th class="text-center font-medium text-gray-700 px-2 md:px-4 py-3">Solo</th>
-                            <th class="text-center font-medium text-gray-700 px-2 md:px-4 py-3">Coop</th>
-                            <th class="text-center font-medium text-gray-700 px-2 md:px-4 py-3">Gap</th>
+                            <th
+                                class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-2 md:px-4 py-3"
+                                >Rank</th
+                            >
+                            <th
+                                class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-2 md:px-4 py-3"
+                                >Model</th
+                            >
+                            <th
+                                class="hidden md:table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3"
+                                >Framework</th
+                            >
+                            <th
+                                class="hidden md:table-cell text-center text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3"
+                                >Git</th
+                            >
+                            <th
+                                class="hidden md:table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3"
+                            >
+                                <span id="metric-label"
+                                    >Cooperative Success Rate</span
+                                >
+                            </th>
+                            <th
+                                class="text-right text-xs font-medium text-gray-500 uppercase tracking-wider px-2 md:px-4 py-3"
+                                >Score</th
+                            >
+                            <th class="hidden md:table-cell w-10"></th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        <tr>
-                            <td class="px-2 md:px-4 py-3 font-medium">GPT-5</td>
-                            <td class="px-2 md:px-4 py-3 text-center">48.31%</td>
-                            <td class="px-2 md:px-4 py-3 text-center">27.95%</td>
-                            <td class="px-2 md:px-4 py-3 text-center text-red-600">-20.36%</td>
-                        </tr>
-                        <tr>
-                            <td class="px-2 md:px-4 py-3 font-medium">Claude Sonnet 4.5</td>
-                            <td class="px-2 md:px-4 py-3 text-center">47.09%</td>
-                            <td class="px-2 md:px-4 py-3 text-center">25.92%</td>
-                            <td class="px-2 md:px-4 py-3 text-center text-red-600">-21.17%</td>
-                        </tr>
-                        <tr>
-                            <td class="px-2 md:px-4 py-3 font-medium">MiniMax M2</td>
-                            <td class="px-2 md:px-4 py-3 text-center">36.20%</td>
-                            <td class="px-2 md:px-4 py-3 text-center">13.96%</td>
-                            <td class="px-2 md:px-4 py-3 text-center text-red-600">-22.24%</td>
-                        </tr>
-                        <tr>
-                            <td class="px-2 md:px-4 py-3 font-medium">Qwen3-Coder-30B</td>
-                            <td class="px-2 md:px-4 py-3 text-center">21.63%</td>
-                            <td class="px-2 md:px-4 py-3 text-center">13.34%</td>
-                            <td class="px-2 md:px-4 py-3 text-center text-red-600">-8.29%</td>
-                        </tr>
-                        <tr>
-                            <td class="px-2 md:px-4 py-3 font-medium">Qwen3-30B</td>
-                            <td class="px-2 md:px-4 py-3 text-center">6.29%</td>
-                            <td class="px-2 md:px-4 py-3 text-center">4.60%</td>
-                            <td class="px-2 md:px-4 py-3 text-center text-red-600">-1.69%</td>
-                        </tr>
+                    <tbody
+                        id="leaderboard-body"
+                        class="divide-y divide-gray-100"
+                    >
+                        <!-- Rows will be rendered here -->
                     </tbody>
                 </table>
             </div>
+
+            <!-- Legend (hidden on mobile since bar chart is hidden) -->
+            <div
+                id="legend"
+                class="hidden md:flex mt-4 items-center gap-6 text-xs text-gray-500"
+            >
+                <div class="flex items-center gap-2">
+                    <div id="legend-bar" class="w-3 h-3 bg-gray-900 rounded-sm">
+                    </div>
+                    <span id="legend-label">Cooperative</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div id="legend-ci" class="w-8 h-0.5 bg-gray-600"></div>
+                    <span>95% CI</span>
+                </div>
+            </div>
+
+            <!-- Methodology Note -->
+            <div class="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 class="text-sm font-medium text-gray-900 mb-2">
+                    Methodology
+                </h3>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                    <strong>Cooperative:</strong> Two agents work on separate features
+                    that may conflict. Success requires both features to pass tests
+                    after merging.
+                </p>
+                <p class="text-sm text-gray-600 leading-relaxed mt-2">
+                    <strong>Solo:</strong> A single agent implements both features.
+                    This serves as the upper bound for what agents can achieve.
+                </p>
+                <p class="text-sm text-gray-500 mt-3">
+                    All models evaluated on the same 652 tasks with identical
+                    prompts and tool access.
+                </p>
+            </div>
+
+            <!-- Detailed Results -->
+            <div class="mt-8">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                    Detailed Results
+                </h2>
+
+                <div
+                    class="bg-white rounded-lg border border-gray-200 overflow-hidden"
+                >
+                    <table class="w-full text-xs md:text-sm">
+                        <thead>
+                            <tr class="border-b border-gray-200 bg-gray-50">
+                                <th
+                                    class="text-left font-medium text-gray-700 px-2 md:px-4 py-3"
+                                    >Model</th
+                                >
+                                <th
+                                    class="text-center font-medium text-gray-700 px-2 md:px-4 py-3"
+                                    >Solo</th
+                                >
+                                <th
+                                    class="text-center font-medium text-gray-700 px-2 md:px-4 py-3"
+                                    >Coop</th
+                                >
+                                <th
+                                    class="text-center font-medium text-gray-700 px-2 md:px-4 py-3"
+                                    >Gap</th
+                                >
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr>
+                                <td class="px-2 md:px-4 py-3 font-medium"
+                                    >Gemini 3 Flash (OpenHands SDK)</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >48.6%</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >26.2%</td
+                                >
+                                <td
+                                    class="px-2 md:px-4 py-3 text-center text-red-600"
+                                    >-22.4%</td
+                                >
+                            </tr>
+                            <tr>
+                                <td class="px-2 md:px-4 py-3 font-medium"
+                                    >GPT-5 (OpenHands)</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >48.3%</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >27.8%</td
+                                >
+                                <td
+                                    class="px-2 md:px-4 py-3 text-center text-red-600"
+                                    >-20.5%</td
+                                >
+                            </tr>
+                            <tr>
+                                <td class="px-2 md:px-4 py-3 font-medium"
+                                    >Claude Sonnet 4.5 (OpenHands)</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >47.1%</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >25.9%</td
+                                >
+                                <td
+                                    class="px-2 md:px-4 py-3 text-center text-red-600"
+                                    >-21.2%</td
+                                >
+                            </tr>
+                            <tr>
+                                <td class="px-2 md:px-4 py-3 font-medium"
+                                    >Gemini 3 Pro (Mini-SWE)</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >36.8%</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >20.4%</td
+                                >
+                                <td
+                                    class="px-2 md:px-4 py-3 text-center text-red-600"
+                                    >-16.4%</td
+                                >
+                            </tr>
+                            <tr>
+                                <td class="px-2 md:px-4 py-3 font-medium"
+                                    >MiniMax M2 (OpenHands)</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >36.2%</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >14.0%</td
+                                >
+                                <td
+                                    class="px-2 md:px-4 py-3 text-center text-red-600"
+                                    >-22.2%</td
+                                >
+                            </tr>
+                            <tr>
+                                <td class="px-2 md:px-4 py-3 font-medium"
+                                    >Gemini 3 Flash (Mini-SWE)</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >25.2%</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >12.3%</td
+                                >
+                                <td
+                                    class="px-2 md:px-4 py-3 text-center text-red-600"
+                                    >-12.9%</td
+                                >
+                            </tr>
+                            <tr>
+                                <td class="px-2 md:px-4 py-3 font-medium"
+                                    >Qwen3-Coder-30B (OpenHands)</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >21.6%</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >13.3%</td
+                                >
+                                <td
+                                    class="px-2 md:px-4 py-3 text-center text-red-600"
+                                    >-8.3%</td
+                                >
+                            </tr>
+                            <tr>
+                                <td class="px-2 md:px-4 py-3 font-medium"
+                                    >Qwen3-30B (OpenHands)</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >6.3%</td
+                                >
+                                <td class="px-2 md:px-4 py-3 text-center"
+                                    >4.6%</td
+                                >
+                                <td
+                                    class="px-2 md:px-4 py-3 text-center text-red-600"
+                                    >-1.7%</td
+                                >
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Model Detail Panel -->
+    <div
+        id="panel-backdrop"
+        class="fixed inset-0 bg-black/30 z-[60] opacity-0 pointer-events-none transition-opacity duration-200"
+    >
+    </div>
+    <div
+        id="model-panel"
+        class="side-panel fixed inset-0 md:top-4 md:right-4 md:bottom-4 md:left-auto w-full md:max-w-4xl bg-white z-[70] shadow-2xl md:rounded-xl flex flex-col overflow-hidden transform translate-x-full transition-transform duration-250 ease-out"
+    >
+        <div class="flex items-center justify-between px-6 py-4">
+            <div>
+                <h2
+                    id="panel-model-name"
+                    class="text-lg font-semibold text-gray-900"
+                >
+                    Model Results
+                </h2>
+                <p id="panel-model-stats" class="text-sm text-gray-500">
+                    0/0 tasks passed
+                </p>
+            </div>
+            <button
+                id="close-panel-btn"
+                class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600"
+            >
+                <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Filters -->
+        <div class="px-6 py-3 flex items-center gap-4">
+            <input
+                type="text"
+                id="panel-search"
+                placeholder="Search tasks..."
+                class="flex-1 px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-gray-400"
+            />
+            <select
+                id="panel-filter-status"
+                class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none"
+            >
+                <option value="">All status</option>
+                <option value="passed">Passed only</option>
+                <option value="failed">Failed only</option>
+            </select>
+            <select
+                id="panel-filter-repo"
+                class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none"
+            >
+                <option value="">All repos</option>
+            </select>
+        </div>
+
+        <!-- Task Table -->
+        <div class="flex-1 overflow-y-auto">
+            <table class="w-full text-sm">
+                <thead class="sticky top-0 bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th
+                            class="text-left font-medium text-gray-600 px-6 py-2"
+                            >Repository</th
+                        >
+                        <th
+                            class="text-left font-medium text-gray-600 px-4 py-2"
+                            >Task</th
+                        >
+                        <th
+                            class="text-left font-medium text-gray-600 px-4 py-2"
+                            >Features</th
+                        >
+                        <th
+                            class="text-center font-medium text-gray-600 px-4 py-2"
+                            >Status</th
+                        >
+                        <th
+                            class="text-center font-medium text-gray-600 px-4 py-2"
+                            >Trajectory</th
+                        >
+                    </tr>
+                </thead>
+                <tbody id="panel-tasks-body" class="divide-y divide-gray-100">
+                    <!-- Rows rendered here -->
+                </tbody>
+            </table>
         </div>
     </div>
-  </main>
-
-  <!-- Model Detail Panel -->
-  <div id="panel-backdrop" class="fixed inset-0 bg-black/30 z-[60] opacity-0 pointer-events-none transition-opacity duration-200"></div>
-  <div id="model-panel" class="side-panel fixed inset-0 md:top-4 md:right-4 md:bottom-4 md:left-auto w-full md:max-w-4xl bg-white z-[70] shadow-2xl md:rounded-xl flex flex-col overflow-hidden transform translate-x-full transition-transform duration-250 ease-out">
-      <div class="flex items-center justify-between px-6 py-4">
-          <div>
-              <h2 id="panel-model-name" class="text-lg font-semibold text-gray-900">Model Results</h2>
-              <p id="panel-model-stats" class="text-sm text-gray-500">0/0 tasks passed</p>
-          </div>
-          <button id="close-panel-btn" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-              </svg>
-          </button>
-      </div>
-      
-      <!-- Filters -->
-      <div class="px-6 py-3 flex items-center gap-4">
-          <input type="text" id="panel-search" placeholder="Search tasks..." class="flex-1 px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-gray-400">
-          <select id="panel-filter-status" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none">
-              <option value="">All status</option>
-              <option value="passed">Passed only</option>
-              <option value="failed">Failed only</option>
-          </select>
-          <select id="panel-filter-repo" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none">
-              <option value="">All repos</option>
-          </select>
-      </div>
-      
-      <!-- Task Table -->
-      <div class="flex-1 overflow-y-auto">
-          <table class="w-full text-sm">
-              <thead class="sticky top-0 bg-gray-50 border-b border-gray-200">
-                  <tr>
-                      <th class="text-left font-medium text-gray-600 px-6 py-2">Repository</th>
-                      <th class="text-left font-medium text-gray-600 px-4 py-2">Task</th>
-                      <th class="text-left font-medium text-gray-600 px-4 py-2">Features</th>
-                      <th class="text-center font-medium text-gray-600 px-4 py-2">Status</th>
-                      <th class="text-center font-medium text-gray-600 px-4 py-2">Trajectory</th>
-                  </tr>
-              </thead>
-              <tbody id="panel-tasks-body" class="divide-y divide-gray-100">
-                  <!-- Rows rendered here -->
-              </tbody>
-          </table>
-      </div>
-  </div>
 </BaseLayout>
 
 <script>
     const leaderboardData = {
         coop: [
-            { rank: 1, model: 'GPT-5', modelKey: 'gpt5', fullName: null, score: 27.95, ci: [24.5, 31.3] },
-            { rank: 2, model: 'Claude Sonnet 4.5', modelKey: 'claude', fullName: null, score: 25.92, ci: [22.7, 29.4] },
-            { rank: 3, model: 'MiniMax M2', modelKey: 'minimax', fullName: null, score: 13.96, ci: [11.5, 16.8] },
-            { rank: 4, model: 'Qwen3-Coder-30B', modelKey: 'qwen_coder', fullName: 'Qwen3-Coder-30B-A3B-Instruct', score: 13.34, ci: [10.9, 16.2] },
-            { rank: 5, model: 'Qwen3-30B', modelKey: 'qwen', fullName: 'Qwen3-30B-A3B-Instruct-2507', score: 4.60, ci: [3.2, 6.5] },
+            {
+                rank: 1,
+                model: "GPT-5",
+                modelKey: "gpt5",
+                fullName: "GPT-5 (openhands)",
+                score: 27.8,
+                ci: [24.5, 31.3],
+                framework: "OpenHands",
+                git: false,
+            },
+            {
+                rank: 2,
+                model: "Gemini 3 Flash",
+                modelKey: "gemini_flash_sdk_git",
+                fullName: "gemini-3-flash-preview (openhands-sdk)",
+                score: 27.8,
+                ci: [24.4, 31.3],
+                framework: "OpenHands SDK",
+                git: true,
+            },
+            {
+                rank: 3,
+                model: "Gemini 3 Flash",
+                modelKey: "gemini_flash_sdk",
+                fullName: "gemini-3-flash-preview (openhands-sdk)",
+                score: 26.2,
+                ci: [22.9, 29.7],
+                framework: "OpenHands SDK",
+                git: false,
+            },
+            {
+                rank: 4,
+                model: "Claude Sonnet 4.5",
+                modelKey: "claude",
+                fullName: "Claude Sonnet 4.5 (openhands)",
+                score: 25.9,
+                ci: [22.7, 29.4],
+                framework: "OpenHands",
+                git: false,
+            },
+            {
+                rank: 5,
+                model: "Gemini 3 Pro",
+                modelKey: "gemini_pro_miniswe_git",
+                fullName: "gemini-3-pro-preview (mini-swe-agent)",
+                score: 21.8,
+                ci: [18.7, 25.2],
+                framework: "Mini-SWE",
+                git: true,
+            },
+            {
+                rank: 6,
+                model: "Gemini 3 Pro",
+                modelKey: "gemini_pro_miniswe",
+                fullName: "gemini-3-pro-preview (mini-swe-agent)",
+                score: 20.4,
+                ci: [17.4, 23.8],
+                framework: "Mini-SWE",
+                git: false,
+            },
+            {
+                rank: 7,
+                model: "Gemini 3 Flash (Mini-SWE)",
+                modelKey: "gemini_flash_miniswe_git",
+                fullName: "gemini-3-flash-preview (mini-swe-agent)",
+                score: 15.2,
+                ci: [12.6, 18.2],
+                framework: "Mini-SWE",
+                git: true,
+            },
+            {
+                rank: 8,
+                model: "MiniMax M2",
+                modelKey: "minimax",
+                fullName: "MiniMax M2 (openhands)",
+                score: 14.0,
+                ci: [11.5, 16.8],
+                framework: "OpenHands",
+                git: false,
+            },
+            {
+                rank: 9,
+                model: "Qwen3-Coder-30B",
+                modelKey: "qwen_coder",
+                fullName: "Qwen3-Coder-30B-A3B-Instruct (openhands)",
+                score: 13.3,
+                ci: [10.9, 16.2],
+                framework: "OpenHands",
+                git: false,
+            },
+            {
+                rank: 10,
+                model: "Gemini 3 Flash (Mini-SWE)",
+                modelKey: "gemini_flash_miniswe",
+                fullName: "gemini-3-flash-preview (mini-swe-agent)",
+                score: 12.3,
+                ci: [9.9, 15.1],
+                framework: "Mini-SWE",
+                git: false,
+            },
+            {
+                rank: 11,
+                model: "Qwen3-30B",
+                modelKey: "qwen",
+                fullName: "Qwen3-30B-A3B-Instruct-2507 (openhands)",
+                score: 4.6,
+                ci: [3.2, 6.5],
+                framework: "OpenHands",
+                git: false,
+            },
         ],
         solo: [
-            { rank: 1, model: 'GPT-5', modelKey: 'gpt5', fullName: null, score: 48.31, ci: [44.50, 52.15] },
-            { rank: 2, model: 'Claude Sonnet 4.5', modelKey: 'claude', fullName: null, score: 47.09, ci: [43.28, 50.92] },
-            { rank: 3, model: 'MiniMax M2', modelKey: 'minimax', fullName: null, score: 36.20, ci: [32.60, 39.96] },
-            { rank: 4, model: 'Qwen3-Coder-30B', modelKey: 'qwen_coder', fullName: 'Qwen3-Coder-30B-A3B-Instruct', score: 21.63, ci: [18.64, 24.95] },
-            { rank: 5, model: 'Qwen3-30B', modelKey: 'qwen', fullName: 'Qwen3-30B-A3B-Instruct-2507', score: 6.29, ci: [4.67, 8.42] },
-        ]
+            {
+                rank: 1,
+                model: "Gemini 3 Flash",
+                modelKey: "gemini_flash_sdk",
+                fullName: "gemini-3-flash-preview (openhands-sdk)",
+                score: 48.6,
+                ci: [44.8, 52.4],
+                framework: "OpenHands SDK",
+                git: false,
+            },
+            {
+                rank: 2,
+                model: "GPT-5",
+                modelKey: "gpt5",
+                fullName: "GPT-5 (openhands)",
+                score: 48.3,
+                ci: [44.5, 52.2],
+                framework: "OpenHands",
+                git: false,
+            },
+            {
+                rank: 3,
+                model: "Claude Sonnet 4.5",
+                modelKey: "claude",
+                fullName: "Claude Sonnet 4.5 (openhands)",
+                score: 47.1,
+                ci: [43.3, 50.9],
+                framework: "OpenHands",
+                git: false,
+            },
+            {
+                rank: 4,
+                model: "Gemini 3 Pro",
+                modelKey: "gemini_pro_miniswe",
+                fullName: "gemini-3-pro-preview (mini-swe-agent)",
+                score: 36.8,
+                ci: [33.1, 40.6],
+                framework: "Mini-SWE",
+                git: false,
+            },
+            {
+                rank: 5,
+                model: "MiniMax M2",
+                modelKey: "minimax",
+                fullName: "MiniMax M2 (openhands)",
+                score: 36.2,
+                ci: [32.6, 40.0],
+                framework: "OpenHands",
+                git: false,
+            },
+            {
+                rank: 6,
+                model: "Gemini 3 Flash (Mini-SWE)",
+                modelKey: "gemini_flash_miniswe",
+                fullName: "gemini-3-flash-preview (mini-swe-agent)",
+                score: 25.2,
+                ci: [22.0, 28.7],
+                framework: "Mini-SWE",
+                git: false,
+            },
+            {
+                rank: 7,
+                model: "Qwen3-Coder-30B",
+                modelKey: "qwen_coder",
+                fullName: "Qwen3-Coder-30B-A3B-Instruct (openhands)",
+                score: 21.6,
+                ci: [18.6, 25.0],
+                framework: "OpenHands",
+                git: false,
+            },
+            {
+                rank: 8,
+                model: "Qwen3-30B",
+                modelKey: "qwen",
+                fullName: "Qwen3-30B-A3B-Instruct-2507 (openhands)",
+                score: 6.3,
+                ci: [4.7, 8.4],
+                framework: "OpenHands",
+                git: false,
+            },
+        ],
     };
 
-    let currentView = 'coop';
+    let currentView = "coop";
     let coopIndex = null;
     let currentModelKey = null;
 
     // Elements
-    const btnCoop = document.getElementById('btn-coop');
-    const btnSolo = document.getElementById('btn-solo');
-    const panelBackdrop = document.getElementById('panel-backdrop');
-    const modelPanel = document.getElementById('model-panel');
-    const closePanelBtn = document.getElementById('close-panel-btn');
-    const panelSearch = document.getElementById('panel-search');
-    const panelFilterStatus = document.getElementById('panel-filter-status');
-    const panelFilterRepo = document.getElementById('panel-filter-repo');
+    const btnCoop = document.getElementById("btn-coop");
+    const btnSolo = document.getElementById("btn-solo");
+    const panelBackdrop = document.getElementById("panel-backdrop");
+    const modelPanel = document.getElementById("model-panel");
+    const closePanelBtn = document.getElementById("close-panel-btn");
+    const panelSearch = document.getElementById("panel-search");
+    const panelFilterStatus = document.getElementById("panel-filter-status");
+    const panelFilterRepo = document.getElementById("panel-filter-repo");
 
     // Load coop index on page load
     async function loadCoopIndex() {
         try {
-            const response = await fetch('/static/data/coop/index.json');
+            const response = await fetch("/static/data/coop/index.json");
             coopIndex = await response.json();
             populateRepoFilter();
             // Re-render leaderboard to show arrows now that data is loaded
             renderLeaderboard();
         } catch (e) {
-            console.error('Error loading coop index:', e);
+            console.error("Error loading coop index:", e);
         }
     }
 
     function populateRepoFilter() {
         if (!coopIndex) return;
-        const repos = [...new Set(coopIndex.tasks.map(t => t.repo))].sort();
+        const repos = [...new Set(coopIndex.tasks.map((t) => t.repo))].sort();
         const select = panelFilterRepo;
         select.innerHTML = '<option value="">All repos</option>';
-        repos.forEach(repo => {
-            const opt = document.createElement('option');
+        repos.forEach((repo) => {
+            const opt = document.createElement("option");
             opt.value = repo;
-            opt.textContent = repo.replace(/_/g, ' ');
+            opt.textContent = repo.replace(/_/g, " ");
             select.appendChild(opt);
         });
     }
 
     function setView(view) {
         currentView = view;
-        btnCoop.className = view === 'coop' 
-            ? 'px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-900 text-white'
-            : 'px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
-        btnSolo.className = view === 'solo'
-            ? 'px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-900 text-white'
-            : 'px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
-        document.getElementById('metric-label').textContent = view === 'coop' 
-            ? 'Cooperative Success Rate' 
-            : 'Solo Success Rate';
-        document.getElementById('legend-bar').className = view === 'coop'
-            ? 'w-3 h-3 bg-gray-900 rounded-sm'
-            : 'w-3 h-3 bg-blue-500 rounded-sm';
-        document.getElementById('legend-ci').className = view === 'coop'
-            ? 'w-8 h-0.5 bg-gray-600'
-            : 'w-8 h-0.5 bg-blue-400';
-        document.getElementById('legend-label').textContent = view === 'coop' ? 'Cooperative' : 'Solo';
+        btnCoop.className =
+            view === "coop"
+                ? "px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-900 text-white"
+                : "px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200";
+        btnSolo.className =
+            view === "solo"
+                ? "px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-900 text-white"
+                : "px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200";
+        document.getElementById("metric-label").textContent =
+            view === "coop" ? "Cooperative Success Rate" : "Solo Success Rate";
+        document.getElementById("legend-bar").className =
+            view === "coop"
+                ? "w-3 h-3 bg-gray-900 rounded-sm"
+                : "w-3 h-3 bg-blue-500 rounded-sm";
+        document.getElementById("legend-ci").className =
+            view === "coop" ? "w-8 h-0.5 bg-gray-600" : "w-8 h-0.5 bg-blue-400";
+        document.getElementById("legend-label").textContent =
+            view === "coop" ? "Cooperative" : "Solo";
         renderLeaderboard();
     }
 
@@ -261,26 +663,37 @@ const description = "Model performance on CooperBench collaborative coding tasks
     function renderLeaderboard() {
         const data = leaderboardData[currentView];
         const maxScore = 100;
-        const tbody = document.getElementById('leaderboard-body');
-        
-        const barColor = currentView === 'coop' ? 'bg-gray-900' : 'bg-blue-500';
-        const ciColor = currentView === 'coop' ? 'bg-gray-600' : 'bg-blue-400';
-        
-        tbody.innerHTML = data.map(item => {
-            const barWidth = (item.score / maxScore) * 100;
-            const ciLow = (item.ci[0] / maxScore) * 100;
-            const ciHigh = (item.ci[1] / maxScore) * 100;
-            const clickable = currentView === 'coop' && coopIndex;
-            
-            // onclick="openModelPanel('${item.modelKey}')"
-            // We need to handle this carefully.
-            
-            return `
-                <tr class="hover:bg-gray-50 ${clickable ? 'cursor-pointer' : ''}" ${clickable ? `data-model-key="${item.modelKey}"` : ''}>
+        const tbody = document.getElementById("leaderboard-body");
+
+        const barColor = currentView === "coop" ? "bg-gray-900" : "bg-blue-500";
+        const ciColor = currentView === "coop" ? "bg-gray-600" : "bg-blue-400";
+
+        tbody.innerHTML = data
+            .map((item) => {
+                const barWidth = (item.score / maxScore) * 100;
+                const ciLow = (item.ci[0] / maxScore) * 100;
+                const ciHigh = (item.ci[1] / maxScore) * 100;
+                const clickable = currentView === "coop" && coopIndex;
+
+                // onclick="openModelPanel('${item.modelKey}')"
+                // We need to handle this carefully.
+
+                return `
+                <tr class="hover:bg-gray-50 ${clickable ? "cursor-pointer" : ""}" ${clickable ? `data-model-key="${item.modelKey}"` : ""}>
                     <td class="px-2 md:px-4 py-3 md:py-4 text-sm text-gray-500">${item.rank}</td>
                     <td class="px-2 md:px-4 py-3 md:py-4">
                         <span class="font-medium text-gray-900 text-sm md:text-base">${item.model}</span>
-                        ${item.fullName ? `<div class="hidden md:block text-xs text-gray-400 font-mono">${item.fullName}</div>` : ''}
+                        ${item.fullName ? `<div class="hidden md:block text-xs text-gray-400 font-mono">${item.fullName}</div>` : ""}
+                        <!-- Mobile: Framework and Git under model name -->
+                        <div class="md:hidden flex items-center gap-2 mt-1">
+                            <span class="text-xs text-gray-600">${item.framework || "—"}</span>
+                            <span class="text-gray-300">•</span>
+                            ${item.git ? '<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800">Git</span>' : '<span class="text-[10px] text-gray-400">No Git</span>'}
+                        </div>
+                    </td>
+                    <td class="hidden md:table-cell px-4 py-4 text-sm text-gray-600">${item.framework || "—"}</td>
+                    <td class="hidden md:table-cell px-4 py-4 text-center">
+                        ${item.git ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Yes</span>' : '<span class="text-xs text-gray-400">No</span>'}
                     </td>
                     <td class="hidden md:table-cell px-4 py-4">
                         <div class="relative h-5 bg-gray-100 rounded">
@@ -296,17 +709,18 @@ const description = "Model performance on CooperBench collaborative coding tasks
                         <span class="font-semibold text-gray-900 tabular-nums text-sm md:text-base">${item.score.toFixed(1)}%</span>
                     </td>
                     <td class="hidden md:table-cell px-4 py-4 text-center">
-                        ${clickable ? '<span class="text-gray-400">→</span>' : ''}
+                        ${clickable ? '<span class="text-gray-400">→</span>' : ""}
                     </td>
                 </tr>
             `;
-        }).join('');
-        
+            })
+            .join("");
+
         // Attach click listeners to rows
-        if (currentView === 'coop' && coopIndex) {
-            tbody.querySelectorAll('tr[data-model-key]').forEach(tr => {
-                tr.addEventListener('click', () => {
-                   openModelPanel(tr.getAttribute('data-model-key')); 
+        if (currentView === "coop" && coopIndex) {
+            tbody.querySelectorAll("tr[data-model-key]").forEach((tr) => {
+                tr.addEventListener("click", () => {
+                    openModelPanel(tr.getAttribute("data-model-key"));
                 });
             });
         }
@@ -314,110 +728,118 @@ const description = "Model performance on CooperBench collaborative coding tasks
 
     function openModelPanel(modelKey) {
         if (!coopIndex) return;
-        
+
         currentModelKey = modelKey;
         const modelName = coopIndex.modelDisplayNames[modelKey] || modelKey;
         const stats = coopIndex.stats[modelKey];
-        
-        document.getElementById('panel-model-name').textContent = `${modelName} Results`;
-        document.getElementById('panel-model-stats').textContent = `${stats.passed}/${stats.total} tasks passed (${stats.rate}%)`;
-        
+
+        document.getElementById("panel-model-name").textContent =
+            `${modelName} Results`;
+        document.getElementById("panel-model-stats").textContent =
+            `${stats.passed}/${stats.total} tasks passed (${stats.rate}%)`;
+
         // Reset filters
-        panelSearch.value = '';
-        panelFilterStatus.value = '';
-        panelFilterRepo.value = '';
-        
+        panelSearch.value = "";
+        panelFilterStatus.value = "";
+        panelFilterRepo.value = "";
+
         renderPanelTasks();
-        
+
         // Show panel
-        panelBackdrop.classList.remove('opacity-0', 'pointer-events-none');
-        modelPanel.classList.remove('translate-x-full'); // Use translate for animation
-        document.body.style.overflow = 'hidden';
+        panelBackdrop.classList.remove("opacity-0", "pointer-events-none");
+        modelPanel.classList.remove("translate-x-full"); // Use translate for animation
+        document.body.style.overflow = "hidden";
     }
 
     function closeModelPanel() {
-        panelBackdrop.classList.add('opacity-0', 'pointer-events-none');
-        modelPanel.classList.add('translate-x-full');
-        document.body.style.overflow = '';
+        panelBackdrop.classList.add("opacity-0", "pointer-events-none");
+        modelPanel.classList.add("translate-x-full");
+        document.body.style.overflow = "";
         currentModelKey = null;
     }
 
     function filterPanelTasks() {
         renderPanelTasks();
     }
-    
+
     // Attach listeners
-    btnCoop.addEventListener('click', () => setView('coop'));
-    btnSolo.addEventListener('click', () => setView('solo'));
-    panelBackdrop.addEventListener('click', closeModelPanel);
-    closePanelBtn.addEventListener('click', closeModelPanel);
-    panelSearch.addEventListener('input', filterPanelTasks);
-    panelFilterStatus.addEventListener('change', filterPanelTasks);
-    panelFilterRepo.addEventListener('change', filterPanelTasks);
+    btnCoop.addEventListener("click", () => setView("coop"));
+    btnSolo.addEventListener("click", () => setView("solo"));
+    panelBackdrop.addEventListener("click", closeModelPanel);
+    closePanelBtn.addEventListener("click", closeModelPanel);
+    panelSearch.addEventListener("input", filterPanelTasks);
+    panelFilterStatus.addEventListener("change", filterPanelTasks);
+    panelFilterRepo.addEventListener("change", filterPanelTasks);
 
     function renderPanelTasks() {
         if (!coopIndex || !currentModelKey) return;
-        
+
         const search = panelSearch.value.toLowerCase();
         const statusFilter = panelFilterStatus.value;
         const repoFilter = panelFilterRepo.value;
-        
+
         // Filter tasks
-        let tasks = coopIndex.tasks.filter(task => {
+        let tasks = coopIndex.tasks.filter((task) => {
             if (!task.results[currentModelKey]) return false;
-            
+
             // Only show tasks with trajectory files
-            const hasTrajectory = task.hasTrajectory && task.hasTrajectory[currentModelKey];
+            const hasTrajectory =
+                task.hasTrajectory && task.hasTrajectory[currentModelKey];
             if (!hasTrajectory) return false;
-            
+
             const result = task.results[currentModelKey];
-            
+
             // Apply filters
-            if (statusFilter === 'passed' && !result.passed) return false;
-            if (statusFilter === 'failed' && result.passed) return false;
+            if (statusFilter === "passed" && !result.passed) return false;
+            if (statusFilter === "failed" && result.passed) return false;
             if (repoFilter && task.repo !== repoFilter) return false;
             if (search) {
-                const searchStr = `${task.repo} ${task.taskId} ${task.features}`.toLowerCase();
+                const searchStr =
+                    `${task.repo} ${task.taskId} ${task.features}`.toLowerCase();
                 if (!searchStr.includes(search)) return false;
             }
-            
+
             return true;
         });
-        
-        const tbody = document.getElementById('panel-tasks-body');
-        
+
+        const tbody = document.getElementById("panel-tasks-body");
+
         if (tasks.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-400">No tasks match filters</td></tr>';
+            tbody.innerHTML =
+                '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-400">No tasks match filters</td></tr>';
             return;
         }
-        
-        tbody.innerHTML = tasks.map(task => {
-            const result = task.results[currentModelKey];
-            const hasTrajectory = task.hasTrajectory && task.hasTrajectory[currentModelKey];
-            
-            const statusBadge = result.passed
-                ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Pass</span>'
-                : '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Fail</span>';
-            
-            const trajLink = hasTrajectory
-                ? `<a href="viewer?model=${currentModelKey}&repo=${task.repo}&task=${task.taskId}&features=${task.features}&passed=${result.passed}" class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded">View →</a>`
-                : '<span class="text-xs text-gray-400">—</span>';
-            
-            return `
+
+        tbody.innerHTML = tasks
+            .map((task) => {
+                const result = task.results[currentModelKey];
+                const hasTrajectory =
+                    task.hasTrajectory && task.hasTrajectory[currentModelKey];
+
+                const statusBadge = result.passed
+                    ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Pass</span>'
+                    : '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Fail</span>';
+
+                const trajLink = hasTrajectory
+                    ? `<a href="viewer?model=${currentModelKey}&repo=${task.repo}&task=${task.taskId}&features=${task.features}&passed=${result.passed}" class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded">View →</a>`
+                    : '<span class="text-xs text-gray-400">—</span>';
+
+                return `
                 <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-3 text-gray-600 font-mono text-xs">${task.repo.replace(/_/g, ' ')}</td>
+                    <td class="px-6 py-3 text-gray-600 font-mono text-xs">${task.repo.replace(/_/g, " ")}</td>
                     <td class="px-4 py-3 text-gray-900 font-medium">${task.taskId}</td>
                     <td class="px-4 py-3 text-gray-600 text-xs">${task.f1} + ${task.f2}</td>
                     <td class="px-4 py-3 text-center">${statusBadge}</td>
                     <td class="px-4 py-3 text-center">${trajLink}</td>
                 </tr>
             `;
-        }).join('');
+            })
+            .join("");
     }
 
     // Close panel on escape
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeModelPanel();
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeModelPanel();
     });
 
     // Initial load
