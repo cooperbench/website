@@ -7,12 +7,13 @@ authors:
     image: "/static/images/arpan.jpg"
   - name: "Hao Zhu"
     image: "/static/images/hao_zhu.png"
+showPaperLinks: false
 ---
 
 import FAQ from '../../components/FAQ.astro';
 import FAQItem from '../../components/FAQItem.astro';
 import QuickSummary from '../../components/QuickSummary.astro';
-import FailureViewer from '../../components/FailureViewer.astro';
+import FailureExample from '../../components/FailureExample.astro';
 
 <QuickSummary>
     `Git` is the backbone of modern software collaboration. It lets multiple engineers work on the same codebase without stepping on each other's toes. Giving AI agents access to `git` should let them coordinate effectively, right? Not so fast.
@@ -25,14 +26,40 @@ In our original setup, the only way agents communicate with each other is by sen
 
 To test this hypothesis, we gave our agents access to a `git` repository. Each agent can clone the repo, make changes, commit them, push them, and pull changes from the other agent. This way, agents can coordinate through code changes rather than just text messages.
 
-# Self-hosted Git for Agents
+## Self-hosted Git for Agents
 
 CooperBench runs agents in virtual machines (VMs), supporting both Google Cloud and Modal containers. To provide `git` functionality, we set up a self-hosted `git` server for each
 pair of agents, thus ensuring isolation between different agent teams. Agents can interact with the `git` server using standard `git` commands, through which they can look at each other's code changes before finalizing their own work.
 
 
-<FailureViewer 
-    id="git-failures"
-    title="Git Collaboration Failures"
-    description="We gave agents full access to `git` — branching, merging, pushing, pulling. The conversations that followed are... illuminating. Here are real excerpts from agent collaboration sessions."
-/>
+We gave agents full access to `git` — branching, merging, pushing, pulling. The conversations that followed are... illuminating. Here are real excerpts from agent collaboration sessions.
+
+## The Real-Time Interaction Problem
+
+One of the most common failure modes: agents that simply can't wait. Rather than coordinating with their partner, they rush ahead and do everything themselves — or push changes without checking if their partner is mid-task. Real-time collaboration requires a kind of patience and awareness that current agents lack. They treat their partner's work as something that will magically appear, rather than something unfolding in parallel that demands synchronization.
+
+<FailureExample category="impatience" />
+
+## Uncooperative Behaviors
+
+Sometimes agents don't just ignore their partner's work — they actively destroy it. Whether through careless overwrites or misguided "cleanup," the result is the same: lost progress. These aren't bugs in the traditional sense. The agents are functioning as designed — they're just not designed to cooperate. When an agent decides the "right" approach is to rewrite a file, it doesn't pause to consider that its partner may have spent turns carefully building what's already there.
+
+<FailureExample category="destructive" />
+
+## The Commitment Problem
+
+In our [previous post](curse-of-coordination), we identified *commitment* as a key coordination challenge: an agent promises "I'll add the validation check," says "Done," but the code is missing after merge. The same pattern shows up here, amplified by `git`. Agents commit broken code with full confidence, leaving their partner to discover the damage only after pulling. The gap between what an agent *says* it did and what it *actually* did is one of the most corrosive forces in multi-agent collaboration.
+
+<FailureExample category="broken" />
+
+## Misuse of Cooperation Tools
+
+`git` is a powerful cooperation tool, but giving agents access to it doesn't mean they know how to use it *cooperatively*. Force pushes, botched merges, and history rewrites abound. The irony is that `git` was designed to make collaboration safer — but agents treat it like a single-player tool, wielding destructive commands without considering the consequences for their partner's work.
+
+<FailureExample category="git_disasters" />
+
+## Hallucination in Communication
+
+When things go wrong, agents sometimes fabricate explanations for what happened — blaming their partner for errors that don't exist, or confidently describing a state of the codebase that bears no resemblance to reality. This is hallucination, but in a social context: agents generating plausible-sounding narratives about their partner's behavior that are simply not true.
+
+<FailureExample category="blame" />
