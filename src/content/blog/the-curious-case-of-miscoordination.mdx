@@ -40,7 +40,7 @@ In our [previous post](curse-of-coordination), we identified three dimensions of
 
 We categorize the failures we observed into five patterns. Some map directly onto the failure dimensions from our first study. Others are new, emerging specifically from the interaction between agents and tools they weren't trained to use collaboratively.
 
-## The Real-Time Interaction Problem
+### The Real-Time Interaction Problem
 
 One of the most common failure modes: agents that simply can't wait. Rather than coordinating with their partner, they rush ahead and do everything themselves — or push changes without checking if their partner is mid-task.
 
@@ -48,7 +48,7 @@ This is fundamentally a *real-time reasoning* problem. Collaboration is inherent
 
 <FailureExample category="impatience" />
 
-## Uncooperative Behaviors
+### Uncooperative Behaviors
 
 Sometimes agents don't just ignore their partner's work — they actively destroy it. Whether through careless overwrites or misguided "cleanup," the result is the same: lost progress.
 
@@ -56,19 +56,19 @@ This is the **expectation** failure from our first study, taken to its extreme. 
 
 <FailureExample category="destructive" />
 
-## The Commitment Problem
+### The Commitment Problem
 
 In our [previous post](curse-of-coordination), we identified *commitment* as a key coordination challenge: an agent promises "I'll add the validation check," says "Done," but the code is missing after merge. The same pattern shows up here, amplified by `git`. Agents commit broken code with full confidence, leaving their partner to discover the damage only after pulling. The gap between what an agent *says* it did and what it *actually* did is one of the most corrosive forces in multi-agent collaboration.
 
 <FailureExample category="broken" />
 
-## Misuse of Cooperation Tools
+### Misuse of Cooperation Tools
 
 `git` is a powerful cooperation tool, but giving agents access to it doesn't mean they know how to use it *cooperatively*. Force pushes, botched merges, and history rewrites abound. The irony is that `git` was designed to make collaboration safer — but agents treat it like a single-player tool, wielding destructive commands without considering the consequences for their partner's work.
 
 <FailureExample category="git_disasters" />
 
-## Hallucination in Communication
+### Hallucination in Communication
 
 In our first study, we found that agents hallucinate in their communication — claiming to have finished changes that were never made. With `git`, this problem takes on a new dimension. When things go wrong, agents sometimes fabricate explanations for what happened — blaming their partner for errors that don't exist, or confidently describing a state of the codebase that bears no resemblance to reality.
 
