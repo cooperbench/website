@@ -593,7 +593,9 @@ const description =
 
     let currentView = "coop";
     let coopIndex = null;
+    let coopGitIndex = null;
     let currentModelKey = null;
+    let currentModelGit = false;
 
     // Elements
     const btnCoop = document.getElementById("btn-coop");
@@ -618,9 +620,22 @@ const description =
         }
     }
 
-    function populateRepoFilter() {
-        if (!coopIndex) return;
-        const repos = [...new Set(coopIndex.tasks.map((t) => t.repo))].sort();
+    async function loadCoopGitIndex() {
+        try {
+            const response = await fetch("/static/data/coop_git/index.json");
+            if (response.ok) {
+                coopGitIndex = await response.json();
+                renderLeaderboard();
+            }
+        } catch (e) {
+            console.error("Error loading coop_git index:", e);
+        }
+    }
+
+    function populateRepoFilter(index) {
+        const src = index || coopIndex;
+        if (!src) return;
+        const repos = [...new Set(src.tasks.map((t) => t.repo))].sort();
         const select = panelFilterRepo;
         select.innerHTML = '<option value="">All repos</option>';
         repos.forEach((repo) => {
@@ -673,13 +688,13 @@ const description =
                 const barWidth = (item.score / maxScore) * 100;
                 const ciLow = (item.ci[0] / maxScore) * 100;
                 const ciHigh = (item.ci[1] / maxScore) * 100;
-                const clickable = currentView === "coop" && coopIndex;
+                const clickable = currentView === "coop" && (item.git ? coopGitIndex : coopIndex);
 
                 // onclick="openModelPanel('${item.modelKey}')"
                 // We need to handle this carefully.
 
                 return `
-                <tr class="hover:bg-gray-50 ${clickable ? "cursor-pointer" : ""}" ${clickable ? `data-model-key="${item.modelKey}"` : ""}>
+                <tr class="hover:bg-gray-50 ${clickable ? "cursor-pointer" : ""}" ${clickable ? `data-model-key="${item.modelKey}" data-git="${item.git ? "1" : ""}"` : ""}>
                     <td class="px-2 md:px-4 py-3 md:py-4 text-sm text-gray-500">${item.rank}</td>
                     <td class="px-2 md:px-4 py-3 md:py-4">
                         <span class="font-medium text-gray-900 text-sm md:text-base">${item.model}</span>
@@ -717,21 +732,24 @@ const description =
             .join("");
 
         // Attach click listeners to rows
-        if (currentView === "coop" && coopIndex) {
+        if (currentView === "coop") {
             tbody.querySelectorAll("tr[data-model-key]").forEach((tr) => {
                 tr.addEventListener("click", () => {
-                    openModelPanel(tr.getAttribute("data-model-key"));
+                    const isGit = tr.getAttribute("data-git") === "1";
+                    openModelPanel(tr.getAttribute("data-model-key"), isGit);
                 });
             });
         }
     }
 
-    function openModelPanel(modelKey) {
-        if (!coopIndex) return;
+    function openModelPanel(modelKey, isGit = false) {
+        const activeIndex = isGit ? coopGitIndex : coopIndex;
+        if (!activeIndex) return;
 
         currentModelKey = modelKey;
-        const modelName = coopIndex.modelDisplayNames[modelKey] || modelKey;
-        const stats = coopIndex.stats[modelKey];
+        currentModelGit = isGit;
+        const modelName = activeIndex.modelDisplayNames[modelKey] || modelKey;
+        const stats = activeIndex.stats[modelKey];
 
         document.getElementById("panel-model-name").textContent =
             `${modelName} Results`;
@@ -742,6 +760,7 @@ const description =
         panelSearch.value = "";
         panelFilterStatus.value = "";
         panelFilterRepo.value = "";
+        populateRepoFilter(activeIndex);
 
         renderPanelTasks();
 
@@ -772,14 +791,15 @@ const description =
     panelFilterRepo.addEventListener("change", filterPanelTasks);
 
     function renderPanelTasks() {
-        if (!coopIndex || !currentModelKey) return;
+        const activeIndex = currentModelGit ? coopGitIndex : coopIndex;
+        if (!activeIndex || !currentModelKey) return;
 
         const search = panelSearch.value.toLowerCase();
         const statusFilter = panelFilterStatus.value;
         const repoFilter = panelFilterRepo.value;
 
         // Filter tasks
-        let tasks = coopIndex.tasks.filter((task) => {
+        let tasks = activeIndex.tasks.filter((task) => {
             if (!task.results[currentModelKey]) return false;
 
             // Only show tasks with trajectory files
@@ -820,8 +840,9 @@ const description =
                     ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Pass</span>'
                     : '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Fail</span>';
 
+                const settingParam = currentModelGit ? "&setting=coopGit" : "";
                 const trajLink = hasTrajectory
-                    ? `<a href="viewer?model=${currentModelKey}&repo=${task.repo}&task=${task.taskId}&features=${task.features}&passed=${result.passed}" class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded">View →</a>`
+                    ? `<a href="viewer?model=${currentModelKey}&repo=${task.repo}&task=${task.taskId}&features=${task.features}&passed=${result.passed}${settingParam}" class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded">View →</a>`
                     : '<span class="text-xs text-gray-400">—</span>';
 
                 return `
@@ -844,5 +865,6 @@ const description =
 
     // Initial load
     loadCoopIndex();
+    loadCoopGitIndex();
     renderLeaderboard();
 </script>
