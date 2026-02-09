@@ -87,9 +87,18 @@ const componentId = `failure-${category}`;
         <div
             class="px-4 py-2 border-b border-gray-100 flex items-center justify-between"
         >
-            <span class="text-sm font-medium text-gray-700"
-                >Conversation Log</span
-            >
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-medium text-gray-700"
+                    >Conversation Log</span
+                >
+                <a
+                    id={`${componentId}-viewer-link`}
+                    href="#"
+                    target="_blank"
+                    class="text-xs text-blue-500 hover:text-blue-700 underline hidden"
+                    >View full trajectory &rarr;</a
+                >
+            </div>
             <span
                 id={`${componentId}-result`}
                 class="text-xs font-medium px-2 py-1 bg-red-100 text-red-700 rounded"
@@ -273,10 +282,10 @@ const componentId = `failure-${category}`;
                 : "";
 
             const annotationHtml = step.annotation
-                ? `<div class="mt-1.5 text-xs italic text-amber-600 flex items-center gap-1">
-                     <svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                ? `<span class="text-xs italic text-amber-600 ml-2 inline-flex items-center gap-1">
+                     <svg class="w-3 h-3 flex-shrink-0 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                      <span>&larr; ${step.annotation}</span>
-                   </div>`
+                   </span>`
                 : "";
 
             msgEl.innerHTML = `
@@ -289,8 +298,7 @@ const componentId = `failure-${category}`;
                             <span class="text-xs px-1.5 py-0.5 rounded ${stepLabel.bg} ${stepLabel.text}">${stepLabel.label}</span>
                             ${timeDisplay}
                         </div>
-                        <div class="text-sm text-gray-600 leading-relaxed">${content}</div>
-                        ${annotationHtml}
+                        <div class="text-sm text-gray-600 leading-relaxed">${content}${annotationHtml}</div>
                     </div>
                 </div>
             `;
@@ -332,7 +340,6 @@ const componentId = `failure-${category}`;
         if (descEl) {
             descEl.innerHTML = `
                 <span class="font-semibold text-gray-900">${failure.name}</span> — ${failure.summary}
-                <span class="text-xs text-gray-400 block mt-1">Source: ${failure.source}</span>
             `;
         }
 
@@ -342,6 +349,17 @@ const componentId = `failure-${category}`;
             const isPass = failure.result.toLowerCase().includes("passed");
             resultEl.className = `text-xs font-medium px-2 py-1 rounded ${isPass ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`;
             resultEl.textContent = failure.result;
+        }
+
+        // Update viewer link
+        const viewerLinkEl = document.getElementById(`${componentId}-viewer-link`);
+        if (viewerLinkEl) {
+            if (failure.viewerUrl) {
+                viewerLinkEl.href = failure.viewerUrl;
+                viewerLinkEl.classList.remove("hidden");
+            } else {
+                viewerLinkEl.classList.add("hidden");
+            }
         }
 
         renderTimeline(failure.steps);

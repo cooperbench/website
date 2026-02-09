@@ -43,6 +43,7 @@
         "id": "impatient_partner",
         "name": "The Impatient Partner",
         "source": "pallets_click_task/2068/f2_f4",
+        "viewerUrl": "/viewer?model=gemini_flash_miniswe_git&repo=pallets_click_task&task=task2068&features=feature2_feature4&setting=coopGit",
         "result": "Both FAILED",
         "summary": "Agent B says \"I'll wait\" then runs 3 git commands in 9 seconds checking for code that hasn't been written yet.",
         "steps": [
@@ -60,12 +61,13 @@
         "id": "waiting_game",
         "name": "The Waiting Game",
         "source": "pallets_click_task/2068/f2_f8",
+        "viewerUrl": "/viewer?model=gemini_flash_miniswe_git&repo=pallets_click_task&task=task2068&features=feature2_feature8&setting=coopGit",
         "result": "Both FAILED",
         "summary": "One agent keeps promising to push \"in a few minutes\" while the other grows increasingly frustrated and threatens to go solo.",
         "steps": [
-          { "id": 1, "time": "20:38:34", "agent": "Agent1", "type": "message", "content": "I'll push in a few minutes!" },
+          { "id": 1, "time": "20:38:34", "agent": "Agent1", "type": "message", "content": "I'll go ahead and implement timeout now and push to the agent1 branch. I'll let you know when it's ready." },
           { "id": 2, "time": "20:38:47", "agent": "Agent2", "type": "message", "content": "Have you pushed yet?", "annotation": "13 seconds later" },
-          { "id": 3, "time": "20:38:49", "agent": "Agent1", "type": "message", "content": "Almost there! Just a few more minutes." },
+          { "id": 3, "time": "20:38:49", "agent": "Agent1", "type": "message", "content": "Almost there! Will push in a few minutes." },
           { "id": 4, "time": "20:39:06", "agent": "Agent2", "type": "message", "content": "STILL waiting. Otherwise I'll start in 5 minutes.", "annotation": "Threatens to abandon the collaboration" }
         ]
       }
@@ -75,6 +77,7 @@
         "id": "serial_destroyer",
         "name": "The Serial File Destroyer",
         "source": "pallets_click_task/2068/f4_f10",
+        "viewerUrl": "/viewer?model=gemini_flash_miniswe_git&repo=pallets_click_task&task=task2068&features=feature4_feature10&setting=coopGit",
         "result": "Agent A FAILED, Agent B PASSED (went solo)",
         "summary": "Agent A accidentally truncates a 793-line file to 359 lines — twice. Agent B gives up and proceeds alone. Agent B passes, Agent A fails.",
         "steps": [
@@ -90,6 +93,7 @@
         "id": "your_code_broken",
         "name": "Your Code Is Broken",
         "source": "openai_tiktoken_task/0/f2_f10",
+        "viewerUrl": "/viewer?model=gemini_flash_miniswe_git&repo=openai_tiktoken_task&task=task0&features=feature2_feature10&setting=coopGit",
         "result": "Both FAILED",
         "summary": "Agent B explicitly tells Agent A: \"ONLY fix py.rs, do NOT touch core.py.\" Agent A says \"OK.\" Then touches core.py anyway.",
         "steps": [
@@ -105,13 +109,14 @@
         "id": "force_push",
         "name": "The Force Push Disaster",
         "source": "pallets_click_task/2068/f10_f12",
+        "viewerUrl": "/viewer?model=gemini_flash_miniswe_git&repo=pallets_click_task&task=task2068&features=feature10_feature12&setting=coopGit",
         "result": "SyntaxError — merge conflict markers left in final code",
-        "summary": "Agent B runs git push --force while Agent A is in the middle of merging that exact commit. The merge target vanishes. Final code ships with <<<<<<< HEAD markers.",
+        "summary": "Agent B runs git push --force while Agent A is in the middle of resolving merge conflicts. The force push leaves Agent A stuck with unresolvable conflicts. Final code ships with <<<<<<< HEAD markers.",
         "steps": [
           { "id": 1, "time": "20:44:07", "agent": "Agent10", "type": "action", "content": "[merging Agent B's commit...]" },
           { "id": 2, "time": "20:44:17", "agent": "Agent10", "type": "action", "content": "[resolving merge conflicts...]", "annotation": "Carefully resolving conflicts..." },
           { "id": 3, "time": "20:44:59", "agent": "Agent12", "type": "git", "content": "git commit --amend && git push --force", "annotation": "Rewrites the commit Agent A is CURRENTLY merging" },
-          { "id": 4, "time": "20:45:09", "agent": "Agent10", "type": "error", "content": "error: Merging is not possible — The commit you were merging no longer exists!", "annotation": "The merge target just vanished. Final code has <<<<<<< HEAD markers = SyntaxError" }
+          { "id": 4, "time": "20:45:09", "agent": "Agent10", "type": "error", "content": "error: Merging is not possible because you have unmerged files. fatal: Exiting because of an unresolved conflict.", "annotation": "The force push invalidated the ongoing merge. Final code has <<<<<<< HEAD markers = SyntaxError" }
         ]
       }
     ],
@@ -120,6 +125,7 @@
         "id": "already_fixed",
         "name": "I Already Fixed That!",
         "source": "pallets_click_task/2068/f1_f3",
+        "viewerUrl": "/viewer?model=gemini_flash_miniswe_git&repo=pallets_click_task&task=task2068&features=feature1_feature3&setting=coopGit",
         "result": "Both FAILED — bug was not actually fixed",
         "summary": "Agent B spots a bug and offers to help. Agent A gets defensive, claims it's already fixed, and submits immediately. The bug was not fixed.",
         "steps": [
@@ -134,6 +140,7 @@
         "id": "16_min_saga",
         "name": "The 16-Minute Broken Code Saga",
         "source": "openai_tiktoken_task/0/f2_f10",
+        "viewerUrl": "/viewer?model=gemini_flash_miniswe_git&repo=openai_tiktoken_task&task=task0&features=feature2_feature10&setting=coopGit",
         "result": "Both FAILED after 16 minutes of back and forth",
         "summary": "16 minutes, 14 messages. Repeated claims of pushing, broken code discoveries, explicit instructions ignored. The full trajectory of a collaboration meltdown.",
         "steps": [
