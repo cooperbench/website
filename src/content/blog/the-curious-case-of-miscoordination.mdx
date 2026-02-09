@@ -32,17 +32,27 @@ CooperBench runs agents in virtual machines (VMs), supporting both Google Cloud 
 pair of agents, thus ensuring isolation between different agent teams. Agents can interact with the `git` server using standard `git` commands, through which they can look at each other's code changes before finalizing their own work.
 
 
-We gave agents full access to `git` — branching, merging, pushing, pulling. The conversations that followed are... illuminating. Here are real excerpts from agent collaboration sessions.
+We gave agents full access to `git` — branching, merging, pushing, pulling. The conversations that followed are... illuminating.
+
+## A taxonomy of git-enabled failures
+
+In our [previous post](curse-of-coordination), we identified three dimensions of coordination failure: **expectation** (agents ignore their partner's plans), **commitment** (agents break their promises), and **communication** (agents talk past each other). Adding `git` didn't fix these problems. It revealed new ones — and sharpened the old ones.
+
+We categorize the failures we observed into five patterns. Some map directly onto the failure dimensions from our first study. Others are new, emerging specifically from the interaction between agents and tools they weren't trained to use collaboratively.
 
 ## The Real-Time Interaction Problem
 
-One of the most common failure modes: agents that simply can't wait. Rather than coordinating with their partner, they rush ahead and do everything themselves — or push changes without checking if their partner is mid-task. Real-time collaboration requires a kind of patience and awareness that current agents lack. They treat their partner's work as something that will magically appear, rather than something unfolding in parallel that demands synchronization.
+One of the most common failure modes: agents that simply can't wait. Rather than coordinating with their partner, they rush ahead and do everything themselves — or push changes without checking if their partner is mid-task.
+
+This is fundamentally a *real-time reasoning* problem. Collaboration is inherently dynamic — your partner is working in parallel, and you need to reason about what they're doing *right now*, not just what they said five messages ago. In our work on [RealTimeGym](https://realtimegym.saltlab.stanford.edu/), we've studied how LLM-based agents struggle when conditions change while they're still thinking. The same challenge shows up here: by the time an agent finishes reasoning about its next step, its partner may have already pushed changes that invalidate the plan. Agents need to synchronize not just on *what* to do, but on *when* to do it.
 
 <FailureExample category="impatience" />
 
 ## Uncooperative Behaviors
 
-Sometimes agents don't just ignore their partner's work — they actively destroy it. Whether through careless overwrites or misguided "cleanup," the result is the same: lost progress. These aren't bugs in the traditional sense. The agents are functioning as designed — they're just not designed to cooperate. When an agent decides the "right" approach is to rewrite a file, it doesn't pause to consider that its partner may have spent turns carefully building what's already there.
+Sometimes agents don't just ignore their partner's work — they actively destroy it. Whether through careless overwrites or misguided "cleanup," the result is the same: lost progress.
+
+This is the **expectation** failure from our first study, taken to its extreme. In the original setup, agents heard their partner's plan and then acted like it didn't exist. With `git`, they can now *see* their partner's code — and they still overwrite it. The agents are functioning as designed. They're just not designed to cooperate. When an agent decides the "right" approach is to rewrite a file, it doesn't pause to consider that its partner may have spent turns carefully building what's already there.
 
 <FailureExample category="destructive" />
 
@@ -60,6 +70,20 @@ In our [previous post](curse-of-coordination), we identified *commitment* as a k
 
 ## Hallucination in Communication
 
-When things go wrong, agents sometimes fabricate explanations for what happened — blaming their partner for errors that don't exist, or confidently describing a state of the codebase that bears no resemblance to reality. This is hallucination, but in a social context: agents generating plausible-sounding narratives about their partner's behavior that are simply not true.
+In our first study, we found that agents hallucinate in their communication — claiming to have finished changes that were never made. With `git`, this problem takes on a new dimension. When things go wrong, agents sometimes fabricate explanations for what happened — blaming their partner for errors that don't exist, or confidently describing a state of the codebase that bears no resemblance to reality.
+
+This is hallucination applied to **communication** itself. Not just generating false code, but generating false *social narratives*. The agent constructs a plausible story about what its partner did wrong, and that story shapes its subsequent actions. It's the same **communication** failure we identified before, but now the lies are about shared history that both agents should be able to verify through `git log`.
 
 <FailureExample category="blame" />
+
+## Git didn't cure the curse
+
+Adding `git` didn't solve the curse of coordination. It just revealed new symptoms.
+
+The three failure dimensions from our first study — expectation, commitment, and communication — all persist. Agents still ignore their partner's plans (*uncooperative behaviors*), still break their promises (*the commitment problem*), and still hallucinate in conversation (*hallucination in communication*). On top of these, `git` introduced two new failure modes that didn't exist before: the *real-time interaction problem*, where agents can't reason about parallel work, and *misuse of cooperation tools*, where the tools meant to help coordination become weapons against it.
+
+The lesson isn't that tools are useless. It's that tools alone aren't enough. `git` gives agents the *infrastructure* for cooperation, but infrastructure without social intelligence is like giving someone a phone and expecting them to negotiate a peace treaty. The capability to share code doesn't create the capability to *collaborate* on code.
+
+What would actually help? Our findings point to a few directions. First, agents need better real-time reasoning — the ability to model what their partner is doing *right now* and adapt accordingly, a challenge we're exploring further in [RealTimeGym](https://realtimegym.saltlab.stanford.edu/). Second, they need cooperative training — not just learning to use `git` commands, but learning to use them *with someone else*. And third, they need robust grounding: the ability to verify claims against observable state, and to flag contradictions rather than hallucinating explanations.
+
+The curse of coordination is real, but it's not permanent. The failure patterns are consistent enough to be learnable. And the tools are in place — both CooperBench and `git` itself — to build the training environments that could teach agents to actually work together.
