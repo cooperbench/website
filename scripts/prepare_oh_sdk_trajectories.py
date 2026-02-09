@@ -170,6 +170,25 @@ def process_agent_traj(traj_data: dict, agent_label: str, timestamps: list):
             continue
 
         if event_type == "MessageEvent":
+            # Check if this is a received message from another agent
+            event_str = msg.get("event", "")
+            received_match = re.search(r"\[Message from (agent\d+)\]:\s*(.*)", event_str, re.DOTALL)
+            if received_match:
+                sender = received_match.group(1)
+                content = received_match.group(2).strip()
+                ts = timestamps[step_idx] if step_idx < len(timestamps) else timestamps[-1] if timestamps else ""
+                steps.append({
+                    "id": step_idx,
+                    "timestamp": ts,
+                    "source": "agent",
+                    "action": "ReceiveMessage",
+                    "args": {"content": content[:10000], "from": sender},
+                    "message": content[:10000],
+                    "observation": "",
+                    "tool_call_metadata": {"function_name": "openhands_comm_get"},
+                    "agentId": agent_label,
+                })
+                step_idx += 1
             i += 1
             continue
 
@@ -201,10 +220,22 @@ def process_agent_traj(traj_data: dict, agent_label: str, timestamps: list):
 
             fn, args = map_tool(action_name, obs_tool, obs_result)
 
+            # For SendMessageAction, use the actual message content from source data
+            if action_name == "SendMessageAction" and msg.get("msg"):
+                args["content"] = msg["msg"]
+                if msg.get("to"):
+                    args["to"] = msg["to"]
+
             ts = timestamps[step_idx] if step_idx < len(timestamps) else timestamps[-1] if timestamps else ""
 
             # Strip ANSI escape codes from observation text
             clean_result = ANSI_RE.sub("", obs_result) if obs_result else ""
+
+            # For send actions, use the actual message as the display message
+            if action_name == "SendMessageAction" and msg.get("msg"):
+                display_message = msg["msg"][:10000]
+            else:
+                display_message = clean_result[:10000] if clean_result else thought
 
             step = {
                 "id": step_idx,
@@ -212,7 +243,7 @@ def process_agent_traj(traj_data: dict, agent_label: str, timestamps: list):
                 "source": "agent",
                 "action": action_name,
                 "args": args,
-                "message": clean_result[:10000] if clean_result else thought,
+                "message": display_message,
                 "observation": clean_result[:10000] if clean_result else "",
                 "tool_call_metadata": {"function_name": fn},
                 "agentId": agent_label,
@@ -350,7 +381,9 @@ def process_run(run_config: dict):
                     with open(agent_a_file) as f:
                         traj_a = json.load(f)
                     a_step_count = len([m for m in traj_a.get("messages", [])
-                                        if m.get("event_type") in ("ActionEvent", "AgentErrorEvent")])
+                                        if m.get("event_type") in ("ActionEvent", "AgentErrorEvent")
+                                        or (m.get("event_type") == "MessageEvent"
+                                            and "[Message from agent" in m.get("event", ""))])
                     ts_a = interpolate_timestamps(started_at, ended_at, max(a_step_count, 1))
                     steps_a = process_agent_traj(traj_a, "agent_1", ts_a)
                     all_steps.extend(steps_a)
@@ -360,7 +393,9 @@ def process_run(run_config: dict):
                     with open(agent_b_file) as f:
                         traj_b = json.load(f)
                     b_step_count = len([m for m in traj_b.get("messages", [])
-                                        if m.get("event_type") in ("ActionEvent", "AgentErrorEvent")])
+                                        if m.get("event_type") in ("ActionEvent", "AgentErrorEvent")
+                                        or (m.get("event_type") == "MessageEvent"
+                                            and "[Message from agent" in m.get("event", ""))])
                     ts_b = interpolate_timestamps(started_at, ended_at, max(b_step_count, 1))
                     steps_b = process_agent_traj(traj_b, "agent_2", ts_b)
                     all_steps.extend(steps_b)

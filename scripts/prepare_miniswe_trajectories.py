@@ -102,24 +102,32 @@ def parse_user_message(content: str):
     return return_code, output, warning, received_msgs
 
 
-def classify_command(command: str):
-    """Classify a bash command into a viewer tool type."""
+def split_command(command: str):
+    """Split a command into send_message parts and remaining bash.
+
+    Returns (send_matches, remaining_bash, is_finish) where:
+      - send_matches: list of (recipient, message) tuples
+      - remaining_bash: the non-send_message portion (empty if pure comm)
+      - is_finish: True if this is a submit/finish command
+    """
     stripped = command.strip()
 
-    # Submit
     if "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT" in stripped:
-        return "finish", "finish"
+        return [], "", True
 
-    # send_message (may be combined with other commands via &&)
-    send_match = SEND_MSG_RE.search(stripped)
-    if send_match:
-        # If the command is ONLY a send_message (possibly with whitespace)
-        only_send = SEND_MSG_RE.sub("", stripped).replace("&&", "").replace("||", "").strip()
-        if not only_send:
-            return "openhands_comm_send", "communication"
+    send_matches = SEND_MSG_RE.findall(stripped)
+    if not send_matches:
+        return [], stripped, False
 
-    # Default: bash
-    return "execute_bash", "bash"
+    # Remove all send_message calls to get the remaining bash
+    remaining = SEND_MSG_RE.sub("", stripped)
+    # Clean up leftover && / || connectors and whitespace
+    remaining = re.sub(r"\s*(?:&&|\|\|)\s*(?:&&|\|\|)\s*", " && ", remaining)
+    remaining = re.sub(r"^\s*(?:&&|\|\|)\s*", "", remaining)
+    remaining = re.sub(r"\s*(?:&&|\|\|)\s*$", "", remaining)
+    remaining = remaining.strip()
+
+    return send_matches, remaining, False
 
 
 def normalize_feature_name(feat_dir_name: str) -> str:
@@ -183,25 +191,8 @@ def process_agent_traj(traj_data: dict, agent_label: str):
             obs_output = ANSI_RE.sub("", obs_output) if obs_output else ""
             obs_warning = ANSI_RE.sub("", obs_warning) if obs_warning else ""
 
-            # Classify the command
-            fn, tool_type = classify_command(command)
-
-            # Build args
-            args = {}
-            if fn == "execute_bash":
-                args["command"] = command
-            elif fn == "openhands_comm_send":
-                send_match = SEND_MSG_RE.search(command)
-                if send_match:
-                    args["recipient"] = send_match.group(1)
-                    args["content"] = send_match.group(2)
-                # If there are additional commands beyond send_message, include them
-                remaining = SEND_MSG_RE.sub("", command).strip()
-                remaining = re.sub(r"^&&\s*|^\|\|\s*|\s*&&\s*$|\s*\|\|\s*$", "", remaining).strip()
-                if remaining:
-                    args["command"] = remaining
-            elif fn == "finish":
-                args["message"] = thought or "Task complete"
+            # Split the command into send_message parts + remaining bash
+            send_matches, remaining_bash, is_finish = split_command(command)
 
             # Build observation text
             obs_text = obs_output
@@ -210,21 +201,73 @@ def process_agent_traj(traj_data: dict, agent_label: str):
             if obs_rc is not None and obs_rc != 0:
                 obs_text = f"[exit code: {obs_rc}]\n{obs_text}" if obs_text else f"[exit code: {obs_rc}]"
 
-            step = {
-                "id": step_idx,
-                "timestamp": timestamp,
-                "source": "agent",
-                "action": command[:200] if command else thought[:200],
-                "args": args,
-                "thought": thought[:5000] if thought else "",
-                "message": obs_text[:10000] if obs_text else thought[:2000],
-                "observation": obs_text[:10000],
-                "tool_call_metadata": {"function_name": fn},
-                "agentId": agent_label,
-            }
+            if is_finish:
+                step = {
+                    "id": step_idx,
+                    "timestamp": timestamp,
+                    "source": "agent",
+                    "action": command[:200],
+                    "args": {"message": thought or "Task complete"},
+                    "thought": thought[:5000] if thought else "",
+                    "message": obs_text[:10000] if obs_text else thought[:2000],
+                    "observation": obs_text[:10000],
+                    "tool_call_metadata": {"function_name": "finish"},
+                    "agentId": agent_label,
+                }
+                steps.append(step)
+                step_idx += 1
+            else:
+                # Emit a comm step for each send_message
+                for recipient, msg_content in send_matches:
+                    comm_step = {
+                        "id": step_idx,
+                        "timestamp": timestamp,
+                        "source": "agent",
+                        "action": f"send_message {recipient}",
+                        "args": {"recipient": recipient, "content": msg_content},
+                        "thought": thought[:5000] if thought else "",
+                        "message": msg_content[:10000],
+                        "observation": "",
+                        "tool_call_metadata": {"function_name": "openhands_comm_send"},
+                        "agentId": agent_label,
+                    }
+                    steps.append(comm_step)
+                    step_idx += 1
+                    # Only attach thought to the first step
+                    thought = ""
 
-            steps.append(step)
-            step_idx += 1
+                # Emit the remaining bash command (or the full command if no sends)
+                if remaining_bash:
+                    bash_step = {
+                        "id": step_idx,
+                        "timestamp": timestamp,
+                        "source": "agent",
+                        "action": remaining_bash[:200],
+                        "args": {"command": remaining_bash},
+                        "thought": thought[:5000] if thought else "",
+                        "message": obs_text[:10000] if obs_text else "",
+                        "observation": obs_text[:10000],
+                        "tool_call_metadata": {"function_name": "execute_bash"},
+                        "agentId": agent_label,
+                    }
+                    steps.append(bash_step)
+                    step_idx += 1
+                elif not send_matches:
+                    # Pure bash with no command (shouldn't happen, but handle gracefully)
+                    step = {
+                        "id": step_idx,
+                        "timestamp": timestamp,
+                        "source": "agent",
+                        "action": command[:200] if command else thought[:200],
+                        "args": {"command": command} if command else {},
+                        "thought": thought[:5000] if thought else "",
+                        "message": obs_text[:10000] if obs_text else thought[:2000],
+                        "observation": obs_text[:10000],
+                        "tool_call_metadata": {"function_name": "execute_bash"},
+                        "agentId": agent_label,
+                    }
+                    steps.append(step)
+                    step_idx += 1
 
             # If there were received messages in the observation, add them as
             # separate receive steps (they appear in the user message content)
