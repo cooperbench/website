@@ -413,6 +413,7 @@ const description =
                             <input
                                 type="checkbox"
                                 id="filter-bash"
+                                checked
                                 onchange="applyFilters()"
                                 class="rounded text-blue-600 focus:ring-blue-500"
                             />
@@ -422,6 +423,7 @@ const description =
                             <input
                                 type="checkbox"
                                 id="filter-other"
+                                checked
                                 onchange="applyFilters()"
                                 class="rounded text-blue-600 focus:ring-blue-500"
                             />
@@ -643,7 +645,7 @@ const description =
             }
             const usage = finalMetrics?.accumulated_token_usage || {};
             return {
-                model: cleanModelName(model),
+                model: cleanModelName(model) || cleanModelName(finalMetrics?.model),
                 steps: steps.length,
                 inputTokens: usage.prompt_tokens ?? usage.input_tokens ?? 0,
                 outputTokens:
@@ -736,7 +738,10 @@ const description =
     }
 
     async function loadTrajectoryFromParams(model, repo, task, features) {
-        const trajectoryPath = `/static/data/coop/trajectories/${model}/${repo}_${task}_${features}.json.gz`;
+        const params = new URLSearchParams(window.location.search);
+        const setting = params.get("setting") || "coop";
+        const dataDir = setting === "coopGit" ? "coop_git" : "coop";
+        const trajectoryPath = `/static/data/${dataDir}/trajectories/${model}/${repo}_${task}_${features}.json.gz`;
         showStatus(
             `Loading ${model} trajectory for ${repo}/${task}/${features}...`,
             "info",
@@ -760,6 +765,12 @@ const description =
                 minimax: "MiniMax M2",
                 qwen_coder: "Qwen3-Coder-30B",
                 qwen: "Qwen3-30B",
+                gemini_flash_sdk_git: "Gemini 3 Flash (SDK + Git)",
+                gemini_flash_sdk: "Gemini 3 Flash (SDK)",
+                gemini_pro_miniswe_git: "Gemini 3 Pro (Mini-SWE + Git)",
+                gemini_pro_miniswe: "Gemini 3 Pro (Mini-SWE)",
+                gemini_flash_miniswe_git: "Gemini 3 Flash (Mini-SWE + Git)",
+                gemini_flash_miniswe: "Gemini 3 Flash (Mini-SWE)",
             };
             const modelName = modelNames[model] || model;
             showStatus(
@@ -1382,25 +1393,49 @@ const description =
                        ${isLong ? `<button onclick="toggleExpand('${contentId}', this)" class="text-gray-400 hover:text-gray-600 text-[10px] mt-1">Show more ↓</button>` : ""}
                    </div>`;
             } else if (toolType === "communication") {
-                if (toolName.includes("get") || toolName.includes("receive")) {
-                    contentHtml = `<div class="text-xs text-gray-400 italic mt-1.5">Checked for messages</div>`;
+                if (commMessage && commMessage !== "No new messages." && commMessage !== "Message sent successfully" && !commMessage.startsWith("Message sent successfully")) {
+                    let formatted = escapeHtml(commMessage);
+                    formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+                    formatted = formatted.replace(/`([^`]+)`/g, '<code class="bg-gray-200 px-1 rounded text-xs">$1</code>');
+                    formatted = formatted.replace(/\n/g, "<br>");
+                    const isLong = commMessage.length > 300;
+                    const contentId = `comm-${idx}`;
+                    contentHtml = `
+                       <div class="text-xs text-gray-600 leading-relaxed mt-1.5 break-words">
+                           <div id="${contentId}" class="${isLong ? "max-h-24 overflow-hidden" : ""}">${formatted}</div>
+                           ${isLong ? `<button onclick="toggleExpand('${contentId}', this)" class="text-gray-400 hover:text-gray-600 text-[10px] mt-1">Show more ↓</button>` : ""}
+                       </div>`;
+                } else if (toolName.includes("get") || toolName.includes("receive")) {
+                    contentHtml = `<div class="text-xs text-gray-400 italic mt-1.5">Checked for messages — no new messages</div>`;
                 } else {
-                    contentHtml = `<div class="text-xs text-gray-400 italic mt-1.5">(message content not available)</div>`;
+                    contentHtml = `<div class="text-xs text-gray-400 italic mt-1.5">Message sent</div>`;
                 }
             }
 
-            if (
-                (toolType === "bash" || toolType === "find_grep") &&
-                step.args?.command
-            ) {
-                contentHtml = `<div class="mt-1.5 text-xs font-mono bg-gray-100 text-gray-800 p-2 rounded border border-gray-200 whitespace-pre-wrap break-all">${escapeHtml(step.args.command)}</div>`;
+            if (toolType === "bash" || toolType === "find_grep") {
+                const bashCmd = step.args?.command;
+                const obs = step.observation || step.message || "";
+                if (bashCmd) {
+                    contentHtml = `<div class="mt-1.5 text-xs font-mono bg-gray-100 text-gray-800 p-2 rounded border border-gray-200 whitespace-pre-wrap break-all">${escapeHtml(bashCmd)}</div>`;
+                    // Show output below command if available (mini SWE format has both)
+                    if (obs && obs !== bashCmd) {
+                        const isLong = obs.length > 300;
+                        const obsId = `obs-${idx}`;
+                        contentHtml += `<div class="mt-1 text-xs font-mono bg-gray-50 text-gray-600 p-2 rounded border border-gray-100 whitespace-pre-wrap break-all"><div class="text-[10px] text-gray-400 mb-0.5 select-none">output</div><div id="${obsId}" class="${isLong ? "max-h-24 overflow-hidden" : ""}">${escapeHtml(obs.slice(0, 5000))}</div>${isLong ? `<button onclick="toggleExpand('${obsId}', this)" class="text-gray-400 hover:text-gray-600 text-[10px] mt-1">Show more ↓</button>` : ""}</div>`;
+                    }
+                } else if (obs) {
+                    // OH SDK format: no command available, show observation output only
+                    const isLong = obs.length > 500;
+                    const obsId = `obs-${idx}`;
+                    contentHtml = `<div class="mt-1.5 text-xs font-mono bg-gray-100 text-gray-800 p-2 rounded border border-gray-200 whitespace-pre-wrap break-all"><div id="${obsId}" class="${isLong ? "max-h-32 overflow-hidden" : ""}">${escapeHtml(obs.slice(0, 5000))}</div>${isLong ? `<button onclick="toggleExpand('${obsId}', this)" class="text-gray-400 hover:text-gray-600 text-[10px] mt-1">Show more ↓</button>` : ""}</div>`;
+                }
             }
 
             if (toolType === "view" && step.args?.path) {
                 contentHtml = `<div class="mt-1.5 text-xs text-gray-600 break-all"><span class="text-gray-400">file:</span> ${escapeHtml(step.args.path)}</div>`;
             }
 
-            if (toolType === "edit" && step.args) {
+            if ((toolType === "edit" || toolType === "create") && step.args) {
                 let editContent = "";
                 if (step.args.path) {
                     editContent += `<div class="text-gray-600 font-mono text-[10px] break-all">${escapeHtml(step.args.path)}</div>`;

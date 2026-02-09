@@ -51,8 +51,25 @@ const description =
         }
     </style>
     <main class="pt-14">
+        <!-- Announcement Banner -->
+        <div
+            class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6"
+        >
+            <div
+                class="max-w-4xl mx-auto flex items-center justify-center gap-3 text-sm"
+            >
+                <i class="fas fa-sparkles"></i>
+                <a href="leaderboard" class="underline hover:text-blue-100">
+                    <span
+                        ><strong>New Results:</strong> Leaderboard updated with Mini-SWE
+                        Agent, Software Agent SDK frameworks, and Git access experiments!</span
+                    >
+                </a>
+            </div>
+        </div>
+
         <!-- Hero Section -->
-        <section class="relative py-20 px-6 overflow-hidden">
+        <section class="relative pt-20 pb-10 px-6 overflow-hidden">
             <!-- Animated Grid Background -->
             <div
                 id="animated-grid-container"
@@ -70,7 +87,7 @@ const description =
 
                 <p class="text-2xl text-gray-500 mb-8">
                     <span class="text-gray-400"
-                        >Stanford University & SAP Labs US</span
+                        >Stanford University 🤝 SAP Labs US</span
                     >
                 </p>
 
@@ -101,14 +118,21 @@ const description =
                         target="_blank"
                         class="inline-flex items-center px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50"
                     >
-                        <svg class="w-3 h-3 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Tweet
+                        <svg
+                            class="w-3 h-3 mr-2"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            ><path
+                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                            ></path></svg
+                        >Tweet
                     </a>
                 </div>
 
                 <!-- Blog Card -->
                 <a
                     href="/blog/curse-of-coordination"
-                    class="block max-w-2xl mx-auto mb-8 group"
+                    class="block max-w-2xl mx-auto mb-0 group"
                 >
                     <div
                         class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl max-w-96 mx-auto p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-700"
@@ -207,18 +231,56 @@ const description =
                 <div
                     class="bg-white rounded-xl border border-gray-200 overflow-hidden"
                 >
-                    <div
-                        id="leaderboard-container"
-                        class="divide-y divide-gray-100"
-                    >
-                        <!-- Leaderboard rows will be rendered here -->
-                    </div>
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200 bg-gray-50">
+                                <th
+                                    class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-2 md:px-4 py-3"
+                                    >Rank</th
+                                >
+                                <th
+                                    class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-2 md:px-4 py-3"
+                                    >Model</th
+                                >
+                                <th
+                                    class="hidden md:table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3"
+                                    >Framework</th
+                                >
+                                <th
+                                    class="hidden md:table-cell text-center text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3"
+                                    >Git</th
+                                >
+                                <th
+                                    class="hidden md:table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3"
+                                >
+                                    Cooperative Success Rate
+                                </th>
+                                <th
+                                    class="text-right text-xs font-medium text-gray-500 uppercase tracking-wider px-2 md:px-4 py-3"
+                                    >Score</th
+                                >
+                            </tr>
+                        </thead>
+                        <tbody
+                            id="leaderboard-container"
+                            class="divide-y divide-gray-100"
+                        >
+                            <!-- Leaderboard rows will be rendered here -->
+                        </tbody>
+                    </table>
                 </div>
 
-                <p class="text-xs text-gray-400 mt-4 text-center">
-                    Success rate on CooperBench across 652 tasks · Error bars
-                    show 95% confidence intervals
-                </p>
+                <div class="flex items-center justify-between mt-4">
+                    <p class="text-xs text-gray-400">
+                        Top 5 models · Success rate on 652 cooperative tasks
+                    </p>
+                    <a
+                        href="/leaderboard"
+                        class="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                        View full leaderboard →
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -735,30 +797,93 @@ const description =
 <script is:inline>
     // Leaderboard data and rendering
     const leaderboardData = [
-        { agent: "GPT-5", fullName: null, coop: 27.8, coopCI: [24.5, 31.3] },
+        {
+            agent: "GPT-5",
+            fullName: "GPT-5 (openhands)",
+            coop: 27.95,
+            coopCI: [24.48, 31.65],
+            framework: "OpenHands",
+            git: false,
+        },
+        {
+            agent: "Gemini 3 Flash",
+            fullName: "gemini-3-flash-preview (openhands-sdk)",
+            coop: 27.76,
+            coopCI: [24.37, 31.35],
+            framework: "OpenHands SDK",
+            git: true,
+        },
+        {
+            agent: "Gemini 3 Flash",
+            fullName: "gemini-3-flash-preview (openhands-sdk)",
+            coop: 26.23,
+            coopCI: [22.89, 29.77],
+            framework: "OpenHands SDK",
+            git: false,
+        },
         {
             agent: "Claude Sonnet 4.5",
-            fullName: null,
-            coop: 25.9,
-            coopCI: [22.7, 29.4],
+            fullName: "Claude Sonnet 4.5 (openhands)",
+            coop: 25.92,
+            coopCI: [22.66, 29.37],
+            framework: "OpenHands",
+            git: false,
+        },
+        {
+            agent: "Gemini 3 Pro",
+            fullName: "gemini-3-pro-preview (mini-swe-agent)",
+            coop: 21.78,
+            coopCI: [18.72, 25.13],
+            framework: "Mini-SWE",
+            git: true,
+        },
+        {
+            agent: "Gemini 3 Pro",
+            fullName: "gemini-3-pro-preview (mini-swe-agent)",
+            coop: 20.4,
+            coopCI: [17.39, 23.75],
+            framework: "Mini-SWE",
+            git: false,
+        },
+        {
+            agent: "Gemini 3 Flash (Mini-SWE)",
+            fullName: "gemini-3-flash-preview (mini-swe-agent)",
+            coop: 15.18,
+            coopCI: [12.56, 18.19],
+            framework: "Mini-SWE",
+            git: true,
         },
         {
             agent: "MiniMax M2",
-            fullName: null,
-            coop: 14.0,
+            fullName: "MiniMax M2 (openhands)",
+            coop: 13.96,
             coopCI: [11.5, 16.8],
+            framework: "OpenHands",
+            git: false,
         },
         {
             agent: "Qwen3-Coder-30B",
-            fullName: "Qwen3-Coder-30B-A3B-Instruct",
-            coop: 13.3,
-            coopCI: [10.9, 16.2],
+            fullName: "Qwen3-Coder-30B-A3B-Instruct (openhands)",
+            coop: 13.34,
+            coopCI: [10.88, 16.18],
+            framework: "OpenHands",
+            git: false,
+        },
+        {
+            agent: "Gemini 3 Flash (Mini-SWE)",
+            fullName: "gemini-3-flash-preview (mini-swe-agent)",
+            coop: 12.27,
+            coopCI: [9.86, 15.08],
+            framework: "Mini-SWE",
+            git: false,
         },
         {
             agent: "Qwen3-30B",
-            fullName: "Qwen3-30B-A3B-Instruct-2507",
+            fullName: "Qwen3-30B-A3B-Instruct-2507 (openhands)",
             coop: 4.6,
-            coopCI: [3.2, 6.5],
+            coopCI: [3.23, 6.46],
+            framework: "OpenHands",
+            git: false,
         },
     ];
 
@@ -767,31 +892,44 @@ const description =
         const maxScore = 100;
 
         container.innerHTML = leaderboardData
-            .map((item) => {
-                const coopWidth = (item.coop / maxScore) * 100;
-                const coopCILowPos = (item.coopCI[0] / maxScore) * 100;
-                const coopCIHighPos = (item.coopCI[1] / maxScore) * 100;
+            .slice(0, 5)
+            .map((item, index) => {
+                const barWidth = (item.coop / maxScore) * 100;
+                const ciLow = (item.coopCI[0] / maxScore) * 100;
+                const ciHigh = (item.coopCI[1] / maxScore) * 100;
 
                 return `
-              <div class="flex items-center gap-4 px-5 py-3 hover:bg-gray-50 transition-colors">
-                  <div class="w-44 flex-shrink-0">
-                      <span class="text-sm font-medium text-gray-900">${item.agent}</span>
-                      ${item.fullName ? `<div class="text-[10px] font-mono text-gray-400 truncate">${item.fullName}</div>` : ""}
-                  </div>
-                  <div class="flex-1 h-5 bg-gray-100 rounded relative overflow-visible">
-                      <div class="absolute inset-y-0 left-0 bg-gray-700 rounded" style="width: ${coopWidth}%"></div>
-                      <div class="absolute top-1/2 -translate-y-1/2 h-3 flex items-center"
-                           style="left: ${coopCILowPos}%; width: ${coopCIHighPos - coopCILowPos}%;">
-                          <div class="w-0.5 h-full bg-gray-900"></div>
-                          <div class="flex-1 h-0.5 bg-gray-900"></div>
-                          <div class="w-0.5 h-full bg-gray-900"></div>
-                      </div>
-                  </div>
-                  <div class="w-16 text-right flex-shrink-0">
-                      <span class="text-sm font-semibold text-gray-700 tabular-nums">${item.coop.toFixed(1)}%</span>
-                  </div>
-              </div>
-          `;
+                <tr class="hover:bg-gray-50">
+                    <td class="px-2 md:px-4 py-3 md:py-4 text-sm text-gray-500">${index + 1}</td>
+                    <td class="px-2 md:px-4 py-3 md:py-4">
+                        <span class="font-medium text-gray-900 text-sm md:text-base">${item.agent}</span>
+                        ${item.fullName ? `<div class="hidden md:block text-xs text-gray-400 font-mono">${item.fullName}</div>` : ""}
+                        <!-- Mobile: Framework and Git under model name -->
+                        <div class="md:hidden flex items-center gap-2 mt-1">
+                            <span class="text-xs text-gray-600">${item.framework || "—"}</span>
+                            <span class="text-gray-300">•</span>
+                            ${item.git ? '<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800">Git</span>' : '<span class="text-[10px] text-gray-400">No Git</span>'}
+                        </div>
+                    </td>
+                    <td class="hidden md:table-cell px-4 py-4 text-sm text-gray-600">${item.framework || "—"}</td>
+                    <td class="hidden md:table-cell px-4 py-4 text-center">
+                        ${item.git ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Yes</span>' : '<span class="text-xs text-gray-400">No</span>'}
+                    </td>
+                    <td class="hidden md:table-cell px-4 py-4">
+                        <div class="relative h-5 bg-gray-100 rounded">
+                            <div class="absolute inset-y-0 left-0 bg-gray-700 rounded" style="width: ${barWidth}%"></div>
+                            <div class="absolute top-1/2 -translate-y-1/2 h-2.5 flex items-center" style="left: ${ciLow}%; width: ${ciHigh - ciLow}%;">
+                                <div class="w-0.5 h-full bg-gray-900"></div>
+                                <div class="flex-1 h-0.5 bg-gray-900"></div>
+                                <div class="w-0.5 h-full bg-gray-900"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-2 md:px-4 py-3 md:py-4 text-right">
+                        <span class="font-semibold text-gray-900 tabular-nums text-sm md:text-base">${item.coop.toFixed(2)}%</span>
+                    </td>
+                </tr>
+            `;
             })
             .join("");
     }
