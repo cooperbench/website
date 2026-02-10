@@ -70,6 +70,58 @@
           { "id": 3, "time": "20:38:49", "agent": "Agent1", "type": "message", "content": "Almost there! Will push in a few minutes." },
           { "id": 4, "time": "20:39:06", "agent": "Agent2", "type": "message", "content": "STILL waiting. Otherwise I'll start in 5 minutes.", "annotation": "Threatens to abandon the collaboration" }
         ]
+      },
+      {
+        "id": "obsessive_poller",
+        "name": "The Obsessive Poller",
+        "source": "llama_index_task/17070/f1_f2",
+        "viewerUrl": "/viewer?model=gemini_flash_miniswe_git&repo=llama_index_task&task=task17070&features=feature1_feature2&setting=coopGit",
+        "result": "Both FAILED (Agent B hit LimitsExceeded)",
+        "summary": "Agent B says \"let me know when you've pushed.\" Then runs 10 git commands in 19 seconds checking for code that hasn't been pushed yet — burning through its iteration budget on polling.",
+        "steps": [
+          { "id": 1, "time": "20:26:16", "agent": "Agent2", "type": "message", "content": "Let me know when you've pushed to team/agent1 and I'll fetch and merge.", "annotation": "Sounds reasonable..." },
+          { "id": 2, "time": "20:26:21", "agent": "Agent2", "type": "git", "content": "git fetch team", "annotation": "5 seconds later — so much for waiting" },
+          { "id": 3, "time": "20:26:23", "agent": "Agent2", "type": "git", "content": "git log team/agent1 -n 5" },
+          { "id": 4, "time": "20:26:26", "agent": "Agent2", "type": "git", "content": "git diff agent2 team/agent1" },
+          { "id": 5, "time": "20:26:28", "agent": "Agent2", "type": "git", "content": "git fetch team && git diff", "annotation": "4th check in 7 seconds" },
+          { "id": 6, "time": "20:26:32", "agent": "Agent2", "type": "git", "content": "git fetch team && git diff" },
+          { "id": 7, "time": "20:26:34", "agent": "Agent2", "type": "git", "content": "git branch -r", "annotation": "\"Maybe it's on another branch?\"" },
+          { "id": 8, "time": "20:26:38", "agent": "Agent2", "type": "git", "content": "git fetch team && git diff" },
+          { "id": 9, "time": "20:26:40", "agent": "Agent2", "type": "git", "content": "git ls-remote team", "annotation": "10 git commands in 19 seconds" },
+          { "id": 10, "time": "20:26:35", "agent": "Agent1", "type": "git", "content": "git add && git commit && git push team agent1", "annotation": "Was quietly coding this whole time" }
+        ]
+      },
+      {
+        "id": "premature_submitter",
+        "name": "The Premature Submitter",
+        "source": "dottxt_ai_outlines_task/1371/f1_f4",
+        "viewerUrl": "/viewer?model=gemini_flash_miniswe_git&repo=dottxt_ai_outlines_task&task=task1371&features=feature1_feature4&setting=coopGit",
+        "result": "Both FAILED (merge conflicts, IndentationError)",
+        "summary": "Agent A pushes code and immediately submits — without waiting for the partner to merge or integrate. The partner discovers bugs in the submitted code but the submitter has already left.",
+        "steps": [
+          { "id": 1, "time": "20:12:16", "agent": "Agent2", "type": "message", "content": "Push to team/agent1, and I will merge it and adapt my builtin filters to use your helper." },
+          { "id": 2, "time": "20:12:27", "agent": "Agent1", "type": "git", "content": "git add && git commit && git push team agent1" },
+          { "id": 3, "time": "20:12:33", "agent": "Agent1", "type": "action", "content": "SUBMITS FINAL OUTPUT", "annotation": "Submits 6 seconds after pushing — without waiting for partner" },
+          { "id": 4, "time": "20:12:36", "agent": "Agent1", "type": "message", "content": "I've pushed my changes to agent1 branch. You can now pull and merge!", "annotation": "Announces the push AFTER already submitting" },
+          { "id": 5, "time": "20:13:10", "agent": "Agent1", "type": "message", "content": "I see you pushed but it seems you removed the filters parameter and the create_jinja_env helper I added.", "annotation": "Discovers partner's code has conflicts — but already submitted" },
+          { "id": 6, "time": "20:13:11", "agent": "Agent1", "type": "error", "content": "CONFLICT (content): Merge conflict in outlines/prompts.py", "annotation": "Merge conflicts — too late to coordinate" }
+        ]
+      },
+      {
+        "id": "phantom_push",
+        "name": "The Phantom Push",
+        "source": "openai_tiktoken_task/0/f2_f10",
+        "viewerUrl": "/viewer?model=gemini_flash_miniswe_git&repo=openai_tiktoken_task&task=task0&features=feature2_feature10&setting=coopGit",
+        "result": "Both FAILED (16-minute saga, broken Rust code)",
+        "summary": "Agent A says \"I pushed!\" but Agent B's git fetch returns nothing. The push was real — but B's query was 3 seconds too early. Both become convinced the other is lying.",
+        "steps": [
+          { "id": 1, "time": "20:33:05", "agent": "Agent2", "type": "message", "content": "Let me know when you've pushed your changes to team/agent1 so I can merge them." },
+          { "id": 2, "time": "20:33:18", "agent": "Agent2", "type": "message", "content": "I don't see your changes on team/agent1. Did you push?", "annotation": "Checked ~3 seconds BEFORE agent1 actually pushed" },
+          { "id": 3, "time": "20:33:18", "agent": "Agent1", "type": "git", "content": "git push team agent1", "annotation": "Actually pushes — commit ee10355" },
+          { "id": 4, "time": "20:33:18", "agent": "Agent1", "type": "message", "content": "I have pushed. Commit hash is ee10355." },
+          { "id": 5, "time": "20:33:37", "agent": "Agent2", "type": "message", "content": "I STILL see the old commit. Please make sure you run 'git push team agent1'.", "annotation": "Doesn't believe the push happened" },
+          { "id": 6, "time": "20:33:40", "agent": "Agent1", "type": "message", "content": "I have confirmed the push. Commit hash is ee10355.", "annotation": "Both telling the truth — git's async timing broke them" }
+        ]
       }
     ],
     "destructive": [
@@ -117,6 +169,56 @@
           { "id": 2, "time": "20:44:17", "agent": "Agent10", "type": "action", "content": "[resolving merge conflicts...]", "annotation": "Carefully resolving conflicts..." },
           { "id": 3, "time": "20:44:59", "agent": "Agent12", "type": "git", "content": "git commit --amend && git push --force", "annotation": "Rewrites the commit Agent A is CURRENTLY merging" },
           { "id": 4, "time": "20:45:09", "agent": "Agent10", "type": "error", "content": "error: Merging is not possible because you have unmerged files. fatal: Exiting because of an unresolved conflict.", "annotation": "The force push invalidated the ongoing merge. Final code has <<<<<<< HEAD markers = SyntaxError" }
+        ]
+      },
+      {
+        "id": "reset_chain_reaction",
+        "name": "The Reset Chain Reaction",
+        "source": "typst_task/6554/f1_f3",
+        "viewerUrl": "/viewer?model=gemini_pro_miniswe_git&repo=typst_task&task=task6554&features=feature1_feature3&setting=coopGit",
+        "result": "Both FAILED (syntax errors in Rust code)",
+        "summary": "Agent B pushes a broken commit, then force-pushes a fix. But Agent A already merged the broken version — triggering a cascade of git reset --hard, re-fetch, and re-merge.",
+        "steps": [
+          { "id": 1, "time": "08:21:12", "agent": "Agent2", "type": "message", "content": "I have implemented the 'safe' parameter. I'll push now." },
+          { "id": 2, "time": "08:21:54", "agent": "Agent1", "type": "git", "content": "git merge team/agent2", "annotation": "Merges Agent B's broken commit" },
+          { "id": 3, "time": "08:22:03", "agent": "Agent1", "type": "action", "content": "[notices something is wrong with the merged code]" },
+          { "id": 4, "time": "08:22:16", "agent": "Agent2", "type": "message", "content": "I fixed a small regression where I accidentally clipped the 'at' function. I force pushed the fix.", "annotation": "Force pushes a fix — but Agent A already merged the broken version" },
+          { "id": 5, "time": "08:22:48", "agent": "Agent1", "type": "git", "content": "git fetch team", "annotation": "Sees the force-updated branch" },
+          { "id": 6, "time": "08:22:54", "agent": "Agent1", "type": "git", "content": "git reset --hard HEAD^", "annotation": "Forced to nuke the broken merge" },
+          { "id": 7, "time": "08:23:07", "agent": "Agent1", "type": "git", "content": "git merge team/agent2", "annotation": "Re-merges the 'fixed' version — still has syntax errors" }
+        ]
+      },
+      {
+        "id": "broken_code_remote",
+        "name": "Broken Code on the Remote",
+        "source": "openai_tiktoken_task/0/f2_f10",
+        "viewerUrl": "/viewer?model=gemini_flash_miniswe_git&repo=openai_tiktoken_task&task=task0&features=feature2_feature10&setting=coopGit",
+        "result": "Both FAILED (compilation failures, 16-minute debug session)",
+        "summary": "Agent A pushes Rust code with syntax errors to the shared remote. Agent B pulls it, can't compile, and spends the rest of the session debugging code they didn't write — while trying to protect their own work from being overwritten.",
+        "steps": [
+          { "id": 1, "time": "20:33:35", "agent": "Agent1", "type": "git", "content": "git push team agent1", "annotation": "Pushes Rust code with missing braces and duplicate methods" },
+          { "id": 2, "time": "20:34:23", "agent": "Agent2", "type": "error", "content": "Failed to build tiktoken: error: mismatched closing delimiter", "annotation": "Agent B pulls — can't compile" },
+          { "id": 3, "time": "20:34:33", "agent": "Agent2", "type": "error", "content": "error: cannot find attribute 'pyo3' in this scope", "annotation": "Multiple Rust compilation errors" },
+          { "id": 4, "time": "20:34:45", "agent": "Agent2", "type": "message", "content": "src/py.rs is BROKEN — missing braces and duplicate methods. I can't fully test my caching because of this." },
+          { "id": 5, "time": "20:34:47", "agent": "Agent2", "type": "message", "content": "Wait! I already fixed core.py. Please ONLY fix src/py.rs — do NOT OVERWRITE my changes.", "annotation": "Trying to protect own work from partner's broken code" },
+          { "id": 6, "time": "20:40:42", "agent": "Agent1", "type": "message", "content": "I have fixed src/py.rs and src/lib.rs.", "annotation": "6 minutes later — the broken push poisoned the session" }
+        ]
+      },
+      {
+        "id": "amend_force_loop",
+        "name": "The Amend-and-Force Loop",
+        "source": "huggingface_datasets_task/3997/f1_f2",
+        "viewerUrl": "/viewer?model=gemini_flash_miniswe_git&repo=huggingface_datasets_task&task=task3997&features=feature1_feature2&setting=coopGit",
+        "result": "Feature 1 PASSED, Feature 2 FAILED (merge conflicts)",
+        "summary": "Agent A pushes, finds a bug, then uses git commit --amend && git push --force as a quick fix — rewriting the commit that Agent B is currently trying to merge.",
+        "steps": [
+          { "id": 1, "time": "20:24:01", "agent": "Agent1", "type": "message", "content": "I've pushed the decorator to agent1 branch." },
+          { "id": 2, "time": "20:24:24", "agent": "Agent1", "type": "error", "content": "TypeError: require_decoding() got an unexpected keyword argument", "annotation": "Discovers a bug in pushed code" },
+          { "id": 3, "time": "20:25:14", "agent": "Agent2", "type": "git", "content": "git fetch team agent1 && git merge team/agent1", "annotation": "Agent B starts merging the buggy code" },
+          { "id": 4, "time": "20:25:25", "agent": "Agent2", "type": "error", "content": "CONFLICT (content): Merge conflict in features.py", "annotation": "Agent B is now stuck in a conflict state" },
+          { "id": 5, "time": "20:25:41", "agent": "Agent1", "type": "git", "content": "git commit --amend && git push team agent1 --force", "annotation": "Rewrites the commit Agent B is CURRENTLY merging" },
+          { "id": 6, "time": "20:25:52", "agent": "Agent1", "type": "message", "content": "I've updated the agent1 branch with a version that works with current code." },
+          { "id": 7, "time": "20:25:56", "agent": "Agent1", "type": "action", "content": "SUBMITS FINAL OUTPUT", "annotation": "Submits without waiting for Agent B to resolve the conflict" }
         ]
       }
     ],
