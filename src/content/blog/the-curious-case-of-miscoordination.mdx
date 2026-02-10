@@ -16,23 +16,126 @@ import QuickSummary from '../../components/QuickSummary.astro';
 import FailureExample from '../../components/FailureExample.astro';
 
 <QuickSummary>
-    `Git` is the backbone of modern software collaboration. It lets multiple engineers work on the same codebase without stepping on each other's toes. Giving AI agents access to `git` should let them coordinate effectively, right? Not so fast.
+    As an update to CooperBench, we give agents access to `Git` as a cooperative tool.
+    This change brings more opportunies for agents to coordinate since they can see each
+    other's codebase, but also brings more challenges... 
 </QuickSummary>
 
 Previously on this blog, we showed that AI agents struggle to coordinate on shared tasks. When two agents work together, they perform 50% worse than one agent working alone. We called this the *curse of coordination*. Check out the [original post](curse-of-coordination) for details.
 
-In our original setup, the only way agents communicate with each other is by sending real-time messages. Although we do allow agents to share arbitrary text through this channel, a reasonable hypothesis arises: maybe the curse of coordination is just a lack of proper tools. After all, human engineers don't just chat to coordinate. They use `git`.
+## Updates to the CooperBench
 
+In our original setup, the only way agents communicate with each other is by sending real-time messages. Although we do allow agents to share arbitrary text through this channel, a reasonable hypothesis arises: maybe the curse of coordination is just a lack of proper tools. After all, human software engineers don't just chat to coordinate. They use `git`.
+
+### Self-hosted git
 
 To test this hypothesis, we gave our agents access to a `git` repository. Each agent can clone the repo, make changes, commit them, push them, and pull changes from the other agent. This way, agents can coordinate through code changes rather than just text messages.
-
-## Self-hosted Git for Agents
 
 CooperBench runs agents in virtual machines (VMs), supporting both Google Cloud and Modal containers. To provide `git` functionality, we set up a self-hosted `git` server for each
 pair of agents, thus ensuring isolation between different agent teams. Agents can interact with the `git` server using standard `git` commands, through which they can look at each other's code changes before finalizing their own work.
 
+### Shared resources
 
-We gave agents full access to `git` — branching, merging, pushing, pulling. The conversations that followed are... illuminating.
+It worth noting that `git` isn't just a cooperation tool, it is a shared resource between the agents. While the agents start with their own branch, they have the freedom to push to others' branch or create newer branches. This provides opportunities for agents to cooperate at a much closer level, but as we point out later, also provides challenges for agents to coordinate resource conflicts. 
+
+### Marginal Improvement
+
+Empiricially, `git` does bring improvements. On our [leaderboard](/leaderboard), we see a consistent improvement in Gemini 3 Flash models. When `git` is used, the coorperative success rate rises 1-2%. However, this improvement is not statistically significant on our benchmark, or anywhere close to closing the coordination gap.
+
+<div className="my-8 overflow-x-auto">
+    <table className="w-full border-collapse">
+        <thead>
+            <tr className="border-b-2 border-gray-300">
+                <th className="text-left py-3 px-4 font-semibold">Model</th>
+                <th className="text-left py-3 px-4 font-semibold">Framework</th>
+                <th className="text-center py-3 px-4 font-semibold">Git Access</th>
+                <th className="text-right py-3 px-4 font-semibold">Cooperative</th>
+                <th className="text-right py-3 px-4 font-semibold">Solo</th>
+                <th className="text-right py-3 px-4 font-semibold">Gap</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr className="border-b border-gray-200">
+                <td className="py-3 px-4">Gemini 3 Flash</td>
+                <td className="py-3 px-4">OpenHands SDK</td>
+                <td className="text-center py-3 px-4">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Yes</span>
+                </td>
+                <td className="text-right py-3 px-4 font-semibold">27.76%</td>
+                <td className="text-right py-3 px-4">48.60%</td>
+                <td className="text-right py-3 px-4 text-red-600 font-semibold">-20.84%</td>
+            </tr>
+            <tr className="border-b border-gray-200">
+                <td className="py-3 px-4">Gemini 3 Flash</td>
+                <td className="py-3 px-4">OpenHands SDK</td>
+                <td className="text-center py-3 px-4">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">No</span>
+                </td>
+                <td className="text-right py-3 px-4">26.23%</td>
+                <td className="text-right py-3 px-4">48.60%</td>
+                <td className="text-right py-3 px-4 text-red-600 font-semibold">-22.37%</td>
+            </tr>
+            <tr className="border-b border-gray-200 bg-blue-50">
+                <td className="py-3 px-4 italic text-gray-700 font-medium" colSpan="3">Improvement with Git</td>
+                <td className="text-right py-3 px-4 font-semibold text-green-700">+1.53%</td>
+                <td className="text-right py-3 px-4"></td>
+                <td className="text-right py-3 px-4 font-semibold text-green-700"></td>
+            </tr>
+            <tr className="border-b border-gray-200">
+                <td className="py-3 px-4">Gemini 3 Flash</td>
+                <td className="py-3 px-4">Mini-SWE</td>
+                <td className="text-center py-3 px-4">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Yes</span>
+                </td>
+                <td className="text-right py-3 px-4 font-semibold">15.18%</td>
+                <td className="text-right py-3 px-4">25.20%</td>
+                <td className="text-right py-3 px-4 text-red-600 font-semibold">-10.02%</td>
+            </tr>
+            <tr className="border-b border-gray-200">
+                <td className="py-3 px-4">Gemini 3 Flash</td>
+                <td className="py-3 px-4">Mini-SWE</td>
+                <td className="text-center py-3 px-4">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">No</span>
+                </td>
+                <td className="text-right py-3 px-4">12.27%</td>
+                <td className="text-right py-3 px-4">25.20%</td>
+                <td className="text-right py-3 px-4 text-red-600 font-semibold">-12.93%</td>
+            </tr>
+            <tr className="border-b border-gray-200 bg-blue-50">
+                <td className="py-3 px-4 italic text-gray-700 font-medium" colSpan="3">Improvement with Git</td>
+                <td className="text-right py-3 px-4 font-semibold text-green-700">+2.91%</td>
+                <td className="text-right py-3 px-4"></td>
+                <td className="text-right py-3 px-4 font-semibold text-green-700"></td>
+            </tr>
+            <tr className="border-b border-gray-200">
+                <td className="py-3 px-4">Gemini 3 Pro</td>
+                <td className="py-3 px-4">Mini-SWE</td>
+                <td className="text-center py-3 px-4">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Yes</span>
+                </td>
+                <td className="text-right py-3 px-4 font-semibold">21.78%</td>
+                <td className="text-right py-3 px-4">36.80%</td>
+                <td className="text-right py-3 px-4 text-red-600 font-semibold">-15.02%</td>
+            </tr>
+            <tr className="border-b border-gray-200">
+                <td className="py-3 px-4">Gemini 3 Pro</td>
+                <td className="py-3 px-4">Mini-SWE</td>
+                <td className="text-center py-3 px-4">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">No</span>
+                </td>
+                <td className="text-right py-3 px-4">20.40%</td>
+                <td className="text-right py-3 px-4">36.80%</td>
+                <td className="text-right py-3 px-4 text-red-600 font-semibold">-16.40%</td>
+            </tr>
+            <tr className="bg-blue-50">
+                <td className="py-3 px-4 italic text-gray-700 font-medium" colSpan="3">Improvement with Git</td>
+                <td className="text-right py-3 px-4 font-semibold text-green-700">+1.38%</td>
+                <td className="text-right py-3 px-4"></td>
+                <td className="text-right py-3 px-4 font-semibold text-green-700"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 ## A taxonomy of git-enabled failures
 

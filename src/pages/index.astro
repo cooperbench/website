@@ -129,58 +129,113 @@ const description =
                     </a>
                 </div>
 
-                <!-- Blog Card -->
-                <a
-                    href="/blog/curse-of-coordination"
-                    class="block max-w-2xl mx-auto mb-0 group"
+                <!-- Blog Cards -->
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto"
                 >
-                    <div
-                        class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl max-w-96 mx-auto p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-700"
+                    <!-- Blog Card 1: Curious Case of Miscoordination -->
+                    <a
+                        href="/blog/the-curious-case-of-miscoordination"
+                        class="block group"
                     >
                         <div
-                            class="flex items-start text-start justify-between mb-4"
+                            class="bg-gradient-to-br from-blue-900 to-blue-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-700 h-full"
                         >
-                            <div class="flex-1">
-                                <h3
-                                    class="text-lg font-bold text-white mb-2 group-hover:text-gray-100"
-                                >
-                                    The Curse of Coordination
-                                </h3>
-                                <p class="text-gray-300 text-sm">
-                                    Read why we created this benchmark
-                                </p>
-                            </div>
-                            <div class="flex-shrink-0 ml-4">
-                                <div
-                                    class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors"
-                                >
-                                    <i
-                                        class="fas fa-arrow-right text-white text-sm"
-                                    ></i>
+                            <div
+                                class="flex items-start text-start justify-between mb-4"
+                            >
+                                <div class="flex-1">
+                                    <h3
+                                        class="text-lg font-bold text-white mb-2 group-hover:text-gray-100"
+                                    >
+                                        The Curious Case of Miscoordination
+                                    </h3>
+                                    <p class="text-gray-300 text-sm">
+                                        Git access for agents: Does it help?
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0 ml-4">
+                                    <div
+                                        class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors"
+                                    >
+                                        <i
+                                            class="fas fa-arrow-right text-white text-sm"
+                                        ></i>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div
-                            class="flex items-center gap-3 pt-4 border-t border-gray-700/50"
-                        >
-                            <div class="flex -space-x-2">
-                                <img
-                                    src="/static/images/arpan.jpg"
-                                    alt="Arpandeep"
-                                    class="w-7 h-7 rounded-full border-2 border-gray-800"
-                                />
-                                <img
-                                    src="/static/images/hao_zhu.png"
-                                    alt="Hao"
-                                    class="w-7 h-7 rounded-full border-2 border-gray-800"
-                                />
-                            </div>
-                            <span class="text-sm text-gray-400"
-                                >Arpandeep Khatua, Hao Zhu</span
+                            <div
+                                class="flex items-center gap-3 pt-4 border-t border-blue-700/50"
                             >
+                                <div class="flex -space-x-2">
+                                    <img
+                                        src="/static/images/arpan.jpg"
+                                        alt="Arpandeep"
+                                        class="w-7 h-7 rounded-full border-2 border-blue-800"
+                                    />
+                                    <img
+                                        src="/static/images/hao_zhu.png"
+                                        alt="Hao"
+                                        class="w-7 h-7 rounded-full border-2 border-blue-800"
+                                    />
+                                </div>
+                                <span class="text-sm text-gray-400"
+                                    >Arpandeep Khatua, Hao Zhu</span
+                                >
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+
+                    <!-- Blog Card 2: Curse of Coordination -->
+                    <a href="/blog/curse-of-coordination" class="block group">
+                        <div
+                            class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-700 h-full"
+                        >
+                            <div
+                                class="flex items-start text-start justify-between mb-4"
+                            >
+                                <div class="flex-1">
+                                    <h3
+                                        class="text-lg font-bold text-white mb-2 group-hover:text-gray-100"
+                                    >
+                                        The Curse of Coordination
+                                    </h3>
+                                    <p class="text-gray-300 text-sm">
+                                        Read why we created this benchmark
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0 ml-4">
+                                    <div
+                                        class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors"
+                                    >
+                                        <i
+                                            class="fas fa-arrow-right text-white text-sm"
+                                        ></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-center gap-3 pt-4 border-t border-gray-700/50"
+                            >
+                                <div class="flex -space-x-2">
+                                    <img
+                                        src="/static/images/arpan.jpg"
+                                        alt="Arpandeep"
+                                        class="w-7 h-7 rounded-full border-2 border-gray-800"
+                                    />
+                                    <img
+                                        src="/static/images/hao_zhu.png"
+                                        alt="Hao"
+                                        class="w-7 h-7 rounded-full border-2 border-gray-800"
+                                    />
+                                </div>
+                                <span class="text-sm text-gray-400"
+                                    >Arpandeep Khatua, Hao Zhu</span
+                                >
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
         </section>
 
