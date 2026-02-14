@@ -2,12 +2,13 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { CoopChart } from "../components/CoopChart";
 
-const title = "CooperBench: Why Coding Agents Cannot be Your Teammates Yet";
+const title = "CooperBench: Benchmarking Agent Teams | Why Coding Agents Cannot be Your Teammates Yet";
 const description =
-    "CooperBench is a benchmark of over 600 collaborative coding tasks. We find that agents achieve 30% lower success rates when working together compared to performing both tasks individually.";
+    "CooperBench is the first benchmark for evaluating AI agent teams, agents as teammates, and human-AI collaboration. Over 600 collaborative coding tasks reveal that agent teams achieve 30% lower success rates when working together compared to performing tasks individually.";
+const keywords = "benchmarking agent teams, benchmarking agents as teammates, AI agent cooperation, multi-agent benchmark, collaborative coding, agent collaboration, AI teammates, human-AI interaction, human-AI collaboration, human-agent collaboration";
 ---
 
-<BaseLayout title={title} description={description} activeNav="Home">
+<BaseLayout title={title} description={description} keywords={keywords} activeNav="Home">
     <style is:inline slot="head">
         :root {
             --background: 0 0% 100%;
@@ -82,7 +83,7 @@ const description =
                     class="text-3xl md:text-4xl font-semibold text-gray-900 leading-tight mb-6"
                 >
                     CooperBench:<br />
-                    Benchmarking AI Agents' Cooperation
+                    Benchmarking Agent Teams & Cooperation
                 </h1>
 
                 <p class="text-2xl text-gray-500 mb-8">
@@ -555,11 +556,12 @@ const description =
 
                 <div id="benchmark-content" class="mt-4">
                     <p class="text-gray-600 leading-relaxed mb-6">
-                        CooperBench is the first benchmark designed to measure
-                        how well AI agents can cooperate when handling
-                        individual tasks with potential conflicts. We
-                        constructed 652 tasks from 12 popular open-source
-                        libraries across Python, TypeScript, Go, and Rust.
+                        CooperBench is the first benchmark for evaluating agent teams
+                        and measuring how well AI agents perform as teammates. Our work
+                        informs human-AI collaboration and human-agent collaboration by
+                        studying whether agents can cooperate when handling individual
+                        tasks with potential conflicts. The benchmark includes 652 tasks
+                        from 12 popular open-source libraries across Python, TypeScript, Go, and Rust.
                     </p>
 
                     <div class="flex flex-wrap gap-6 text-center mb-6">

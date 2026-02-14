@@ -4,6 +4,7 @@ import '../index.css';
 interface Props {
   title: string;
   description?: string;
+  keywords?: string;
   bodyClass?: string;
   activeNav?: string;
   noindex?: boolean;
@@ -17,6 +18,7 @@ interface Props {
 const {
   title,
   description = '',
+  keywords = '',
   bodyClass = 'bg-gray-50 text-gray-900 font-sans',
   activeNav = '',
   noindex = false,
@@ -43,6 +45,7 @@ const navItems = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    {keywords && <meta name="keywords" content={keywords} />}
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg?v=2" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
